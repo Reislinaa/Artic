@@ -30,6 +30,7 @@ export default function Navbar({ onStartDemo, onOpenAuth, currentPage = 'home', 
     { key: 'home', label: '首页', page: 'home' },
     { key: 'features', label: '功能', page: 'features' },
     { key: 'download', label: '下载', page: 'download' },
+    { key: 'pricing', label: '会员', page: 'pricing' },
     { key: 'about', label: '关于', page: 'about' }
   ]
 

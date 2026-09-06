@@ -14,6 +14,7 @@ import PageGlow from './components/PageGlow'
 import IntroPage from './pages/IntroPage'
 import DownloadPage from './pages/DownloadPage'
 import AboutPage from './pages/AboutPage'
+import PaymentPage from './pages/PaymentPage'
 
 function Home({ onStartDemo }) {
   return (
@@ -47,6 +48,8 @@ function App() {
         return <DownloadPage />
       case 'about':
         return <AboutPage onNavigate={handleNavigate} />
+      case 'pricing':
+        return <PaymentPage onNavigate={handleNavigate} />
       case 'privacy':
       case 'terms':
         return <LegalPage type={page} onBack={() => setPage('home')} />
