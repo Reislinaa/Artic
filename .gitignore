@@ -16,6 +16,9 @@ deploy-log.txt
 !.env.example
 *.local
 
+# 运行时数据（用户账号、日志等，绝不入库）
+server/data/
+
 # 系统文件
 .DS_Store
 Thumbs.db
