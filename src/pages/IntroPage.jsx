@@ -2,8 +2,8 @@ import Reveal from '../components/Reveal'
 
 const scenarios = [
   {
-    title: '微信聊天',
-    desc: '双手不方便时，按住语音键直接说，秒出文字发送。',
+    title: '客户沟通',
+    desc: '金融、高端销售每天数十条客户消息：说出口的是口语，发出去的必须是得体的书面表达。',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -12,7 +12,7 @@ const scenarios = [
   },
   {
     title: '工作汇报',
-    desc: '零散想法自动整理成结构清晰的日报、周报。',
+    desc: '会议纪要、日报周报、项目同步：脑子里已经想明白，但结构化成稿更慢。',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -24,8 +24,18 @@ const scenarios = [
     )
   },
   {
+    title: '商务邮件',
+    desc: '口语化表达一键转为正式、得体的商务邮件，措辞不必再反复打磨。',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+      </svg>
+    )
+  },
+  {
     title: '会议记录',
-    desc: '边说边记，关键内容实时转写，会后直接导出。',
+    desc: '边说边记，关键内容实时转写，会后直接输出可发送的纪要。',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3Z" />
@@ -35,33 +45,23 @@ const scenarios = [
     )
   },
   {
-    title: '邮件起草',
-    desc: '口语化表达一键转为正式、得体的商务邮件。',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-      </svg>
-    )
-  },
-  {
-    title: '代码注释',
-    desc: '在 IDE 中口述注释与 Commit 信息，保持心流。',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="16 18 22 12 16 6" />
-        <polyline points="8 6 2 12 8 18" />
-      </svg>
-    )
-  },
-  {
-    title: '多语言沟通',
-    desc: '中英文混合输入，自动识别并给出准确结果。',
+    title: '跨语言沟通',
+    desc: '中文口语输入，连语气与商务礼节一起重写为地道的外语商务表达。',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <path d="M2 12h20" />
         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    )
+  },
+  {
+    title: '内容创作',
+    desc: '自媒体商务对接：品牌合作中的细节沟通与确认，每一条都要快速、专业、得体。',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
       </svg>
     )
   }
@@ -73,9 +73,10 @@ export default function IntroPage({ onNavigate }) {
       <div className="page-hero">
         <div className="container">
           <span className="page-hero-tag">FEATURES · 功能</span>
-          <h1 className="page-hero-title">为表达而生的<em>AI 输入法</em></h1>
+          <h1 className="page-hero-title">为表达而生的<em>语音成稿工具</em></h1>
           <p className="page-hero-sub">
-            流星语把语音、理解与润色能力融入每一次输入，让你在任何文本框里都能快速、自然、准确地表达。
+            ARTIC 把语音、理解与润色能力融入每一次输入，让你在任何文本框里都能快速、自然、准确地表达——
+            说出口的话，就是能直接发出去的稿。
           </p>
         </div>
       </div>
@@ -89,7 +90,7 @@ export default function IntroPage({ onNavigate }) {
             <h2 className="page-title">你在哪写，它就在哪</h2>
           </Reveal>
           <Reveal delay={1} variant="fade">
-            <p className="page-subtitle">覆盖日常沟通、办公协作与内容创作的常见场景</p>
+            <p className="page-subtitle">覆盖高端商务场景最典型的高频沟通与成稿需求</p>
           </Reveal>
 
           <div className="scenario-grid">
@@ -112,7 +113,7 @@ export default function IntroPage({ onNavigate }) {
             <div className="cta-banner">
               <div>
                 <h2 className="cta-title">准备好开始说了吗？</h2>
-                <p className="cta-desc">免费下载流星语，把开口变成文字</p>
+                <p className="cta-desc">下载 ARTIC，把开口变成可发送的商务稿</p>
               </div>
               <button className="btn btn-primary" onClick={() => onNavigate('download')}>立即下载</button>
             </div>

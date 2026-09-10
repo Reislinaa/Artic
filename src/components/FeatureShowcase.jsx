@@ -12,7 +12,7 @@ const features = [
     label: '01',
     en: 'Voice to Text',
     title: 'AI 语音转写',
-    desc: '自然说话即可生成准确文字。无论是长句还是专业术语，都能被清晰识别并转写成可直接发送的内容。',
+    desc: '自然说话即可生成准确文字。长句与专业术语都能被清晰识别，超长音频稳定 3 秒内出稿——说完即所得。',
     mockup: 'phone'
   },
   {
@@ -232,7 +232,7 @@ function ToneMockup() {
   )
 }
 
-const VOCAB_WORDS = ['流星语', 'Typeless', 'LLM', '多模态']
+const VOCAB_WORDS = ['ARTIC', '张凯伦', 'LLM', '多模态']
 
 function VocabMockup() {
   return (
@@ -247,12 +247,12 @@ function VocabMockup() {
           <span className="mockup-vocab-label">语音转写</span>
           <p className="mockup-vocab-text">
             这次{' '}
-            <span className="mockup-vocab-highlight">流星语</span>{' '}
+            <span className="mockup-vocab-highlight">ARTIC</span>{' '}
             接入了{' '}
             <span className="mockup-vocab-highlight">LLM</span>{' '}
             多模态能力，{' '}
-            <span className="mockup-vocab-highlight">Typeless</span>{' '}
-            团队正在做最后测试。
+            <span className="mockup-vocab-highlight">张凯伦</span>{' '}
+            正在做最后验收。
           </p>
         </div>
 
@@ -468,11 +468,11 @@ export default function FeatureShowcase() {
             <span className="section-kicker">Capabilities</span>
           </Reveal>
           <Reveal variant="blur">
-            <h2 className="section-title">不只是语音输入</h2>
+            <h2 className="section-title">润色质量，才是分水岭</h2>
           </Reveal>
           <Reveal delay={1} variant="fade">
             <p className="section-subtitle">
-              从识别到润色，从格式到隐私，每一步都为"说出来即成文"而设计
+              识别准只是及格线，写得好才是付费理由——从转写到成稿，每一步都为"说出来即成文"而设计
             </p>
           </Reveal>
         </div>

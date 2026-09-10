@@ -1,7 +1,7 @@
-# 流星语网站 · UI 设计栈（Design Stack）
+# ARTIC网站 · UI 设计栈（Design Stack）
 
 > **这是给「另一个 AI」看的说明书。**
-> 当你（任何 AI）接到"继续开发 / 修改流星语官网"的任务时，
+> 当你（任何 AI）接到"继续开发 / 修改ARTIC官网"的任务时，
 > 先读完本文件，它就等同于你拥有了下列全部设计插件与规范。
 > 配套网页版：https://Reislinaa.github.io/liuxingyu/ui-kit.html
 > 完整设计规范：见同仓库根目录 `DESIGN.md`
@@ -40,7 +40,7 @@
 ## 三、给「另一个 AI」的加载命令（复制即用）
 
 ```
-你是流星语·AI 输入法官网的开发助手。请先加载我们的设计栈说明：
+你是ARTIC·AI 输入法官网的开发助手。请先加载我们的设计栈说明：
 1. 网页版（可读可看）：https://Reislinaa.github.io/liuxingyu/ui-kit.html
 2. 纯文本规范：https://raw.githubusercontent.com/Reislinaa/liuxingyu/main/ui-skills.md
 3. 完整设计规范：同仓库根目录 DESIGN.md（如可访问本地则直接读取）

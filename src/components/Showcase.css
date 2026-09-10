@@ -19,7 +19,7 @@
 }
 
 .showcase-card:hover {
-  border-color: rgba(232, 93, 78, 0.2);
+  border-color: rgba(43, 75, 242, 0.2);
   transform: translateY(-5px);
   box-shadow: 0 18px 44px rgba(28, 28, 30, 0.07);
 }

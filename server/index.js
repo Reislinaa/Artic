@@ -5,6 +5,19 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { generateSuggestion } from './aiService.js'
 import { findUser, findUserByEmail, createUser, addLog } from './store.js'
+import {
+  PLANS,
+  getPayStatus,
+  createOrderRecord,
+  getOrder,
+  markPaid,
+  wechatNativePay,
+  alipayPrecreate,
+  handleWechatNotify,
+  handleAlipayNotify,
+  scheduleDemoPaid,
+  demoQrContent
+} from './pay.js'
 
 dotenv.config()
 
@@ -16,7 +29,14 @@ const PORT = process.env.PORT || 3001
 
 // 中间件
 app.use(cors())
-app.use(express.json())
+// 保留原始报文：微信支付回调验签必须使用未经解析的 raw body
+app.use(express.json({
+  verify: (req, res, buf) => {
+    if (buf && buf.length) req.rawBody = buf.toString('utf8')
+  }
+}))
+// 支付宝异步通知为 form-urlencoded
+app.use(express.urlencoded({ extended: true }))
 
 // 健康检查
 app.get('/api/health', (req, res) => {
@@ -66,45 +86,103 @@ app.post('/api/auth/login', (req, res) => {
   res.json({ success: true, message: '登录成功', user: { id: user.id, username: user.username } })
 })
 
-// ===== 支付订单（演示用 Mock，接真实支付需替换为微信/支付宝 SDK） =====
-// 真实接入：
-//   微信支付 → 服务端调用「统一下单」拿到 code_url，前端用原生二维码展示，
-//             通过「查询订单」或「支付结果通知」回调更新 status。
-//   支付宝   → 服务端调用「alipay.trade.precreate」拿到 qr_code，同样轮询/异步通知。
-const orders = new Map()
+// ===== 支付链路（演示 / 正式 双模式：证件号填进 .env 即自动切换） =====
 
-app.post('/api/order/create', (req, res) => {
-  const { plan = 'pro', method = 'wechat' } = req.body || {}
-  const orderId = 'LXY' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase()
-  const amountMap = { free: 0, pro: 29, team: 99 }
-  const amount = amountMap[plan] ?? 29
-  // 真实场景此 payUrl 由对应支付 SDK 的下单接口返回
-  const payUrl = method === 'wechat'
-    ? `weixin://wxpay/bizpayurl?pr=${orderId}`
-    : `alipays://platformapi/startapp?appId=20000067&url=https%3A%2F%2Fm.alipay.com%2F%3ForderId%3D${orderId}`
-  orders.set(orderId, { orderId, plan, method, amount, status: 'pending', createdAt: Date.now() })
-  // 演示：8 秒后自动置为已支付（模拟用户扫码完成）
-  setTimeout(() => {
-    const o = orders.get(orderId)
-    if (o && o.status === 'pending') o.status = 'paid'
-  }, 8000)
-  res.json({ orderId, payUrl, amount, method, plan })
+// 前端读取支付模式与各渠道配置状态
+app.get('/api/pay/status', (req, res) => {
+  res.json(getPayStatus())
 })
 
+// 创建订单：渠道已配置走真实下单，未配置走演示流程
+app.post('/api/order/create', async (req, res) => {
+  const { plan = 'pro-monthly', method = 'wechat' } = req.body || {}
+  if (!PLANS[plan]) return res.status(400).json({ error: '未知的订阅方案' })
+  if (!['wechat', 'alipay'].includes(method)) return res.status(400).json({ error: '不支持的支付方式' })
+
+  const order = createOrderRecord({ planKey: plan, method })
+  const status = getPayStatus()
+
+  let payUrl
+  let mode
+  try {
+    if (status.channels[method].configured) {
+      mode = 'live'
+      payUrl = method === 'wechat' ? await wechatNativePay(order) : await alipayPrecreate(order)
+    } else {
+      mode = 'demo'
+      payUrl = demoQrContent(method, order.orderId)
+      scheduleDemoPaid(order.orderId)
+    }
+  } catch (e) {
+    console.error('[pay] 下单失败:', e.message)
+    // 正式模式下单失败时明确报错，不静默降级为演示，避免「看似付款成功实则未进账」
+    return res.status(502).json({ error: '支付下单失败：' + e.message })
+  }
+
+  res.json({
+    orderId: order.orderId,
+    planKey: order.planKey,
+    method: order.method,
+    amount: order.amount,
+    subject: order.subject,
+    payUrl,
+    mode
+  })
+})
+
+// 订单状态（前端轮询；正式模式的支付结果由官方回调写入）
 app.get('/api/order/status', (req, res) => {
-  const { orderId } = req.query
-  const o = orders.get(orderId)
+  const o = getOrder(req.query.orderId)
   if (!o) return res.status(404).json({ error: '订单不存在' })
-  res.json({ orderId, status: o.status, amount: o.amount, plan: o.plan })
+  res.json({
+    orderId: o.orderId,
+    status: o.status,
+    amount: o.amount,
+    planKey: o.planKey,
+    paidAt: o.paidAt || null
+  })
 })
 
-// 演示：立即标记支付成功（无需等待 8 秒自动模拟）
+// 仅演示模式可用：正式模式下拒绝，防止绕过真实支付
 app.post('/api/order/forcepaid', (req, res) => {
-  const { orderId } = (req.body || {})
-  const o = orders.get(orderId)
-  if (!o) return res.status(404).json({ error: '订单不存在' })
-  o.status = 'paid'
+  if (getPayStatus().mode === 'live') {
+    return res.status(403).json({ error: '正式模式下不允许模拟支付' })
+  }
+  const ok = markPaid((req.body || {}).orderId)
+  if (!ok) return res.status(404).json({ error: '订单不存在' })
   res.json({ ok: true })
+})
+
+// 微信支付结果通知（需返回 200 + SUCCESS，否则微信会重试）
+app.post('/api/pay/wechat/notify', (req, res) => {
+  try {
+    const r = handleWechatNotify(req.headers, req.rawBody || JSON.stringify(req.body || {}))
+    if (!r.ok) {
+      console.warn('[pay] 微信回调校验失败:', r.reason)
+      return res.status(400).json({ code: 'FAIL', message: r.reason })
+    }
+    console.log(`[pay] 微信支付成功 ${r.orderId}（验签：${r.verified ? '已验签' : '未配置平台证书'}）`)
+    res.json({ code: 'SUCCESS', message: '成功' })
+  } catch (e) {
+    console.error('[pay] 微信回调异常:', e)
+    res.status(500).json({ code: 'FAIL', message: '处理异常' })
+  }
+})
+
+// 支付宝异步通知（成功需返回纯文本 success）
+app.post('/api/pay/alipay/notify', async (req, res) => {
+  try {
+    const r = await handleAlipayNotify(req.body || {})
+    if (!r.ok) {
+      console.warn('[pay] 支付宝回调校验失败:', r.reason)
+      return res.send('failure')
+    }
+    console.log(`[pay] 支付宝支付成功 ${r.orderId}`)
+    res.send('success')
+  } catch (e) {
+    console.error('[pay] 支付宝回调异常:', e)
+    res.send('failure')
+  }
 })
 
 // 生产环境静态资源
@@ -117,5 +195,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () => {
-  console.log(`AI 输入法后端服务已启动: http://localhost:${PORT}`)
+  const pay = getPayStatus()
+  console.log(`ARTIC 后端服务已启动: http://localhost:${PORT}`)
+  console.log(`支付模式: ${pay.mode === 'live' ? '正式（已接入官方支付通道）' : '演示（填入 .env 商户参数后自动切换）'}`)
+  if (pay.mode === 'demo') {
+    if (pay.channels.wechat.missing.length) {
+      console.log(`  微信支付待配置: ${pay.channels.wechat.missing.join(', ')}`)
+    }
+    if (pay.channels.alipay.missing.length) {
+      console.log(`  支付宝待配置: ${pay.channels.alipay.missing.join(', ')}`)
+    }
+  }
 })

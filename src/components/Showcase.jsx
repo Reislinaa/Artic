@@ -21,7 +21,7 @@ export default function Showcase() {
         </Reveal>
         <Reveal delay={1} variant="fade">
           <p className="section-subtitle">
-            流星语不是另一个聊天机器人，它生活在每一个文本框里
+            ARTIC不是另一个聊天机器人，它生活在每一个文本框里
           </p>
         </Reveal>
 

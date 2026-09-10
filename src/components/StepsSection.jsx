@@ -2,8 +2,8 @@ import Reveal from './Reveal'
 import './StepsSection.css'
 
 const steps = [
-  { num: '1', title: '下载安装', desc: '选择你的平台，一键安装流星语' },
-  { num: '2', title: '授权输入', desc: '在系统设置中启用流星语输入法' },
+  { num: '1', title: '下载安装', desc: '选择你的平台，一键安装ARTIC' },
+  { num: '2', title: '授权输入', desc: '在系统设置中启用ARTIC输入法' },
   { num: '3', title: '按住说话', desc: '在任意文本框按住语音键，开口即输入' },
   { num: '4', title: '享受表达', desc: '让每一次开口都变成可用的文字' }
 ]

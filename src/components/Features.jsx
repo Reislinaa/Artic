@@ -79,7 +79,7 @@ export default function Features({ onTryFeature }) {
     <section className="section features" id="features">
       <div className="container">
         <Reveal variant="fade">
-          <span className="section-kicker">Why 流星语</span>
+          <span className="section-kicker">Why ARTIC</span>
         </Reveal>
         <Reveal variant="blur">
           <h2 className="section-title">为表达而生的能力</h2>

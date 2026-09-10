@@ -42,7 +42,7 @@
 
 .plan-active {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(232, 93, 78, 0.12);
+  box-shadow: 0 0 0 3px rgba(43, 75, 242, 0.12);
 }
 
 .plan-badge {
@@ -127,6 +127,77 @@
 .plan-btn:disabled {
   opacity: 0.55;
   cursor: default;
+}
+
+/* 支付模式提示条 */
+.pay-mode-wrap {
+  padding: 28px 0 0;
+}
+
+.pay-mode-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.pay-mode-bar strong {
+  color: var(--text);
+}
+
+.pay-mode-bar code {
+  background: rgba(43, 75, 242, 0.08);
+  color: var(--primary);
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-size: 0.82rem;
+}
+
+.pay-mode-dot {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--text-light);
+}
+
+.pay-mode-bar.is-live .pay-mode-dot {
+  background: #0EA05A;
+}
+
+.pay-mode-bar.is-demo .pay-mode-dot {
+  background: var(--primary);
+}
+
+.pay-plans {
+  padding-top: 48px;
+}
+
+.plan-amount-sm {
+  font-size: 1.9rem;
+}
+
+.plan-footnote {
+  margin-top: 32px;
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.88rem;
+}
+
+.pay-qr-order {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  letter-spacing: 0.02em;
 }
 
 /* 支付面板 */
@@ -245,9 +316,9 @@
 }
 
 @keyframes payPulse {
-  0% { box-shadow: 0 0 0 0 rgba(232, 93, 78, 0.4); }
-  70% { box-shadow: 0 0 0 8px rgba(232, 93, 78, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(232, 93, 78, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(43, 75, 242, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(43, 75, 242, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(43, 75, 242, 0); }
 }
 
 .pay-demo {

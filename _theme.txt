@@ -1,0 +1,22 @@
+
+===== ppt/theme/theme1.xml =====
+dk1      srgbClr 000000
+lt1      srgbClr FFFFFF
+dk2      srgbClr 1F2937
+lt2      srgbClr F3F4F6
+accent1  srgbClr 4472C4
+accent2  srgbClr ED7D31
+accent3  srgbClr A5A5A5
+accent4  srgbClr FFC000
+accent5  srgbClr 5B9BD5
+accent6  srgbClr 70AD47
+hlink    srgbClr 0563C1
+folHlink srgbClr 954F72
+
+--- fonts ---
+majorFont latin MiSans
+majorFont ea MiSans
+majorFont cs MiSans
+minorFont latin MiSans
+minorFont ea MiSans
+minorFont cs MiSans

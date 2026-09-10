@@ -300,8 +300,8 @@
   background: var(--surface-3);
 }
 
-.mockup-editor-dot:first-child { background: #E85D4E; }
-.mockup-editor-dot:nth-child(2) { background: #F59E0B; }
+.mockup-editor-dot:first-child { background: #2B4BF2; }
+.mockup-editor-dot:nth-child(2) { background: #6D4BFF; }
 .mockup-editor-dot:nth-child(3) { background: #0F766E; }
 
 .mockup-editor-body {
@@ -475,7 +475,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 10px 24px rgba(232, 93, 78, 0.3);
+  box-shadow: 0 10px 24px rgba(43, 75, 242, 0.3);
 }
 
 .mockup-command-chip svg {
@@ -783,7 +783,7 @@
 }
 
 .mockup-shield path:first-child {
-  fill: rgba(232, 93, 78, 0.08);
+  fill: rgba(43, 75, 242, 0.08);
   stroke: var(--primary);
   stroke-width: 2.5;
 }
@@ -806,7 +806,7 @@
   font-weight: 700;
   padding: 5px 10px;
   border-radius: 99px;
-  box-shadow: 0 4px 12px rgba(232, 93, 78, 0.25);
+  box-shadow: 0 4px 12px rgba(43, 75, 242, 0.25);
 }
 
 .mockup-privacy-flow {
@@ -836,7 +836,7 @@
 }
 
 .mockup-privacy-mic {
-  background: rgba(232, 93, 78, 0.1);
+  background: rgba(43, 75, 242, 0.1);
   color: var(--primary);
 }
 
@@ -846,7 +846,7 @@
 }
 
 .mockup-privacy-done {
-  background: rgba(217, 119, 6, 0.1);
+  background: rgba(109, 75, 255, 0.1);
   color: var(--gold);
 }
 

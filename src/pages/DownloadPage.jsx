@@ -47,7 +47,7 @@ const questions = [
   { q: '下载需要付费吗？', a: '基础功能完全免费，你可以放心下载使用。' },
   { q: '支持哪些设备？', a: '支持 iOS、Android、Windows、macOS 四大平台。' },
   { q: '如何更新到最新版？', a: '在应用内设置中检查更新即可，会第一时间推送。' },
-  { q: '下载遇到问题怎么办？', a: '可以联系我们的客服邮箱 support@liuxingyu.cn。' }
+  { q: '下载遇到问题怎么办？', a: '可以联系我们的客服邮箱 support@artic.cn。' }
 ]
 
 // 使用 simple-icons 的真实品牌 path，fill 用 currentColor 以沿用站点统一的
@@ -67,7 +67,7 @@ export default function DownloadPage() {
       <div className="page-hero">
         <div className="container">
           <span className="page-hero-tag">DOWNLOAD · 下载</span>
-          <h1 className="page-hero-title">下载<em>流星语</em></h1>
+          <h1 className="page-hero-title">下载<em>ARTIC</em></h1>
           <p className="page-hero-sub">
             全平台支持，选择你的设备，开始智能输入之旅
           </p>

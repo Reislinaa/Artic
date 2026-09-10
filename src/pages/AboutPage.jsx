@@ -8,16 +8,16 @@ const values = [
       </svg>
     ),
     title: '表达至上',
-    desc: '我们相信，每一个人都应该轻松、准确地表达自己。'
+    desc: '我们服务那些靠表达吃饭的人。让他们更清晰地表达，更高效地完成大量沟通。'
   },
   {
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        <path d="M12 2 15 9l7 .5-5.5 4.5L18.5 21 12 17 5.5 21l2-7L2 9.5 9 9z" />
       </svg>
     ),
-    title: '技术为人',
-    desc: 'AI 是工具，不是主人。技术服务于真实的沟通场景。'
+    title: '质量即分水岭',
+    desc: '识别准只是及格线，写得好才是付费理由。功能数量让位于润色质量。'
   },
   {
     icon: (
@@ -25,25 +25,26 @@ const values = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    title: '隐私优先',
-    desc: '敏感内容本地处理，用户数据只属于用户。'
+    title: '数据只属于你',
+    desc: '语音与文本优先在本地处理，敏感内容无需上传云端，你的表达只属于你。'
   },
   {
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+        <path d="M21 12a9 9 0 1 1-3-6.7" />
+        <path d="M21 3v6h-6" />
       </svg>
     ),
-    title: '持续打磨',
-    desc: '从每一次输入体验出发，追求更快、更准、更自然。'
+    title: '越用越准',
+    desc: '采纳、修改与重写持续回流为场景语料，让产品随使用规模变强而非变慢。'
   }
 ]
 
 const milestones = [
-  { year: '2025', title: '流星语立项', desc: '团队成立，开始探索语音与输入法的结合。' },
-  { year: '2025', title: '首个内测版', desc: '核心语音转写与润色功能完成，邀请首批用户试用。' },
-  { year: '2026', title: '全平台覆盖', desc: '支持 iOS、Android、Windows、macOS 四大平台。' },
-  { year: '2026', title: '持续进化', desc: '不断优化模型与体验，让更多人开口即成文。' }
+  { year: '2026', title: 'ARTIC 立项', desc: '四位合伙人共同出资设立，聚焦高端商务场景的表达效率。' },
+  { year: '2026 · 9', title: '创始用户内测', desc: '50 位 Founding User Program 启动，共创反馈驱动产品迭代。' },
+  { year: '2026 · 10', title: '正式上线', desc: '语音转写 + 商务润色、语音 + 翻译 + 润色两大核心功能发布。' },
+  { year: '下一步', title: '企业专属词包', desc: '为每家企业训练专属术语库，承接企业级表达效率需求。' }
 ]
 
 const contactItems = [
@@ -55,8 +56,8 @@ const contactItems = [
       </svg>
     ),
     label: '产品反馈',
-    value: 'feedback@liuxingyu.cn',
-    href: 'mailto:feedback@liuxingyu.cn'
+    value: 'feedback@artic.cn',
+    href: 'mailto:feedback@artic.cn'
   },
   {
     icon: (
@@ -65,9 +66,9 @@ const contactItems = [
         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
       </svg>
     ),
-    label: '商务合作',
-    value: 'business@liuxingyu.cn',
-    href: 'mailto:business@liuxingyu.cn'
+    label: '商务合作 / 企业版',
+    value: 'business@artic.cn',
+    href: 'mailto:business@artic.cn'
   },
   {
     icon: (
@@ -78,8 +79,8 @@ const contactItems = [
       </svg>
     ),
     label: '问题咨询',
-    value: 'support@liuxingyu.cn',
-    href: 'mailto:support@liuxingyu.cn'
+    value: 'support@artic.cn',
+    href: 'mailto:support@artic.cn'
   }
 ]
 
@@ -89,10 +90,10 @@ export default function AboutPage({ onNavigate }) {
       <div className="page-hero">
         <div className="container">
           <span className="page-hero-tag">ABOUT US · 关于我们</span>
-          <h1 className="page-hero-title">让每一次<em>开口</em>都有价值</h1>
+          <h1 className="page-hero-title">为「高表达密度」的人<em>而生</em></h1>
           <p className="page-hero-sub">
-            流星语是一支专注于 AI 语音输入的团队。我们致力于打造最自然、最懂你的输入方式，
-            让表达不再受限于键盘与屏幕。
+            ARTIC 是一家为高表达密度人群而生的 AI 软件公司。我们服务律师、金融从业者、
+            高端销售、品牌策划、项目经理——那些对表达的精准度与专业度有极高要求的人。
           </p>
         </div>
       </div>
@@ -100,10 +101,10 @@ export default function AboutPage({ onNavigate }) {
       <div className="page-section">
         <div className="container">
           <Reveal variant="blur">
-            <h2 className="page-title">我们的价值观</h2>
+            <h2 className="page-title">我们的信念</h2>
           </Reveal>
           <Reveal delay={1} variant="fade">
-            <p className="page-subtitle">四个信念，驱动我们前行</p>
+            <p className="page-subtitle">四个判断，决定我们怎么做产品</p>
           </Reveal>
           <div className="values-grid">
             {values.map((v, i) => (
@@ -125,7 +126,7 @@ export default function AboutPage({ onNavigate }) {
             <h2 className="page-title">发展历程</h2>
           </Reveal>
           <Reveal delay={1} variant="fade">
-            <p className="page-subtitle">一路走来，与你同行</p>
+            <p className="page-subtitle">从立项到上线，与创始用户一起打磨</p>
           </Reveal>
           <div className="timeline">
             {milestones.map((m, i) => (
@@ -171,10 +172,10 @@ export default function AboutPage({ onNavigate }) {
           <Reveal variant="scale">
             <div className="cta-banner">
               <div>
-                <h2 className="cta-title">想先体验一下？</h2>
-                <p className="cta-desc">下载流星语，开始把开口变成文字</p>
+                <h2 className="cta-title">想让每句话都能直接发出去？</h2>
+                <p className="cta-desc">开始使用 ARTIC，把开口变成可发送的商务稿</p>
               </div>
-              <button className="btn btn-primary" onClick={() => onNavigate('download')}>立即下载</button>
+              <button className="btn btn-primary" onClick={() => onNavigate('pricing')}>查看定价</button>
             </div>
           </Reveal>
         </div>

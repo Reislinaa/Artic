@@ -10,7 +10,7 @@ export default function Hero({ onStartDemo, onNavigate }) {
         {/* Left column: copy + actions + compare */}
         <div className="hero-col hero-col-left">
           <Reveal>
-            <span className="hero-tag">流星语 · AI 语音输入</span>
+            <span className="hero-tag">ARTIC · AI 语音成稿</span>
           </Reveal>
 
           <Reveal delay={1} variant="scale">
@@ -22,17 +22,17 @@ export default function Hero({ onStartDemo, onNavigate }) {
 
           <Reveal delay={2} variant="blur">
             <p className="hero-subtitle">
-              把每一次开口，都变成准确、自然、可直接使用的文字。
-              智能补全 · 语音转写 · 自动润色 · 跨端同步
+              把说出口的话，变成能直接发出去的商务稿。
+              语音转写 · 商务润色 · 跨语言翻译 · 一键唤起
             </p>
           </Reveal>
 
           <Reveal delay={3} variant="up" duration={0.7}>
             <div className="hero-actions">
-              <button className="btn btn-primary btn-lg" onClick={() => onNavigate('download')}>
-                免费下载
+              <button className="btn btn-primary btn-lg" onClick={() => onNavigate('pricing')}>
+                开始使用
               </button>
-              <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('product')}>
+              <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('features')}>
                 了解更多
               </button>
             </div>
@@ -51,7 +51,7 @@ export default function Hero({ onStartDemo, onNavigate }) {
               </div>
               <div className="compare-arrow">→</div>
               <div className="compare-item">
-                <span className="compare-label">流星语</span>
+                <span className="compare-label">ARTIC</span>
                 <div className="compare-value">
                   <span className="compare-num compare-num-fast">220</span>
                   <span className="compare-unit">wpm</span>
@@ -59,6 +59,7 @@ export default function Hero({ onStartDemo, onNavigate }) {
                 <div className="compare-bar compare-bar-fast"><span /></div>
               </div>
             </div>
+            <p className="hero-caption">超长音频稳定 3 秒内出稿，说完即所得</p>
           </Reveal>
         </div>
 

@@ -4,13 +4,13 @@
   --surface: #FFFFFF;
   --border: rgba(0, 0, 0, 0.06);
   --border-strong: rgba(0, 0, 0, 0.1);
-  --primary: #E85D4E;
+  --primary: #2B4BF2;
   --secondary: #0F766E;
   --gold: #D97706;
   --text: #1A1A1A;
   --text-2: #4A4A4A;
   --text-light: #8A8A8A;
-  --grad-brand: linear-gradient(135deg, #E85D4E, #F59E0B);
+  --grad-brand: linear-gradient(135deg, #2B4BF2, #6D4BFF);
   --radius-lg: 20px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --font: 'Bricolage Grotesque', 'Noto Sans SC', sans-serif;
@@ -25,7 +25,7 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(900px 500px at 80% -10%, rgba(232, 93, 78, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 80% -10%, rgba(43, 75, 242, 0.06), transparent 60%),
     radial-gradient(700px 420px at 10% 110%, rgba(15, 118, 110, 0.05), transparent 60%),
     var(--bg);
   padding: 60px 0 100px;
@@ -36,7 +36,7 @@
   inset: 0;
   background: radial-gradient(
     600px circle at 50% 30%,
-    rgba(232, 93, 78, 0.06),
+    rgba(43, 75, 242, 0.06),
     rgba(245, 158, 11, 0.03) 45%,
     transparent 65%
   );
@@ -206,6 +206,13 @@
 .compare-bar-fast span {
   width: 100%;
   background: var(--grad-brand);
+}
+
+.hero-caption {
+  margin-top: 14px;
+  font-size: 0.86rem;
+  color: var(--text-light);
+  letter-spacing: 0.01em;
 }
 
 .compare-arrow {

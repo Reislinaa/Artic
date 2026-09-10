@@ -22,8 +22,8 @@
   height: 56px;
   margin: 0 auto 16px;
   border-radius: 50%;
-  border: 1px solid rgba(232, 93, 78, 0.3);
-  background: rgba(232, 93, 78, 0.08);
+  border: 1px solid rgba(43, 75, 242, 0.3);
+  background: rgba(43, 75, 242, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,7 +39,7 @@
   color: #fff;
   border-color: transparent;
   transform: scale(1.08);
-  box-shadow: 0 8px 20px rgba(232, 93, 78, 0.25);
+  box-shadow: 0 8px 20px rgba(43, 75, 242, 0.25);
 }
 
 .step-title {
