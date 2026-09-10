@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Reveal from './Reveal'
+import DisperseText from './DisperseText'
 import './FeatureShowcase.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -468,7 +469,9 @@ export default function FeatureShowcase() {
             <span className="section-kicker">Capabilities</span>
           </Reveal>
           <Reveal variant="blur">
-            <h2 className="section-title">润色质量，才是分水岭</h2>
+            <h2 className="section-title">
+              <DisperseText text="润色质量，才是分水岭" />
+            </h2>
           </Reveal>
           <Reveal delay={1} variant="fade">
             <p className="section-subtitle">

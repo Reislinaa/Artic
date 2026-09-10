@@ -10,29 +10,11 @@
 .pspecs {
   position: relative;
   border-top: 1px solid var(--border);
-  /* 聚光的坐标与显隐都由 JS 写在这三个变量上：
-     用变量控制显隐（而不是 :hover）更可靠 —— 指针移出窗口、或经过子元素时都不会卡在错误状态。 */
-  --mx: 50%;
-  --my: 0px;
-  --spot: 0;
 }
 
-/* 跟随指针的暖色聚光（react-bits「Spotlight」的范式，用单个径向渐变实现）。
-   放在行的下层：行本身背景透明，聚光从下面透出来，不会压到文字上。 */
-.pspecs-spot {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: var(--spot, 0);
-  transition: opacity 0.4s var(--ease-out);
-  background: radial-gradient(
-    280px circle at var(--mx) var(--my),
-    rgba(245, 158, 11, 0.20),
-    rgba(245, 158, 11, 0.06) 46%,
-    transparent 72%
-  );
-}
+/* 说明：这里原有一层「跟随鼠标的暖色聚光」。
+   实测在白色卡片上它只是一片半透明污渍（模糊半径远大于文字，反而不干净），
+   已按用户反馈移除。交互改为**逐行**响应，见下方 .pspec:hover。 */
 
 /* ============ 行 ============ */
 .pspec {

@@ -21,15 +21,22 @@
   isolation: isolate;
 }
 
-/* 弥散光斑：大、软、偏右，边缘必须完全化开 */
-.hero-glow {
+/* 弥散光斑：大、软、偏右，边缘必须完全化开。
+   垂直居中交给外层 wrap，**transform 完全留给 GSAP**
+   （呼吸 + 随鼠标漂移）—— 否则 CSS 关键帧与 GSAP 会争同一个属性。 */
+.hero-glow-wrap {
   position: absolute;
   top: 46%;
   right: -6%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.hero-glow {
+  display: block;
   width: min(880px, 76vw);
   height: min(880px, 76vw);
   border-radius: 50%;
-  pointer-events: none;
   background: radial-gradient(
     circle at 50% 50%,
     rgba(253, 230, 138, 0.92) 0%,
@@ -39,13 +46,6 @@
     transparent 76%
   );
   filter: blur(64px);
-  transform: translateY(-50%);
-  animation: blobDrift 24s ease-in-out infinite alternate;
-}
-
-@keyframes blobDrift {
-  0% { transform: translateY(-50%) translateX(0) scale(1); }
-  100% { transform: translateY(-50%) translateX(-2%) scale(1.05); }
 }
 
 /* 左下再补一小团，避免画面只有单点 */
@@ -93,6 +93,39 @@
   align-items: center;
 }
 
+/* ============ 产品小窗口：浮动 / 3D 倾斜 / 内层视差 分三层 ============
+   三层各自负责一个 transform，避免 GSAP 与 CSS 抢同一属性：
+     .hero-window       → 常驻上下浮动（y）
+     .hero-window-tilt  → 鼠标 3D 旋转 + 轻微位移
+     .hero-window-body  → 内层视差（位移比外框更大 → 景深）
+   高光用 CSS 变量 --gx/--gy 定位，由 JS 直接写，不经过 React。 */
+.hero-window {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-window-tilt {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  transform-style: preserve-3d;
+}
+
+.hero-window-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: var(--radius-xl);
+  pointer-events: none;
+  background: radial-gradient(
+    260px circle at var(--gx, 50%) var(--gy, 50%),
+    rgba(245, 158, 11, 0.16),
+    rgba(245, 158, 11, 0.05) 45%,
+    transparent 70%
+  );
+}
+
 /* ============ 编辑式小标签：极小 + 宽字距 + 大写，无胶囊 ============ */
 .hero-tag {
   display: block;
@@ -120,10 +153,13 @@
 
 /* 强调行不再用渐变填充，只把字重提上去 + 一道短下划线。
    参考图的彩色全部来自光斑，文字保持纯黑。 */
+/* 注意：这里**刻意不写 display**。
+   `.hero-line` 的 `display: block` 负责强制换行，`width: fit-content` 让下划线
+   只覆盖文字长度。两者都写 display 会互相覆盖，导致两行标题并排。 */
 .hero-gradient {
   color: var(--text);
   position: relative;
-  display: inline-block;
+  width: fit-content;
   padding-bottom: 0.06em;
 }
 

@@ -245,6 +245,13 @@ button {
   line-height: 1.8;
 }
 
+/* ============ 文字随鼠标弥散（DisperseText） ============
+   每个字是一个 inline-block，才能被独立位移/模糊。
+   不写 will-change：一屏几十个字符会因此生成大量合成层，反而更慢。 */
+.dt-char {
+  display: inline-block;
+}
+
 /* 细分割线工具类 */
 .hairline {
   height: 1px;

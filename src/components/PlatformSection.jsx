@@ -1,4 +1,6 @@
 import Reveal from './Reveal'
+import DisperseText from './DisperseText'
+import MagneticButton from './MagneticButton'
 import PlatformSpecs from './PlatformSpecs'
 import './PlatformSection.css'
 
@@ -11,7 +13,9 @@ export default function PlatformSection({ onNavigate }) {
           <span className="section-kicker">Works everywhere you type</span>
         </Reveal>
         <Reveal variant="blur">
-          <h2 className="section-title">一处习惯，处处如一</h2>
+          <h2 className="section-title">
+            <DisperseText text="一处习惯，处处如一" />
+          </h2>
         </Reveal>
         <Reveal delay={1} variant="fade">
           <p className="section-subtitle">
@@ -23,9 +27,12 @@ export default function PlatformSection({ onNavigate }) {
 
         <Reveal delay={2} variant="up">
           <div className="platform-cta">
-            <button className="btn btn-primary btn-lg" onClick={() => onNavigate('download')}>
+            <MagneticButton
+              className="btn btn-primary btn-lg"
+              onClick={() => onNavigate('download')}
+            >
               选择你的平台下载
-            </button>
+            </MagneticButton>
           </div>
         </Reveal>
       </div>

@@ -195,6 +195,58 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-10 · v14 移除平台表聚光 + 新增一组鼠标动效（弥散文字 / 小窗口 3D / 磁吸按钮 / 逐行入场）
+**用户要求**：去掉平台表那个「随鼠标的光圈」；并且**「多来点动效，别不舍得加」**——
+文字随鼠标弥散、小窗口随鼠标动画。附 `GSAP 动画开发助手` 技能。
+
+**① 移除（用户指出难看）**
+- 平台表的 `.pspecs-spot`（跟随指针的暖色聚光）连同其 mousemove 逻辑一并删除。
+  原因：模糊半径远大于文字，在白色卡片上只是一片半透明污渍，比不加更脏。
+- 逐行交互保留（用户未反对）：悬停该行 → 索引转橙 + 图标微抬 + 箭头滑入。
+
+**② 新增：文字随鼠标弥散** —— 新组件 `DisperseText.jsx`
+- 文本按**字符**拆成 `inline-block`；光标附近的字沿「字 → 光标」**反方向**被推开，
+  同时轻微放大（+7%）、模糊（≤4px）、降透明（−28%），离开半径自动复位（RADIUS = 150px）
+- 性能取舍：window 级 passive mousemove + rAF 节流；每个实例先判断光标是否靠近自己，
+  远离则直接 return；用 dirty 集合**只复位被改过的字符**；只写 transform / filter / opacity；
+  **刻意不写 `will-change`**（一屏几十个字符会生成大量合成层，反而更慢）
+- 触摸设备（不匹配 `hover: hover and pointer: fine`）与 `prefers-reduced-motion` 下**完全不启用**
+- 接入：Hero 标题两行 + 四个区块标题（步骤 / 功能 / 平台 / 图标）
+
+**③ 新增：小窗口随鼠标动画** —— `Hero.jsx` + `Hero.css`
+- **三层 DOM 分工**，避免 GSAP 与 CSS 争抢同一个 transform：
+  `.hero-window`（常驻上下浮动 y）→ `.hero-window-tilt`（鼠标 3D 旋转 + 位移）→
+  `.hero-window-body`（内层视差：位移比外框更大 → 景深）
+- 另加跟随光标的**暖色高光** `.hero-window-glare`（写 CSS 变量 `--gx/--gy`，不经过 React）
+- 全部用 `gsap.quickTo` 平滑逼近，快速移动指针时不跳变
+
+**④ 新增：光斑随鼠标漂移** —— 弥散光斑在常驻「呼吸」（scale / opacity）之外，
+  再叠加一个与光标**反向**的位移（x / y），产生「光被推开」的弥散感。
+  为此把定位拆出 `.hero-glow-wrap`（负责垂直居中），**transform 完全留给 GSAP**。
+
+**⑤ 新增：磁吸按钮** —— 新组件 `MagneticButton.jsx`
+- 指针靠近时按钮被「吸」过去（位移 = 光标到中心距离 × 0.3），离开后弹回
+- 用在 Hero 主 CTA 与平台区 CTA
+
+**⑥ 新增：平台表逐行入场** —— GSAP + ScrollTrigger（`once: true`），自上而下 stagger 浮现
+
+**顺手修掉一个 display 冲突**
+- `.hero-line`（`display: block`，负责换行）与 `.hero-gradient`（`display: inline-block`）
+  都设了 display，后写的赢 → **两行标题会并排**。
+  改为 `.hero-gradient` 不写 display，用 `width: fit-content` 让橙色下划线贴合文字长度。
+
+**验证与部署结果**（线上实测计算样式）：
+- 聚光已移除：页面查不到 `.pspecs-spot`
+- 文字弥散：光标贴近字符 →
+  `translate3d(20.99px, 0.24px, 0) scale(1.067); blur(3.82px); opacity: 0.733`
+- 小窗口倾斜：`rotateY ≈ −9.1°` + 透视 1000；内层视差 `(11.82, −9.24)`；
+  光斑 `scale 1.078 + (−20.08, 10)`
+- 高光跟随：`--gx 95.4% / --gy 3.8%`
+- 磁吸按钮：悬停位移 `(15.25, −6.01)` → 离开复位 `(0, 0)`
+- 平台表逐行入场：进入视口前 `opacity 0` → 入场后全为 `1`
+- 构建通过；lint 无错误
+- 部署 → https://reislinaa.github.io/Artic/
+
 ### 2026-09-10 · v13 重做「四步开始」为贯通式 stepper + 滚动 / 鼠标 GSAP 动效
 **用户要求**：要「随鼠标和滑动页面的动效」；并且「四步开始」这块**重新设计（太丑）**。
 附 `GSAP 动画开发助手` 技能。

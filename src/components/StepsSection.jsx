@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Reveal from './Reveal'
+import DisperseText from './DisperseText'
 import './StepsSection.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -111,7 +112,9 @@ export default function StepsSection() {
           <span className="section-kicker">Get started</span>
         </Reveal>
         <Reveal>
-          <h2 className="section-title">四步开始</h2>
+          <h2 className="section-title">
+            <DisperseText text="四步开始" />
+          </h2>
         </Reveal>
         <Reveal>
           <p className="section-subtitle">零学习成本，像使用普通输入法一样简单</p>

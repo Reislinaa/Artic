@@ -1,6 +1,10 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { siApple, siAppstore, siAndroid, siGooglechrome, siLinux } from 'simple-icons'
 import './PlatformSpecs.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // simple-icons v16 因商标下架了 Windows 官方图标，这里保留官方四格旗的规范 path，
 // 与其余来自 simple-icons 的品牌标保持一致。
@@ -26,46 +30,49 @@ const PLATFORMS = [
  * 平台支持表。
  *
  * 结构：索引 → 图标 + 名称 → 说明 → 状态 → 箭头。
- * 与上一版的差别：
- *   · 不再用 `max-width + margin auto` 居中 —— 那会让表格左边缘与页头标题错位；
- *     现在与页头同一起始线，并吃满容器宽度，消除右侧大片空白。
- *   · 标签移到最右成为「状态列」，中间不再夹着两个空洞。
- *   · 每行可点击（跳下载页），因此悬停反馈是「真实可交互」而不是装饰。
+ * 与上一版的差别：索引与名称仍在左侧对齐页头，标签移到最右成为「状态列」。
  *
- * 鼠标交互：整表有一个跟随指针的暖色聚光（react-bits 的 Spotlight 范式）。
- * 位置写在 CSS 变量上，用 rAF 节流，**不触发 React 重渲染**。
+ * 说明：这里**曾经有一层跟随鼠标的暖色聚光**，已按用户反馈移除 ——
+ * 它在白色卡片上会糊成一片半透明污渍，比不加更难看。
+ * 交互改为**逐行**的：悬停该行时索引转橙、图标微抬、箭头滑入。
  */
 export default function PlatformSpecs({ onNavigate }) {
-  const wrapRef = useRef(null)
-  const frameRef = useRef(0)
+  const listRef = useRef(null)
 
-  const handleMove = (e) => {
-    if (frameRef.current) return
-    const { clientX, clientY } = e
-    frameRef.current = requestAnimationFrame(() => {
-      frameRef.current = 0
-      const el = wrapRef.current
-      if (!el) return
-      const rect = el.getBoundingClientRect()
-      el.style.setProperty('--mx', `${clientX - rect.left}px`)
-      el.style.setProperty('--my', `${clientY - rect.top}px`)
-      el.style.setProperty('--spot', '1')
+  /* 逐行入场：进入视口时从上往下依次浮现。
+     用 fromTo —— CSS 的默认状态是「已显示」，所以 JS 未执行
+     或用户开了 prefers-reduced-motion 时，表格依然完整可读。 */
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    const rows = list.querySelectorAll('.pspec')
+    if (!rows.length) return
+
+    const mm = gsap.matchMedia()
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const tween = gsap.fromTo(
+        rows,
+        { autoAlpha: 0, y: 18 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.07,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: list, start: 'top 88%', once: true }
+        }
+      )
+      return () => {
+        tween.kill()
+        gsap.set(rows, { clearProps: 'all' })
+      }
     })
-  }
 
-  const handleLeave = () => {
-    if (frameRef.current) {
-      cancelAnimationFrame(frameRef.current)
-      frameRef.current = 0
-    }
-    wrapRef.current?.style.setProperty('--spot', '0')
-  }
+    return () => mm.revert()
+  }, [])
 
   return (
-    <div className="pspecs" ref={wrapRef} onMouseMove={handleMove} onMouseLeave={handleLeave}>
-      {/* 跟随指针的聚光层：放在行之下，不遮挡文字 */}
-      <div className="pspecs-spot" aria-hidden="true" />
-
+    <div className="pspecs" ref={listRef}>
       {PLATFORMS.map((p, i) => (
         <button
           type="button"
