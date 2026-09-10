@@ -186,6 +186,49 @@
 /* v11：去掉 hover 抬升 + 缩放。
    「产品截图悬停时整体浮起并放大」是模板页面的典型动作，这里不再需要。 */
 
+/* ============================================================
+   v15 · 立主次
+   「口语 → 书面语」是产品的核心差异，它必须在这 7 条里被一眼认出来，
+   而不是和「隐私优先」长得一模一样 —— 这正是上一版「平平无奇」的机制。
+   手法保持克制：一条橙色短线 + 一枚墨黑小标签 + 放大的标题与更多留白。
+   不新增卡片色块、不加图标、不放大橙色面积。
+   ============================================================ */
+.feature-band-featured {
+  padding: 96px 0;
+}
+
+.feature-band-featured .feature-band-content::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 22px;
+}
+
+.feature-band-featured .feature-title {
+  font-size: clamp(2rem, 3.4vw, 2.7rem);
+}
+
+.feature-band-featured .feature-desc {
+  font-size: 1.1rem;
+  color: var(--text-2);
+}
+
+.feature-chip {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  vertical-align: 1px;
+}
+
 /* ============ 聊天框模拟 (AI 语音转写) ============ */
 .mockup-chatbox {
   width: 100%;

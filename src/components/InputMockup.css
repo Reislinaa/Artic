@@ -1,169 +1,297 @@
-/* ============ 产品 UI 模拟（聊天 / 语音转写） ============
-   PDF 规范：黑白主导，橙色只用于「关键行动按钮」。
-   因此气泡与头像统一为墨黑，橙色只保留在麦克风按钮（核心动作）上。
-   这张白卡在黑底区块里正好复刻 PDF「黑底 + 白色卡片」的对比。 */
-.chatbox {
+/* ============ 首屏产品演示：口语 → 商务稿 ============
+   配色：黑白主导，**橙色只出现在麦克风**（核心动作）。
+   动效只服务一件事——展示产品怎么工作：
+     转写逐字出现 → 改写提示 → 成稿逐字输出 → 口语原句被划掉。
+   ⚠️ 这里没有任何跟随鼠标的效果（v15 明确移除）。 */
+
+.demo {
   width: 100%;
-  max-width: 360px;
+  max-width: 440px;
   margin: 0 auto;
   background: var(--surface);
-  /* 显式声明文字色：本组件常被放进深色区块，避免继承白色导致白底白字 */
+  /* 显式声明文字色：避免落进深色区块时继承白色 */
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  box-shadow:
-    0 1px 2px rgba(16, 16, 16, 0.04),
-    0 18px 48px rgba(16, 16, 16, 0.16);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   font-family: var(--font);
 }
 
-.chatbox-header {
+/* —— 窗口头 —— */
+.demo-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px 20px;
-  background: var(--bg);
+  padding: 11px 16px;
+  background: var(--surface-2);
   border-bottom: 1px solid var(--border);
 }
 
-.chatbox-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--ink);
+.demo-window-dots {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--on-ink);
-  font-weight: 700;
-  font-size: 0.95rem;
+  gap: 5px;
 }
 
-.chatbox-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
+.demo-window-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border-strong);
 }
 
-.chatbox-body {
-  padding: 24px 20px;
+.demo-header-title {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  letter-spacing: 0.01em;
+}
+
+/* —— 主体 —— */
+.demo-body {
+  padding: 20px 18px 16px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-height: 240px;
+  gap: 12px;
 }
 
-.chat-msg {
-  max-width: 82%;
-  padding: 12px 16px;
-  border-radius: 10px;
+.demo-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.demo-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 18px;
+}
+
+.demo-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--text-light);
+}
+
+.demo-label-strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* 录音 / 转写状态 */
+.demo-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.3s var(--ease-soft);
+}
+
+.demo-rec[data-on='false'] {
+  opacity: 0.45;
+}
+
+.demo-rec-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-light);
+}
+
+.demo-rec[data-on='true'] .demo-rec-dot {
+  background: var(--text);
+  animation: demoRec 1.1s ease-in-out infinite;
+}
+
+@keyframes demoRec {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* 正文 */
+.demo-text {
+  min-height: 1.68em;
   font-size: 0.95rem;
-  line-height: 1.55;
+  line-height: 1.68;
+  color: var(--text);
   word-break: break-word;
 }
 
-.chat-msg-them {
-  align-self: flex-start;
-  background: var(--surface-2);
-  color: var(--text);
-  border-bottom-left-radius: 3px;
+/* 口语原句：成稿出来后变灰并被划掉 —— 用「被替换掉」来讲故事 */
+.demo-text-raw {
+  color: var(--text-2);
+  transition: color 0.5s var(--ease-out);
 }
 
-/* 我方消息：墨黑（不再用橙色，避免橙面积超规范） */
-.chat-msg-me {
-  align-self: flex-end;
-  background: var(--ink);
-  color: var(--on-ink);
-  border-bottom-right-radius: 3px;
+.demo-text-raw[data-done='true'] {
+  color: var(--text-light);
+  text-decoration: line-through;
+  text-decoration-color: var(--border-strong);
+  text-decoration-thickness: 1px;
 }
 
-.chat-msg-voice {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  min-width: 140px;
+/* 成稿：整块在输出前占好位（保证卡片高度稳定，不会跳） */
+.demo-block-out {
+  transition: opacity 0.45s var(--ease-out), visibility 0.45s;
 }
 
-.chat-voice-wave {
+.demo-block-out[data-visible='false'] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.demo-text-out {
+  font-weight: 500;
+}
+
+/* 「正在改写」过渡行 */
+.demo-process {
   display: flex;
   align-items: center;
+  gap: 8px;
+  height: 18px;
+  font-size: 0.75rem;
+  color: var(--text-light);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.demo-process[data-visible='true'] {
+  opacity: 1;
+}
+
+.demo-dots {
+  display: inline-flex;
   gap: 3px;
-  height: 24px;
 }
 
-.chat-voice-wave span {
-  display: block;
+.demo-dots i {
   width: 3px;
-  height: calc(var(--h) * 22px);
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 99px;
-  animation: chatWave 1.2s ease-in-out infinite alternate;
-  animation-delay: var(--d);
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: demoDot 1.2s ease-in-out infinite;
 }
 
-@keyframes chatWave {
-  from { transform: scaleY(0.35); opacity: 0.45; }
-  to   { transform: scaleY(1); opacity: 1; }
+.demo-dots i:nth-child(2) { animation-delay: 0.15s; }
+.demo-dots i:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes demoDot {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-2px); }
 }
 
-.chat-voice-time {
-  font-size: 0.82rem;
-  opacity: 0.9;
-  font-variant-numeric: tabular-nums;
+/* 成稿状态徽章（墨黑，不用橙 —— 橙留给麦克风） */
+.demo-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 0.68rem;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
 }
 
-.chatbox-footer {
-  padding: 12px 16px 16px;
+.demo-badge[data-visible='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* 打字光标 */
+.demo-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.14em;
+  background: var(--text);
+  animation: demoCaret 0.95s steps(1) infinite;
+}
+
+@keyframes demoCaret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* —— 底部输入条 —— */
+.demo-footer {
+  padding: 12px 16px 14px;
+  background: var(--surface-2);
   border-top: 1px solid var(--border);
-  background: var(--bg);
 }
 
-.chatbox-input {
+.demo-input {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 14px;
+  padding: 9px 12px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
 }
 
-.chatbox-input-text {
-  font-size: 0.9rem;
+.demo-input-text {
+  font-size: 0.82rem;
   color: var(--text-light);
 }
 
-/* 唯一的橙色：核心行动（按住说话） */
-.chatbox-input-mic {
-  width: 32px;
-  height: 32px;
+/* 全站唯一的橙色：核心动作 */
+.demo-mic {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--ink);
-  flex-shrink: 0;
-  box-shadow: 0 0 0 4px rgba(255, 138, 31, 0.16);
 }
 
-.chatbox-input-mic svg {
-  width: 16px;
-  height: 16px;
+.demo-mic svg {
+  width: 15px;
+  height: 15px;
+}
+
+.demo-mic-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  opacity: 0;
+}
+
+.demo-mic-ring[data-on='true'] {
+  animation: demoMicRing 1.4s ease-out infinite;
+}
+
+@keyframes demoMicRing {
+  0% { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.7); }
 }
 
 @media (max-width: 640px) {
-  .chatbox {
+  .demo {
     max-width: 100%;
   }
-  .chatbox-body {
-    min-height: 200px;
-    padding: 20px 16px;
+}
+
+/* 减少动效：JS 已直接给出最终结果，这里再兜一层无限动画 */
+@media (prefers-reduced-motion: reduce) {
+  .demo-caret,
+  .demo-rec-dot,
+  .demo-dots i,
+  .demo-mic-ring {
+    animation: none !important;
   }
-  .chat-msg {
-    font-size: 0.9rem;
+
+  .demo-caret {
+    display: none;
   }
 }

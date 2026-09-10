@@ -39,8 +39,11 @@ function Home({ onStartDemo }) {
     <>
       <PageGlow />
       <Hero onNavigate={onStartDemo} />
-      <StepsSection />
+      {/* 顺序（v15）：先讲「你凭什么不一样」，再讲「怎么开始」。
+          上一版把「四步开始」放在首屏之后 —— 下载 / 授权 / 按住说话是任何输入法
+          都有的内容，却占了最贵的位置，直接稀释了产品特色（用户反馈：看不出特色）。 */}
       <FeatureShowcase />
+      <StepsSection />
       <EverywhereSection />
       <PlatformSection onNavigate={onStartDemo} />
     </>

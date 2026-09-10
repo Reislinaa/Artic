@@ -2,19 +2,25 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Reveal from './Reveal'
-import DisperseText from './DisperseText'
 import './FeatureShowcase.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+/* 顺序即优先级（v15 调整）：
+   第一屏已经用「口语 → 商务稿」演示过产品的核心差异，这里必须**接着它讲**，
+   所以把「口语直接改成书面语」放在 01；其余按「独特性」递减排，
+   转写、词库、隐私这些**通用能力**放到后面。
+   上一版是按功能流水线排的（转写→纠正→格式化→编辑…），
+   结果最独家的能力被压在中间，和第 7 条长得一模一样 —— 用户看不出特色。 */
 const features = [
   {
-    id: 'voice',
+    id: 'edit',
     label: '01',
-    en: 'Voice to Text',
-    title: 'AI 语音转写',
-    desc: '自然说话即可生成准确文字。长句与专业术语都能被清晰识别，超长音频稳定 3 秒内出稿——说完即所得。',
-    mockup: 'phone'
+    en: 'Speak to Edit',
+    title: '口语直接改成书面语',
+    desc: '说一句「改正式一点」，「这个方案我觉得还可以」就变成「该方案具备可行性」。不用手动选字删改，开口即可改稿——这是 ARTIC 和普通语音输入最本质的区别。',
+    mockup: 'edit',
+    featured: true
   },
   {
     id: 'correct',
@@ -33,20 +39,20 @@ const features = [
     mockup: 'format'
   },
   {
-    id: 'edit',
-    label: '04',
-    en: 'Speak to Edit',
-    title: '语音编辑',
-    desc: '不用手动选字删改，直接说"把最后一句改正式一点"，文字就会按你的指令变化。',
-    mockup: 'edit'
-  },
-  {
     id: 'tone',
-    label: '05',
+    label: '04',
     en: 'Personal Tone',
     title: '个性化文风',
     desc: '学习你的语气、习惯和表达偏好。给朋友轻松，给客户正式，让输出始终像你自己写的。',
     mockup: 'tone'
+  },
+  {
+    id: 'voice',
+    label: '05',
+    en: 'Voice to Text',
+    title: 'AI 语音转写',
+    desc: '自然说话即可生成准确文字。长句与专业术语都能被清晰识别，超长音频稳定 3 秒内出稿——说完即所得。',
+    mockup: 'phone'
   },
   {
     id: 'vocab',
@@ -77,8 +83,10 @@ function PhoneMockup() {
         </div>
       </div>
       <div className="mockup-chatbox-body">
+        {/* 内容必须是商务场景：全站定位是「商务写作」，演示却是约饭聊天，
+            是上一版「看不出产品特色」最直接的原因。 */}
         <div className="mockup-chatbox-bubble mockup-chatbox-bubble-them">
-          晚上吃饭吗？
+          周五的评审会你能来吗？
         </div>
         <div className="mockup-chatbox-bubble mockup-chatbox-bubble-me mockup-chatbox-bubble-voice">
           <div className="mockup-chatbox-wave" aria-hidden="true">
@@ -95,7 +103,7 @@ function PhoneMockup() {
           <span className="mockup-chatbox-voice-time">0:03</span>
         </div>
         <div className="mockup-chatbox-bubble mockup-chatbox-bubble-me">
-          好啊，想去那家新开的日料，七点可以吗？
+          可以，我把方案和排期一起带过去。
         </div>
       </div>
       <div className="mockup-chatbox-footer">
@@ -470,7 +478,7 @@ export default function FeatureShowcase() {
           </Reveal>
           <Reveal variant="blur">
             <h2 className="section-title">
-              <DisperseText text="润色质量，才是分水岭" />
+              润色质量，才是分水岭
             </h2>
           </Reveal>
           <Reveal delay={1} variant="fade">
@@ -488,12 +496,17 @@ export default function FeatureShowcase() {
           return (
             <div
               key={f.id}
-              className={`feature-band ${isEven ? 'feature-band-left' : 'feature-band-right'}`}
+              className={`feature-band ${isEven ? 'feature-band-left' : 'feature-band-right'}${
+                f.featured ? ' feature-band-featured' : ''
+              }`}
               ref={(el) => (bandsRef.current[i] = el)}
             >
               <div className="feature-band-inner">
                 <div className="feature-band-content">
-                  <span className="feature-text-line feature-label">{f.label}</span>
+                  <span className="feature-text-line feature-label">
+                    {f.label}
+                    {f.featured && <em className="feature-chip">核心能力</em>}
+                  </span>
                   <span className="feature-text-line feature-en">{f.en}</span>
                   <h3 className="feature-text-line feature-title">{f.title}</h3>
                   <p className="feature-text-line feature-desc">{f.desc}</p>

@@ -1,9 +1,7 @@
 /* ============ 四步开始 —— 贯通式 stepper ============
-   与上一版的差别：
-   · 原来是 4 段**断开**的短线 + 悬在空中孤零零的小数字；
-     现在是一条贯通整轨的线，数字做成线上的圆形节点 → 才读得出「步骤」。
-   · 说明文字固定两行高：原来 4 条分别是 1/1/2/2 行，下边缘参差。
-   · 入场动画交给 GSAP（原来 4 个块各用 up/scale/blur/fade 四种，模板感很重）。 */
+   · 一条贯通整轨的线，数字是线上的圆形节点 → 才读得出「步骤」
+   · 说明文字固定两行高，避免四条下边缘参差
+   · 动效只有滚动驱动的一层（v15 删掉了跟随鼠标的光环），见 StepsSection.jsx */
 
 .steps-section {
   background: var(--paper-2);
@@ -35,27 +33,6 @@
   /* 默认即「已填满」：JS 未执行 / 减少动效时，线依然是完整的 */
   transform: scaleX(1);
   transform-origin: left center;
-}
-
-/* 跟随鼠标的光环：沿轨道滑到所悬停的节点上 */
-.steps-halo {
-  position: absolute;
-  top: -17px;
-  left: 0;
-  margin-left: -17px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
-  background: radial-gradient(
-    circle,
-    rgba(245, 158, 11, 0.30) 0%,
-    rgba(245, 158, 11, 0.10) 46%,
-    transparent 72%
-  );
 }
 
 .steps-grid {
@@ -92,16 +69,16 @@
   color: var(--text-light);
   background: var(--paper-2);
   border: 1px solid var(--border-strong);
-  transition: transform 0.35s var(--ease-out), background 0.3s var(--ease-soft),
-    border-color 0.3s var(--ease-soft), color 0.3s var(--ease-soft);
+  transition: border-color 0.3s var(--ease-soft), color 0.3s var(--ease-soft);
 }
 
+/* v15：悬停不再「放大 + 填满橙色」。
+   4 个节点在悬停时整块变橙，是页面上最容易产生「橙色漂浮」的交互；
+   这里只把边框与数字加深，作为一个安静的反馈。 */
 .step-card:hover .step-num,
 .step-card:focus-within .step-num {
-  transform: scale(1.15);
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--ink);
+  border-color: var(--text);
+  color: var(--text);
 }
 
 .step-body {
@@ -126,11 +103,9 @@
 }
 
 /* ============ 窄屏 ============
-   两列/单列时一条横线不再成立，改为每格自带一条上边线，节点贴在自己那条线上。
-   鼠标光环也一并隐藏（触摸设备没有悬停）。 */
+   两列 / 单列时一条横线不再成立，改为每格自带一条上边线，节点贴在自己那条线上。 */
 @media (max-width: 992px) {
-  .steps-line,
-  .steps-halo {
+  .steps-line {
     display: none;
   }
 

@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import Reveal from './Reveal'
-import DisperseText from './DisperseText'
 import { APP_ICONS } from '../data/app-icons'
 import './EverywhereSection.css'
 
@@ -118,7 +117,7 @@ export default function EverywhereSection() {
         </Reveal>
         <Reveal variant="blur">
           <h2 className="section-title">
-            <DisperseText text="你在哪写，它就在哪" />
+            你在哪写，它就在哪
           </h2>
         </Reveal>
         <Reveal delay={1} variant="fade">

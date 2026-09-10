@@ -93,37 +93,22 @@
   align-items: center;
 }
 
-/* ============ 产品小窗口：浮动 / 3D 倾斜 / 内层视差 分三层 ============
-   三层各自负责一个 transform，避免 GSAP 与 CSS 抢同一属性：
-     .hero-window       → 常驻上下浮动（y）
-     .hero-window-tilt  → 鼠标 3D 旋转 + 轻微位移
-     .hero-window-body  → 内层视差（位移比外框更大 → 景深）
-   高光用 CSS 变量 --gx/--gy 定位，由 JS 直接写，不经过 React。 */
+/* 演示卡必须吃满右栏宽度。
+   .hero-col-right 是 flex 容器，子项默认 shrink-to-fit ——
+   实测 490px 的栏里卡片只渲染出 327px，产品演示因此显得很小、没有存在感。
+   演示卡就是「产品凭什么不一样」的证据，它必须够醒目。 */
+.hero-col-right > * {
+  width: 100%;
+}
+
+/* ============ 产品演示窗口 ============
+   v15：这里原来分三层承载「浮动 / 3D 倾斜 / 内层视差」，并有一层跟随光标的高光。
+   三层都是鼠标驱动，已全部移除 —— 窗口现在静置，动效只发生在它内部
+   （文字逐字出现，见 InputMockup.jsx）。 */
 .hero-window {
   width: 100%;
   display: flex;
   justify-content: center;
-}
-
-.hero-window-tilt {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
-  transform-style: preserve-3d;
-}
-
-.hero-window-glare {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-radius: var(--radius-xl);
-  pointer-events: none;
-  background: radial-gradient(
-    260px circle at var(--gx, 50%) var(--gy, 50%),
-    rgba(245, 158, 11, 0.16),
-    rgba(245, 158, 11, 0.05) 45%,
-    transparent 70%
-  );
 }
 
 /* ============ 编辑式小标签：极小 + 宽字距 + 大写，无胶囊 ============ */

@@ -1,133 +1,57 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import Reveal from './Reveal'
-import DisperseText from './DisperseText'
-import MagneticButton from './MagneticButton'
 import InputMockup from './InputMockup'
 
 /**
  * Hero。
  *
- * 鼠标动效分四组，全部用 GSAP 的 quickTo 做平滑跟随：
- *   ① 弥散光斑     —— 常驻「呼吸」+ 随鼠标反向漂移
- *   ② 产品小窗口   —— 常驻上下浮动
- *   ③ 产品小窗口   —— 3D 倾斜（rotateX / rotateY）+ 轻微位移，朝向光标
- *   ④ 窗口内层     —— 视差位移比外框更大，形成景深
- * 另加一层跟随光标的高光（写 CSS 变量，不经过 React）。
+ * 动效原则（v15）：**只保留光斑的缓慢「呼吸」这一层环境动效**。
  *
- * 三层 DOM 分开承载「浮动 / 倾斜 / 视差」，是为了让 GSAP 与 CSS
- * 不要在同一个 transform 上打架（同一个属性被两处驱动会互相覆盖）。
+ * 原先堆在这里的鼠标跟随全部移除：
+ *   · 光斑随光标反向漂移
+ *   · 产品窗口 3D 倾斜（rotateX / rotateY）
+ *   · 窗口内层视差
+ *   · 跟随光标的高光斑
+ *   · 标题文字随光标「弥散」（逐字被推开 + 变模糊）
+ *   · CTA 磁吸
+ * 理由：它们是「炫技作品集」的视觉语言，与「这是一款让你写出正式商务稿的工具」
+ * 的气质冲突；而且文字弥散会直接把标题推歪、糊掉，干扰阅读。
+ *
+ * 真正承担说服力的动效，交给右侧的产品演示 —— 它展示的是产品怎么工作：
+ * 口语逐字转写 → 改写为书面语 → 成稿逐字输出。
  */
 export default function Hero({ onStartDemo, onNavigate }) {
-  const heroRef = useRef(null)
   const glowRef = useRef(null)
-  const floatRef = useRef(null)
-  const tiltRef = useRef(null)
-  const bodyRef = useRef(null)
-  const glareRef = useRef(null)
 
   useEffect(() => {
-    const hero = heroRef.current
-    if (!hero) return
-
     const mm = gsap.matchMedia()
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const tweens = []
-
-      /* ① 光斑常驻呼吸（property 与「鼠标漂移」的 x/y 不重叠） */
-      if (glowRef.current) {
-        tweens.push(
-          gsap.to(glowRef.current, {
-            scale: 1.08,
-            opacity: 0.92,
-            duration: 7,
-            ease: 'sine.inOut',
-            yoyo: true,
-            repeat: -1
-          })
-        )
-      }
-
-      /* ② 小窗口常驻轻浮（放在最外层，避开鼠标控制的 y） */
-      if (floatRef.current) {
-        tweens.push(
-          gsap.to(floatRef.current, {
-            y: -12,
-            duration: 3.6,
-            ease: 'sine.inOut',
-            yoyo: true,
-            repeat: -1
-          })
-        )
-      }
-
-      /* ③④ 鼠标跟随：quickTo 让每次更新都是「向目标平滑逼近」而不是硬切 */
-      const tilt = tiltRef.current
-      const glare = glareRef.current
-      if (tilt) gsap.set(tilt, { transformPerspective: 1000, transformOrigin: 'center center' })
-
-      const glowX = glowRef.current ? gsap.quickTo(glowRef.current, 'x', { duration: 1.1, ease: 'power3.out' }) : null
-      const glowY = glowRef.current ? gsap.quickTo(glowRef.current, 'y', { duration: 1.1, ease: 'power3.out' }) : null
-      const rotX = tilt ? gsap.quickTo(tilt, 'rotationX', { duration: 0.8, ease: 'power3.out' }) : null
-      const rotY = tilt ? gsap.quickTo(tilt, 'rotationY', { duration: 0.8, ease: 'power3.out' }) : null
-      const winX = tilt ? gsap.quickTo(tilt, 'x', { duration: 0.8, ease: 'power3.out' }) : null
-      const winY = tilt ? gsap.quickTo(tilt, 'y', { duration: 0.8, ease: 'power3.out' }) : null
-      const bodyX = bodyRef.current ? gsap.quickTo(bodyRef.current, 'x', { duration: 0.9, ease: 'power3.out' }) : null
-      const bodyY = bodyRef.current ? gsap.quickTo(bodyRef.current, 'y', { duration: 0.9, ease: 'power3.out' }) : null
-
-      const onMove = (e) => {
-        const hr = hero.getBoundingClientRect()
-        const nx = (e.clientX - hr.left) / hr.width - 0.5
-        const ny = (e.clientY - hr.top) / hr.height - 0.5
-
-        /* 光斑朝鼠标反方向漂移：产生「光被推开」的弥散感 */
-        if (glowX) glowX(-nx * 54)
-        if (glowY) glowY(-ny * 40)
-
-        if (!tilt) return
-        const cr = tilt.getBoundingClientRect()
-        const px = (e.clientX - cr.left) / cr.width - 0.5
-        const py = (e.clientY - cr.top) / cr.height - 0.5
-
-        if (rotY) rotY(px * 20)
-        if (rotX) rotX(-py * 16)
-        if (winX) winX(px * 14)
-        if (winY) winY(py * 10)
-        if (bodyX) bodyX(px * 26)
-        if (bodyY) bodyY(py * 20)
-
-        if (glare) {
-          glare.style.setProperty('--gx', `${(px + 0.5) * 100}%`)
-          glare.style.setProperty('--gy', `${(py + 0.5) * 100}%`)
-        }
-      }
-
-      hero.addEventListener('mousemove', onMove, { passive: true })
-
-      return () => {
-        hero.removeEventListener('mousemove', onMove)
-        tweens.forEach((t) => t.kill())
-        gsap.set(
-          [glowRef.current, floatRef.current, tiltRef.current, bodyRef.current].filter(Boolean),
-          { clearProps: 'all' }
-        )
-      }
+      if (!glowRef.current) return
+      const tween = gsap.to(glowRef.current, {
+        scale: 1.06,
+        opacity: 0.9,
+        duration: 9,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1
+      })
+      return () => tween.kill()
     })
 
     return () => mm.revert()
   }, [])
 
   return (
-    <section className="hero" id="home" ref={heroRef}>
-      {/* 黑底时期遗留的命名保留：hero-glow 现在是一团橙黄弥散光斑 */}
+    <section className="hero" id="home">
       <div className="hero-glow-wrap" aria-hidden="true">
         <span className="hero-glow" ref={glowRef} />
       </div>
       <div className="hero-horizon" aria-hidden="true" />
 
       <div className="hero-content">
-        {/* Left column: copy + actions + compare */}
+        {/* Left column: 主张 + 行动 + 数据 */}
         <div className="hero-col hero-col-left">
           <Reveal>
             <span className="hero-tag">ARTIC · AI 语音成稿</span>
@@ -135,29 +59,26 @@ export default function Hero({ onStartDemo, onNavigate }) {
 
           <Reveal delay={1}>
             <h1 className="hero-title">
-              <DisperseText as="span" className="hero-line" text="说出来" />
-              <DisperseText as="span" className="hero-line hero-gradient" text="即成文" />
+              <span className="hero-line">说出来</span>
+              <span className="hero-line hero-gradient">就是商务稿</span>
             </h1>
           </Reveal>
 
           <Reveal delay={2}>
             <p className="hero-subtitle">
-              把说出口的话，变成能直接发出去的商务稿。
+              不是把语音变成字幕，是直接写成能发出去的稿。
               <br />
-              语音转写&nbsp;·&nbsp;商务润色&nbsp;·&nbsp;跨语言翻译&nbsp;·&nbsp;一键唤起
+              口语自动改书面语&nbsp;·&nbsp;说错自动纠正&nbsp;·&nbsp;一处习惯，处处能用
             </p>
           </Reveal>
 
           <Reveal delay={3}>
             <div className="hero-actions">
-              <MagneticButton
-                className="btn btn-primary btn-lg"
-                onClick={() => onNavigate('pricing')}
-              >
+              <button className="btn btn-primary btn-lg" onClick={() => onNavigate('pricing')}>
                 开始使用
-              </MagneticButton>
+              </button>
               <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('features')}>
-                了解更多
+                看它怎么改稿
               </button>
             </div>
           </Reveal>
@@ -192,16 +113,11 @@ export default function Hero({ onStartDemo, onNavigate }) {
           </Reveal>
         </div>
 
-        {/* Right column: 产品小窗口（浮动 / 倾斜 / 视差 分三层） */}
+        {/* Right column: 产品演示（口语 → 商务稿，逐字出现） */}
         <div className="hero-col hero-col-right">
           <Reveal delay={3}>
-            <div className="hero-window" ref={floatRef}>
-              <div className="hero-window-tilt" ref={tiltRef}>
-                <span className="hero-window-glare" ref={glareRef} aria-hidden="true" />
-                <div className="hero-window-body" ref={bodyRef}>
-                  <InputMockup />
-                </div>
-              </div>
+            <div className="hero-window">
+              <InputMockup />
             </div>
           </Reveal>
         </div>
