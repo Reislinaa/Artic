@@ -195,6 +195,35 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-10 · v11 全站统一浅色（功能区与页脚去黑）+ 清理残留的「AI 味」动效
+**用户决定**（回应我提的两个判断点）：
+- 首页橙黄光斑强度：**保持现状**（大而软、边缘化开）
+- 中间「黑底 + 白色产品卡」功能区：**改成浅色，全站统一浅色**
+
+**代码改动痕迹**：
+- `FeatureShowcase.jsx`：去掉 `<section>` 上的 `ink` 类
+- `FeatureShowcase.css`
+  - 删除 v8 的整段深色覆盖（黑底 + 白字 + `hairline-ink` + 橙色序号）
+  - 改为浅色：区块底 `--paper-2`；奇偶带用「白带 `--paper` + 细线」交替区分
+  - `01–07` 序号由 44% 白改中性灰（浅色下 7 个橙色序号属于铺色）
+  - 去掉 `.feature-mockup-frame:hover` 的 `translateY(-6px) scale(1.01)`
+  - 麦克风图标由白改**墨色**（白压橙黄约 2.2:1 → 墨色约 9:1）
+- `Footer.css`：页脚由纯黑改米白 + 顶细线（"全站统一浅色"的最后一块黑）
+- `FeatureShowcase.jsx` 的 GSAP 滚动动效（本次新发现的「AI 味」残留）：
+  - 三条入场动画全部**去掉 `scale`**（缩放淡入是模板页面的签名动作）
+  - `ease: 'back.out(1.4)'`（回弹）→ `power2.out`
+  - `toggleActions: 'play none none reverse'` → **`play none none none`**：
+    原来向上滚动会把内容**倒放消失**，容易被误认为「内容没加载出来」
+- 说明：产品 mockup 自带 `background: var(--surface)` + `border` + 轻阴影，
+  从黑底换到米白底**无需改内部样式**即可分层
+
+**验证与部署结果**：
+- 构建通过；lint 无错误
+- 线上实测：`.feature-showcase` 底 `rgb(245,242,236)`、标题 `rgb(16,16,16)`、
+  描述与序号 `rgb(133,130,124)`、奇偶带 `rgb(255,255,255)`
+- 全站已无 `.ink` 深色区块（`grep className="…ink…"` 结果为 0）
+- 部署 → https://reislinaa.github.io/Artic/
+
 ### 2026-09-10 · v10 按参考 05 节重做：浅色主调 + 弥散光斑 + 系统性去「AI 味」
 **用户要求**：按参考文档 05 节「黑 + 白 + 黄 / 其他」（米白底 + 橙黄光斑）配色，
 并**降低设计里的 AI 味**。（附 `Taste` 技能。）

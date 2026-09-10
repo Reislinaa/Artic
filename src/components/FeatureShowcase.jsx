@@ -413,29 +413,35 @@ export default function FeatureShowcase() {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: band,
-            start: 'top 80%',
+            start: 'top 82%',
             end: 'top 30%',
-            toggleActions: 'play none none reverse'
+            /* v11：改为「只播一次」。
+               原来的 'play none none reverse' 会在向上滚动时把内容倒放消失，
+               容易被误认为「内容没加载出来」，也是模板感的来源。 */
+            toggleActions: 'play none none none'
           }
         })
 
+        /* v11：三条入场都去掉 scale 与回弹缓动。
+           「缩放淡入 + back.out 回弹」是 AI 生成页面最典型的动效签名，
+           这里统一成「轻微上移 + 淡入 + power2.out」。 */
         tl.fromTo(
           visual,
-          { opacity: 0, y: 50, scale: 0.96 },
-          { opacity: 1, y: 0, scale: 1, duration: 1, ease: 'power3.out' }
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }
         )
           .fromTo(
             texts,
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out' },
-            '-=0.7'
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out' },
+            '-=0.6'
           )
 
         if (bubbles.length) {
           tl.fromTo(
             bubbles,
-            { opacity: 0, y: 20, scale: 0.95 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.4)' },
+            { opacity: 0, y: 14 },
+            { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' },
             '-=0.4'
           )
         }
@@ -461,7 +467,7 @@ export default function FeatureShowcase() {
   }, [])
 
   return (
-    <section className="feature-showcase ink" id="features" ref={sectionRef}>
+    <section className="feature-showcase" id="features" ref={sectionRef}>
       <div className="feature-showcase-header">
         <div className="container-wide">
           <Reveal variant="fade">

@@ -104,58 +104,59 @@
 }
 
 /* ============================================================
-   v8 · 深色改造 —— 依据《万物本相 UI DESIGN REFERENCE》
-   整块黑底，产品 UI 卡保持白色 → 复刻 PDF「黑底 + 白色卡片」的对比手法；
-   橙色只给 01–07 序号（PDF 标题版式的序号用色）。
+   v11 · 改浅色 —— 全站统一浅色（用户 2026-09-10 决定）
+   此前这里是一整块黑底，靠黑底反衬白色产品卡。
+   改为米白底后，白卡靠自身的细线边框 + 轻阴影分层（mockup 自带 border）。
+   橙色不在这块出现：7 个序号用中性灰，避免「铺色」。
    ============================================================ */
 .feature-showcase {
-  background: var(--ink);
-  color: var(--on-ink);
+  background: var(--paper-2);
+  color: var(--text);
 }
 
 .feature-showcase-header {
-  background: var(--ink);
+  background: var(--paper-2);
 }
 
 .feature-showcase .section-title {
-  color: var(--on-ink);
+  color: var(--text);
 }
 
 .feature-showcase .section-subtitle {
-  color: var(--on-ink-2);
+  color: var(--text-light);
 }
 
 .feature-showcase .section-kicker {
-  color: var(--accent);
+  color: var(--text-light);
+  border-top-color: var(--border);
 }
 
-/* 奇偶两条带在黑底上靠「极淡的明度差」区分，而不是卡片色块 */
+/* 奇偶两条带：浅色下用「白带 + 细线」交替，靠明度差区分 */
 .feature-showcase .feature-band:nth-child(odd) {
-  background: rgba(255, 255, 255, 0.022);
-  border-top: 1px solid var(--hairline-ink);
-  border-bottom: 1px solid var(--hairline-ink);
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
-/* 序号 01–07 改中性灰：7 个橙色序号在这块黑底上属于「铺色」，
-   与本区块的纯黑白气质冲突。橙色让给 Hero 的 CTA 与数据。 */
+/* 序号 01–07 用中性灰：7 个橙色序号属于铺色，橙色让给 Hero 光斑与 CTA */
 .feature-showcase .feature-label {
-  color: var(--on-ink-3);
+  color: var(--text-light);
   letter-spacing: 0.2em;
 }
 
 .feature-showcase .feature-en {
-  color: var(--on-ink-3);
+  color: var(--text-light);
 }
 
 .feature-showcase .feature-title {
-  color: var(--on-ink);
+  color: var(--text);
 }
 
 .feature-showcase .feature-desc {
-  color: var(--on-ink-2);
+  color: var(--text-light);
 }
 
-/* 收紧深色区的垂直节奏：原来的 110/90px 在整块黑底上会显得空、散 */
+/* 垂直节奏 */
 .feature-showcase-header {
   padding: 100px 0 40px;
 }
@@ -182,9 +183,8 @@
   transition: transform 0.5s var(--ease-out);
 }
 
-.feature-mockup-frame:hover {
-  transform: translateY(-6px) scale(1.01);
-}
+/* v11：去掉 hover 抬升 + 缩放。
+   「产品截图悬停时整体浮起并放大」是模板页面的典型动作，这里不再需要。 */
 
 /* ============ 聊天框模拟 (AI 语音转写) ============ */
 .mockup-chatbox {
@@ -324,8 +324,8 @@
   color: var(--text-light);
 }
 
-/* 整个深色功能区里**唯一**的橙色：核心动作（按住说话）。
-   气泡/头像/徽章全部改墨黑后，这一个小按钮才有意义。 */
+/* 本区块唯一的橙色：核心动作（按住说话）。
+   气泡/头像/徽章全部为墨黑后，这一个小按钮才真正突出。 */
 .mockup-chatbox-input-mic {
   width: 32px;
   height: 32px;
@@ -334,7 +334,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  /* 橙黄底上用墨色图标（对比度约 9:1）；白压橙只有约 2.2:1 */
+  color: var(--ink);
   flex-shrink: 0;
 }
 

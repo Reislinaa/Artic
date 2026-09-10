@@ -1,10 +1,12 @@
-/* ============ 页脚 —— 一条纯黑收尾 ============
-   v10：去掉 v8 加的那层橙色余光（大面积柔光最容易显脏、也最像模板），
-   改为纯黑 + 细线，把「黑」这一极干净地落下来。 */
+/* ============ 页脚 —— 浅色收尾（全站统一浅色） ============
+   v11：此前是纯黑条（v8 的黑白体系留下的）。用户决定全站统一浅色，
+   于是页脚也回到米白：与页面同底，只靠一条细线分隔，收得轻、不打断观感。
+   层级仍然靠字号与字距（栏目标题用极小宽字距大写）。 */
 .footer {
   position: relative;
-  background: var(--ink);
-  color: var(--on-ink);
+  background: var(--paper-2);
+  color: var(--text);
+  border-top: 1px solid var(--border);
   padding: 64px 0 0;
 }
 
@@ -27,12 +29,12 @@
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.06em;
-  color: var(--on-ink);
+  color: var(--text);
   margin-bottom: 14px;
 }
 
 .footer-tagline {
-  color: var(--on-ink-3);
+  color: var(--text-light);
   font-size: 0.86rem;
   line-height: 1.75;
 }
@@ -44,7 +46,7 @@
 }
 
 .footer-col h4 {
-  color: var(--on-ink-3);
+  color: var(--text-light);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -59,20 +61,20 @@
 }
 
 .footer-col a {
-  color: var(--on-ink-2);
+  color: var(--text-2);
   font-size: 0.88rem;
   transition: color 0.2s;
 }
 
 .footer-col a:hover {
-  color: var(--on-ink);
+  color: var(--text);
   text-decoration: none;
 }
 
 .footer-link-btn {
   background: none;
   border: none;
-  color: var(--on-ink-2);
+  color: var(--text-2);
   font-size: 0.88rem;
   font-family: inherit;
   padding: 0;
@@ -82,13 +84,13 @@
 }
 
 .footer-link-btn:hover {
-  color: var(--on-ink);
+  color: var(--text);
 }
 
 .footer-bottom {
-  border-top: 1px solid var(--hairline-ink);
+  border-top: 1px solid var(--border);
   padding: 22px 0;
   font-size: 0.78rem;
-  color: var(--on-ink-3);
+  color: var(--text-light);
   letter-spacing: 0.02em;
 }
