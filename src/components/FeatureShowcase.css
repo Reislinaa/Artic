@@ -136,9 +136,11 @@
   border-bottom: 1px solid var(--hairline-ink);
 }
 
+/* 序号 01–07 改中性灰：7 个橙色序号在这块黑底上属于「铺色」，
+   与本区块的纯黑白气质冲突。橙色让给 Hero 的 CTA 与数据。 */
 .feature-showcase .feature-label {
-  color: var(--accent);
-  letter-spacing: 2.6px;
+  color: var(--on-ink-3);
+  letter-spacing: 0.2em;
 }
 
 .feature-showcase .feature-en {

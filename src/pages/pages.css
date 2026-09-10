@@ -115,7 +115,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--text-2);
   background: rgba(255, 138, 31, 0.08);
   border: 1px solid rgba(255, 138, 31, 0.14);
   border-radius: 12px;
@@ -165,7 +165,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--grad-brand);
+  background: var(--ink);
   opacity: 0;
   transition: opacity 0.35s;
 }
@@ -187,7 +187,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--text-2);
   background: rgba(255, 138, 31, 0.08);
   border: 1px solid rgba(255, 138, 31, 0.14);
   border-radius: 12px;
@@ -210,7 +210,7 @@
 }
 
 .scenario-timeline line {
-  stroke: var(--primary);
+  stroke: var(--text-light);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -306,7 +306,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--text-2);
 }
 
 .value-icon svg {
@@ -362,8 +362,9 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--grad-brand);
-  box-shadow: 0 0 12px rgba(255, 138, 31, 0.35);
+  /* 时间轴节点用墨点 + 白描边：它是结构元素，不是品牌记忆点 */
+  background: var(--ink);
+  box-shadow: 0 0 0 3px var(--surface);
 }
 
 .timeline-content {
@@ -381,7 +382,7 @@
 
 .timeline-year {
   font-size: 0.8rem;
-  color: var(--primary);
+  color: var(--text-2);
   font-weight: 600;
   letter-spacing: 1px;
 }
@@ -435,7 +436,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--text-2);
 }
 
 .contact-icon svg {
@@ -492,7 +493,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: var(--text-2);
   flex-shrink: 0;
 }
 
@@ -515,7 +516,7 @@
 
 .download-platform-info span {
   font-size: 0.85rem;
-  color: var(--primary);
+  color: var(--text-2);
 }
 
 .download-platform-info p {
@@ -579,9 +580,9 @@
   width: 24px;
   height: 24px;
   border-radius: 6px;
-  background: rgba(255, 138, 31, 0.1);
-  border: 1px solid rgba(255, 138, 31, 0.18);
-  color: var(--primary);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
   font-size: 0.8rem;
   font-weight: 700;
   display: flex;

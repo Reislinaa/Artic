@@ -66,7 +66,8 @@
   color: var(--on-ink);
 }
 
-/* 选中态用橙色短横 —— 点缀色只做「记忆点」 */
+/* 选中态：白短横。
+   黑底上白线本身就是最强对比，不需要再用橙色（橙留给右侧 CTA）。 */
 .navbar-link.active::after {
   content: '';
   position: absolute;
@@ -75,9 +76,8 @@
   transform: translateX(-50%);
   width: 16px;
   height: 2px;
-  background: var(--accent);
+  background: var(--on-ink);
   border-radius: 2px;
-  box-shadow: 0 0 10px rgba(255, 138, 31, 0.8);
 }
 
 .navbar-cta {

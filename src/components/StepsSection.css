@@ -12,12 +12,12 @@
   margin: 0 auto;
 }
 
-/* 每格顶部一条细线，靠间距与线而非卡片来组织 */
+/* 不再给每格加顶部细线：4 条线 + 2x2 排布后线条过多，反而显乱。
+   步骤之间的分隔交给间距。 */
 .step-card {
   text-align: center;
   padding: 28px 20px;
   position: relative;
-  border-top: 1px solid var(--border);
 }
 
 /* 序号：不再用色块圆点，改为橙色大数字（PDF 中 01 / 02 的处理） */

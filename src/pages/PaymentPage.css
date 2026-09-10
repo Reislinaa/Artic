@@ -118,11 +118,13 @@
   font-size: 0.94rem;
 }
 
+/* 勾选改墨黑：3 张卡 × 5 项 = 15 个橙色勾，是上一版橙色占比最大的来源之一。
+   勾选是「功能说明」而非「行动」，用黑更干净，也让橙色 CTA 真正突出。 */
 .plan-check {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  color: var(--primary);
+  color: var(--text);
 }
 
 .plan-btn {

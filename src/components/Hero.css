@@ -21,40 +21,44 @@
 /* 主光斑：偏右上的巨大柔和橙光（“日出”感，PDF 01 节手法） */
 .hero-glow {
   position: absolute;
-  top: -16%;
-  right: -8%;
-  width: min(920px, 80vw);
-  height: min(920px, 80vw);
+  top: -8%;
+  right: -4%;
+  width: min(760px, 68vw);
+  height: min(760px, 68vw);
   border-radius: 50%;
   pointer-events: none;
+  /* 核心更小更亮、衰减更短。
+     褐色浑浊的来源是「大范围 + 低不透明度的橙压在黑上」，
+     把过渡带收窄，同样的橙就会显得干净通透而不是发脏。 */
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(255, 173, 71, 0.88) 0%,
-    rgba(255, 138, 31, 0.48) 24%,
-    rgba(255, 122, 24, 0.18) 46%,
-    rgba(255, 122, 24, 0.05) 60%,
-    transparent 72%
+    rgba(255, 176, 74, 0.90) 0%,
+    rgba(255, 138, 0, 0.50) 18%,
+    rgba(255, 128, 0, 0.16) 36%,
+    rgba(255, 122, 0, 0.04) 52%,
+    transparent 64%
   );
-  filter: blur(46px);
+  filter: blur(36px);
   animation: glowDrift 22s ease-in-out infinite alternate;
 }
 
-/* 地平线光带：底部中央的橙色弧光收尾（PDF 04 节 Contact 页手法） */
+/* 地平线光带：底部中央的橙色弧光收尾。
+   强度已大幅调低 —— 它是全页最容易「糊成一片褐色」的元素。 */
 .hero-horizon {
   position: absolute;
   left: 50%;
-  bottom: -14%;
-  width: min(1500px, 135%);
-  height: 440px;
+  bottom: -10%;
+  width: min(1300px, 115%);
+  height: 300px;
   transform: translateX(-50%);
   pointer-events: none;
   background: radial-gradient(
-    ellipse 55% 100% at 50% 100%,
-    rgba(255, 138, 31, 0.40) 0%,
-    rgba(255, 122, 24, 0.13) 44%,
-    transparent 74%
+    ellipse 50% 100% at 50% 100%,
+    rgba(255, 138, 0, 0.20) 0%,
+    rgba(255, 122, 0, 0.06) 46%,
+    transparent 72%
   );
-  filter: blur(52px);
+  filter: blur(46px);
 }
 
 @keyframes glowDrift {
@@ -110,15 +114,8 @@
   margin-bottom: 44px;
 }
 
-/* 标签前的橙色小圆点 —— 点缀色的最小用法 */
-.hero-tag::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 10px rgba(255, 138, 31, 0.85);
-}
+/* 说明：v8 在标签前加过一个橙色发光小圆点。v9 已移除 ——
+   橙色应当稀缺，胶囊边框本身就足以定义这个标签。 */
 
 .hero-title {
   margin: 0 0 32px;
@@ -253,7 +250,8 @@
 
 .compare-arrow {
   font-size: 1.5rem;
-  color: var(--accent);
+  /* 中性灰：这一块只让「220」这个数据用橙，箭头不再抢色 */
+  color: var(--on-ink-3);
   animation: arrowPulse 2s ease-in-out infinite;
 }
 

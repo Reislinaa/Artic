@@ -171,10 +171,14 @@
   border-color: var(--border-strong);
 }
 
+/* 选中态用中性墨色，渠道品牌色只留在图标上。
+   整块套微信绿/支付宝蓝会让收银台同时出现「绿 + 蓝 + 橙 + 黑白」四种色相，
+   是上一版最明显的配色打架点。 */
 .co-method.active {
-  border-color: var(--m-color, var(--primary));
-  color: var(--m-color, var(--primary));
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--m-color, var(--primary)) 12%, transparent);
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--ink);
 }
 
 .co-method:disabled {

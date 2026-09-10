@@ -117,7 +117,9 @@
   font-size: 0.85rem;
 }
 
-/* ===== 全局卡片悬浮 ===== */
+/* ===== 全局卡片：默认轻阴影 + 悬浮抬升 =====
+   v9 起统一给白卡一层「双层轻阴影」(贴地 1px + 扩散)：
+   底色是 #F4F4F5 的中性浅灰，白卡只靠 1px 边框会显得平、整页发灰。 */
 .feature-card,
 .value-card,
 .contact-card,
@@ -128,7 +130,10 @@
 .highlight-card,
 .pricing-card,
 .timeline-content,
-.detail-side-card {
+.detail-side-card,
+.plan-card,
+.co-card {
+  box-shadow: var(--shadow-sm);
   transition: transform 0.5s var(--ease-out), border-color 0.4s var(--ease-out),
     box-shadow 0.5s var(--ease-out), background 0.4s var(--ease-out);
 }
@@ -142,7 +147,8 @@
 .highlight-card:hover,
 .pricing-card:hover,
 .timeline-content:hover,
-.detail-side-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 48px rgba(28, 28, 30, 0.08);
+.detail-side-card:hover,
+.plan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
