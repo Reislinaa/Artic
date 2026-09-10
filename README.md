@@ -1,87 +1,81 @@
-# AI 智能输入法 - 网站项目
+# ARTIC — AI 语音成稿工具
 
-一个公开的 AI 输入法网站，包含**产品介绍官网**和**在线体验区**两部分，后端对接大语言模型 API 实现智能补全、语义改写、翻译等功能。
+> 让说出口的话，就是能直接发出去的稿。
+> `Say what you mean, but better.`
 
-## 功能特性
+面向**高端商务场景**的 AI 语音转文字 + 润色工具：说出口语，直接得到可发送的商务书面稿。
 
-- **智能补全**：根据输入内容智能扩展补全，打字更高效
-- **语义改写**：一键润色文字，表达更专业流畅
-- **多语言翻译**：中英互译等
-- **在线体验**：无需安装即可在浏览器体验
-- **用户系统**：注册 / 登录（后端 API）
-- **请求日志**：记录 AI 调用记录
+## 核心能力
+
+- **语音转文字 + 润色**：客户微信、工作邮件、会议纪要、社群回复，说出口就是成稿
+- **语音转文字 + 翻译 + 润色**：中文口语输入，产出地道的外语商务表达（连语气与商务礼节一起重写）
+- **自定义热键一键唤起**：最多两键，开口即用
+- **超长音频 3 秒内出稿**：说完即所得
 
 ## 技术栈
 
-- **前端**：React + Vite
-- **后端**：Node.js + Express
-- **数据库**：SQLite（用户数据 + 请求日志）
-- **AI 接入**：OpenAI 兼容接口（DeepSeek / 通义千问 / OpenAI 等）
+| 层 | 技术 |
+|---|---|
+| 前端 | React 19 + Vite 5 + 原生 CSS |
+| 动画 | GSAP 3（ScrollTrigger）+ IntersectionObserver |
+| 后端 | Node.js + Express 4 |
+| 存储 | JSON 文件（`server/store.js`） |
+| 支付 | `wechatpay-node-v3`（微信 APIv3）+ `alipay-sdk`（支付宝官方 SDK） |
 
 ## 快速开始
 
-### 1. 安装依赖
-
 ```bash
 npm install
+cp .env.example .env     # Windows: copy .env.example .env
+npm run dev              # 前端 5173，后端 3001
 ```
 
-### 2. 配置环境变量
+## 支付链路（当前重点）
 
-复制 `.env.example` 为 `.env`，并填入你的大模型 API 信息：
+支付实现在 `server/pay.js`，设计目标是**填入证件号即可上线，无需改代码**：
 
-```env
-PORT=3001
-AI_API_BASE=https://api.deepseek.com/v1
-AI_API_KEY=你的API密钥
-AI_MODEL=deepseek-chat
-```
+| 模式 | 触发条件 | 行为 |
+|---|---|---|
+| 演示 demo | 未配置商户参数 | 走通完整「下单 → 二维码 → 轮询 → 成功」，8 秒模拟到账 |
+| 正式 live | `.env` 中该渠道配齐 | 微信 Native 下单 / 支付宝当面付，官方异步回调验签后置为已支付 |
 
-> 未配置时自动降级为本地词库引擎，方便开发调试。
+启动服务时会打印当前模式与仍缺失的字段。配置项见 `.env.example`。
 
-### 3. 启动开发环境
-
-```bash
-npm run dev
-```
-
-- 前端地址：http://localhost:5173
-- 后端地址：http://localhost:3001
-
-### 4. 生产构建
-
-```bash
-npm run build
-npm start
-```
-
-## 项目结构
-
-```
-ai-input-method/
-├── index.html              # 入口 HTML
-├── vite.config.js          # Vite 配置
-├── server/
-│   ├── index.js            # Express 后端主入口
-│   ├── aiService.js        # AI 服务（大模型对接 + 本地兜底）
-│   └── data/               # SQLite 数据库
-├── src/
-│   ├── main.jsx            # React 入口
-│   ├── App.jsx             # 主应用
-│   ├── index.css           # 全局样式
-│   └── components/         # 页面组件
-└── public/                 # 静态资源
-```
-
-## API 接口
+### 支付相关接口
 
 | 方法 | 路径 | 说明 |
-|------|------|------|
+|---|---|---|
+| GET | `/api/pay/status` | 支付模式与各渠道缺失配置 |
+| POST | `/api/order/create` | 创建订单（已配置渠道走真实下单） |
+| GET | `/api/order/status` | 订单状态（前端轮询） |
+| POST | `/api/order/forcepaid` | 演示模式模拟支付（正式模式返回 403） |
+| POST | `/api/pay/wechat/notify` | 微信支付结果通知 |
+| POST | `/api/pay/alipay/notify` | 支付宝异步通知 |
+
+### 其他接口
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
 | GET | `/api/health` | 健康检查 |
-| POST | `/api/ai/complete` | AI 补全/改写/翻译，参数 `{text, mode}` |
+| POST | `/api/ai/complete` | AI 补全 / 改写 / 翻译，参数 `{text, mode}` |
 | POST | `/api/auth/register` | 用户注册 |
 | POST | `/api/auth/login` | 用户登录 |
 
-## 部署上线
+## 生产部署
 
-构建完成后可将 `dist/` 目录和 `server/` 部署到任意 Node.js 服务器（如腾讯云 Lighthouse、CloudBase、EdgeOne 等），设置 `NODE_ENV=production` 即可由后端托管静态资源。
+```bash
+npm run build
+NODE_ENV=production npm start   # 由 Express 同时托管 dist 与 API
+```
+
+需要公网 HTTPS 域名，才能接收微信 / 支付宝的支付回调。
+
+## 相关文档
+
+- **`DESIGN.md`** — 设计规范，改 UI 前必读
+- **`Artic项目日志.md`** — 项目日志，**每次完成任务后必须更新**
+- **`ui-skills.md`** — 设计栈说明（供其他 AI 复用）
+
+## 在线预览
+
+https://reislinaa.github.io/Artic/

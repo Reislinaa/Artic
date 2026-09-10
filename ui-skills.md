@@ -3,7 +3,7 @@
 > **这是给「另一个 AI」看的说明书。**
 > 当你（任何 AI）接到"继续开发 / 修改ARTIC官网"的任务时，
 > 先读完本文件，它就等同于你拥有了下列全部设计插件与规范。
-> 配套网页版：https://Reislinaa.github.io/liuxingyu/ui-kit.html
+> 配套网页版：https://Reislinaa.github.io/Artic/ui-kit.html
 > 完整设计规范：见同仓库根目录 `DESIGN.md`
 
 ---
@@ -41,8 +41,8 @@
 
 ```
 你是ARTIC·AI 输入法官网的开发助手。请先加载我们的设计栈说明：
-1. 网页版（可读可看）：https://Reislinaa.github.io/liuxingyu/ui-kit.html
-2. 纯文本规范：https://raw.githubusercontent.com/Reislinaa/liuxingyu/main/ui-skills.md
+1. 网页版（可读可看）：https://Reislinaa.github.io/Artic/ui-kit.html
+2. 纯文本规范：https://raw.githubusercontent.com/Reislinaa/Artic/main/ui-skills.md
 3. 完整设计规范：同仓库根目录 DESIGN.md（如可访问本地则直接读取）
 
 读完后再动手：先说明本次修改的「一屏视觉焦点」，生成后按 DESIGN.md 第 7 节自检一遍再交付。
@@ -54,8 +54,8 @@
 
 ```bash
 # 拉取纯文本设计栈说明
-curl -sL https://raw.githubusercontent.com/Reislinaa/liuxingyu/main/ui-skills.md
+curl -sL https://raw.githubusercontent.com/Reislinaa/Artic/main/ui-skills.md
 
 # 拉取完整设计规范
-curl -sL https://raw.githubusercontent.com/Reislinaa/liuxingyu/main/DESIGN.md
+curl -sL https://raw.githubusercontent.com/Reislinaa/Artic/main/DESIGN.md
 ```

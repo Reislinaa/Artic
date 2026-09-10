@@ -1,9 +1,9 @@
 @echo off
 chcp 65001 >nul
-title 流星语 - 一键部署到 GitHub Pages
+title ARTIC - 一键部署到 GitHub Pages
 
 echo ============================================
-echo   流星语 - 一键部署到 GitHub Pages
+echo   ARTIC - 一键部署到 GitHub Pages
 echo ============================================
 echo.
 
@@ -13,7 +13,7 @@ cd /d "%~dp0"
 REM 检查参数
 if "%~2"=="" (
     echo 用法: 部署到GitHub.bat ^<GitHub用户名^> ^<仓库名^>
-    echo 示例: 部署到GitHub.bat Reislinaa liuxingyu
+    echo 示例: 部署到GitHub.bat Reislinaa Artic
     echo.
     pause
     exit /b 1

@@ -1,6 +1,6 @@
 // 手动部署 dist/ 到 GitHub Pages (gh-pages 分支)
 // 用法: node scripts/deploy-gh-pages.mjs <github用户名> <仓库名>
-// 例: node scripts/deploy-gh-pages.mjs Reislinaa liuxingyu
+// 例: node scripts/deploy-gh-pages.mjs Reislinaa Artic
 
 import { execSync } from 'child_process'
 import { existsSync, rmSync, mkdirSync, readdirSync, copyFileSync } from 'fs'
@@ -67,7 +67,7 @@ fs.writeFileSync(join(tmpDir, 'index.html'), fs.readFileSync(join(distPath, 'ind
 
 console.log('[2/3] 提交...')
 run(`git -C "${tmpDir}" add -A`)
-run(`git -C "${tmpDir}" -c user.name="流星语部署" -c user.email="deploy@liuxingyu.local" commit -m "deploy: 更新站点"`)
+run(`git -C "${tmpDir}" -c user.name="ARTIC部署" -c user.email="deploy@Artic.local" commit -m "deploy: 更新站点"`)
 
 console.log('[3/3] 推送 gh-pages 分支...')
 run(`git -C "${tmpDir}" branch -M gh-pages`)

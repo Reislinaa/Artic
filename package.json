@@ -1,5 +1,5 @@
 {
-  "name": "artic-web",
+  "name": "artic",
   "version": "1.0.0",
   "type": "module",
   "description": "ARTIC - 高端商务场景的 AI 语音成稿工具官网 + 支付链路 + 后端 API",
