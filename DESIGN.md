@@ -98,10 +98,15 @@
 |---|---|---|
 | 首页 | `home` | Hero + Steps + FeatureShowcase + Everywhere + Platform |
 | 功能页 | `features` | 六大商务场景 + CTA |
-| **定价页** | `pricing` | 支付模式提示 + 三档方案 + 支付面板 + FAQ |
+| **定价页** | `pricing` | 三档方案（月付 / 年付 / 企业版）+ FAQ |
+| **收银台页** | `checkout` | 独立支付页：订单摘要 + 渠道切换 + 二维码 + 失效倒计时 + 轮询 + 成功态 |
 | 下载页 | `download` | 平台选择 + FAQ |
 | 关于页 | `about` | 信念 + 历程 + 联系 + CTA |
 | 法律页 | `privacy` / `terms` | 隐私政策 / 服务条款 |
+
+**路由**：极简 hash 路由（见 `App.jsx`），每个页面都有真实 URL，浏览器前进/后退可用。
+支付流程：定价页点方案 → `#/checkout?plan=pro-yearly`（独立收银台）→ 支付成功。
+收银台页面**隐藏页脚**以减少干扰，导航高亮保持在「定价」。
 
 ## 8. 支付链路架构（改支付相关代码前必读）
 

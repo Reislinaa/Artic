@@ -173,6 +173,30 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-10 · 支付改为独立收银台页面 + 引入 hash 路由
+**用户要求**：不能做成点击支付按钮，跳转到另一个支付页面吗？
+
+**代码改动痕迹**：
+- 新建 `src/pages/CheckoutPage.jsx` / `CheckoutPage.css` —— **独立收银台页面**：
+  - 顶部：返回定价 + 「收银台」标题 + 安全标识 + 订单号
+  - 左栏：渠道切换（微信 / 支付宝）+ 二维码 + 扫码提示 + **15 分钟失效倒计时** + 轮询状态
+  - 右栏：订单摘要（方案 / 周期 / 单价 / 数量 / 应付金额）+ 权益列表 + 订阅说明
+  - 状态机：`creating` / `pending` / `paid` / `expired` / `failed`；超时可「重新下单」
+  - 直接访问未带方案时显示引导页，避免产生空订单
+- `src/pages/PaymentPage.jsx`：**移除**内嵌支付面板与订单逻辑，只负责方案选择；
+  点「订阅月付 / 订阅年付」→ `onNavigate('checkout', { plan })`
+- `src/pages/PaymentPage.css`：收银台样式拆出，只保留方案卡片相关
+- `src/App.jsx`：引入**极简 hash 路由**（`#/pricing`、`#/checkout?plan=pro-yearly`…），
+  支持手改地址与浏览器前进 / 后退；收银台隐藏页脚、导航高亮保持「定价」
+- `DESIGN.md`：页面结构表新增「收银台页」，补充路由说明
+
+**验证与部署结果**：
+- `npm run build` 通过（146 模块），lint 无错误
+- 部署 → https://reislinaa.github.io/Artic/ ；源码推送 `main`
+
+**备注**：收银台的 15 分钟倒计时为**前端展示**；后端订单仍是内存实现且无服务端过期，
+正式上线前需落库并补服务端过期与幂等（已记入待办）。
+
 ### 2026-09-10 · 仓库改名 Artic + 全局同步 + 建立本日志
 **用户要求**：
 1. 仓库名已改为 `Artic`，要求把所有相应名称都改成 `Artic`；
@@ -329,4 +353,5 @@ git add -A && git commit -m "..." && git push origin main
 - [ ] GitHub 仓库描述仍是旧文案「流星语 - AI 智能输入法」，需在网页手动改
 - [ ] 确认正式邮箱域名（当前暂用 `artic.cn`：support@ / business@ / feedback@）
 - [ ] 订单存储改为数据库 + 幂等处理（当前为内存实现，重启即丢）
+- [ ] 订单落库 + 服务端过期与幂等（当前为内存实现，收银台倒计时仅为前端展示）
 - [ ] 接入真实大模型 API（需 API Key）

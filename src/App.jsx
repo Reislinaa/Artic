@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { AuthProvider } from './context/AuthContext'
 import Navbar from './components/Navbar'
@@ -15,6 +15,24 @@ import IntroPage from './pages/IntroPage'
 import DownloadPage from './pages/DownloadPage'
 import AboutPage from './pages/AboutPage'
 import PaymentPage from './pages/PaymentPage'
+import CheckoutPage from './pages/CheckoutPage'
+
+const PAGE_KEYS = ['home', 'features', 'pricing', 'checkout', 'download', 'about', 'privacy', 'terms']
+
+// 极简 hash 路由：让每个页面都有真实 URL，浏览器前进/后退可用
+// 例：#/pricing、#/checkout?plan=pro-yearly
+function parseHash(hash) {
+  const raw = (hash || '').replace(/^#\/?/, '')
+  const [path, query] = raw.split('?')
+  const page = PAGE_KEYS.includes(path) ? path : 'home'
+  const plan = new URLSearchParams(query || '').get('plan')
+  return { page, plan }
+}
+
+function buildHash(page, plan) {
+  if (page === 'home') return '#/'
+  return `#/${page}${plan ? `?plan=${plan}` : ''}`
+}
 
 function Home({ onStartDemo }) {
   return (
@@ -30,15 +48,30 @@ function Home({ onStartDemo }) {
 }
 
 function App() {
-  const [page, setPage] = useState('home')
+  const [route, setRoute] = useState(() => parseHash(window.location.hash))
   const [authOpen, setAuthOpen] = useState(false)
+  const { page, plan } = route
 
-  const handleNavigate = (target) => {
-    setPage(target)
-    window.scrollTo({ top: 0 })
+  // 监听 hash 变化（浏览器前进/后退、手改地址）
+  useEffect(() => {
+    const onHashChange = () => {
+      setRoute(parseHash(window.location.hash))
+      window.scrollTo({ top: 0 })
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  const handleNavigate = (target, opts = {}) => {
+    const hash = buildHash(target, opts.plan)
+    if (window.location.hash === hash) {
+      // 同一地址：直接切换，避免 hashchange 不触发
+      setRoute({ page: target, plan: opts.plan || null })
+      window.scrollTo({ top: 0 })
+    } else {
+      window.location.hash = hash
+    }
   }
-
-  const handleOpenLegal = (type) => setPage(type)
 
   const renderContent = () => {
     switch (page) {
@@ -50,13 +83,19 @@ function App() {
         return <AboutPage onNavigate={handleNavigate} />
       case 'pricing':
         return <PaymentPage onNavigate={handleNavigate} />
+      case 'checkout':
+        return <CheckoutPage planKey={plan} onNavigate={handleNavigate} />
       case 'privacy':
       case 'terms':
-        return <LegalPage type={page} onBack={() => setPage('home')} />
+        return <LegalPage type={page} onBack={() => handleNavigate('home')} />
       default:
         return <Home onStartDemo={handleNavigate} />
     }
   }
+
+  // 收银台属于「定价 → 支付」流程，导航高亮保持定价；并隐藏页脚以减少干扰
+  const navHighlight = page === 'checkout' ? 'pricing' : page
+  const hideFooter = page === 'privacy' || page === 'terms' || page === 'checkout'
 
   return (
     <AuthProvider>
@@ -64,12 +103,12 @@ function App() {
         <Navbar
           onStartDemo={handleNavigate}
           onOpenAuth={() => setAuthOpen(true)}
-          currentPage={page}
+          currentPage={navHighlight}
           onNavigate={handleNavigate}
         />
         <main key={page} className="page-transition">{renderContent()}</main>
-        {page !== 'privacy' && page !== 'terms' && (
-          <Footer onOpenLegal={handleOpenLegal} onNavigate={handleNavigate} />
+        {!hideFooter && (
+          <Footer onOpenLegal={handleNavigate} onNavigate={handleNavigate} />
         )}
         <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
       </div>
