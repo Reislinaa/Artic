@@ -4,7 +4,17 @@ import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { generateSuggestion } from './aiService.js'
-import { findUser, findUserByEmail, createUser, addLog } from './store.js'
+import { findUser, findUserByEmail, createUser, addLog, findUserById, upsertOAuthUser, safeUser } from './store.js'
+import {
+  getProvider,
+  checkProvider,
+  getProvidersStatus,
+  buildRedirectUri,
+  createState,
+  readState,
+  createSession,
+  readSession
+} from './oauth.js'
 import {
   PLANS,
   getPayStatus,
@@ -60,7 +70,9 @@ app.post('/api/ai/complete', async (req, res) => {
   }
 })
 
-// 用户注册（简单版）
+// ===== 账号体系 =====
+
+// 注册
 app.post('/api/auth/register', (req, res) => {
   const { username, email, password } = req.body
   if (!username || !email || !password) {
@@ -73,18 +85,97 @@ app.post('/api/auth/register', (req, res) => {
     return res.status(409).json({ error: '邮箱已存在' })
   }
   const user = createUser(username, email, password)
-  res.json({ success: true, message: '注册成功', user: { id: user.id, username: user.username } })
+  res.json({ success: true, message: '注册成功', user: safeUser(user) })
 })
 
-// 用户登录（简单版，仅演示）
+// 账号密码登录
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body
   const user = findUser(username)
-  if (!user || user.password !== password) {
+  // 第三方登录用户没有密码，禁止用密码登录
+  if (!user || !user.password || user.password !== password) {
     return res.status(401).json({ error: '用户名或密码错误' })
   }
-  res.json({ success: true, message: '登录成功', user: { id: user.id, username: user.username } })
+  res.json({ success: true, message: '登录成功', user: safeUser(user), token: createSession(user) })
 })
+
+// 当前登录用户（Bearer token）
+app.get('/api/auth/me', (req, res) => {
+  const token = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '')
+  const session = readSession(token)
+  if (!session) return res.status(401).json({ error: '未登录或登录已过期' })
+  const user = findUserById(session.uid)
+  if (!user) return res.status(401).json({ error: '用户不存在' })
+  res.json({ user: safeUser(user) })
+})
+
+// 退出登录（token 为无状态签名，服务端无需处理；此接口仅作语义占位）
+app.post('/api/auth/logout', (req, res) => {
+  res.json({ ok: true })
+})
+
+// ===== 第三方登录（预留式：凭据填进 .env 即自动启用） =====
+
+// 各渠道可用状态：前端据此决定按钮可点 / 灰显
+app.get('/api/auth/providers', (req, res) => {
+  res.json(getProvidersStatus())
+})
+
+// 发起授权：签名 state 后 302 跳转到服务商
+app.get('/api/auth/:provider/start', (req, res) => {
+  const provider = getProvider(req.params.provider)
+  if (!provider) return res.status(404).send('未知的登录渠道')
+  const { configured, missing } = checkProvider(provider)
+  if (!configured) {
+    return res.status(400).send(`「${provider.name}」登录尚未配置，缺少环境变量：${missing.join(', ')}`)
+  }
+  const redirectUri = buildRedirectUri(req, provider.id)
+  const state = createState(provider.id)
+  res.redirect(provider.authorizeUrl({ redirectUri, state }))
+})
+
+// 授权回调：校验 state → code 换 token → 拉用户 → 落库 → 签发会话 → 跳回站点
+app.get('/api/auth/:provider/callback', async (req, res) => {
+  const provider = getProvider(req.params.provider)
+  if (!provider) return res.status(404).send('未知的登录渠道')
+
+  const { code, state, error, error_description: errorDesc } = req.query
+  if (error) return authFail(req, res, `${provider.name}授权被拒绝：${errorDesc || error}`)
+  if (!code) return authFail(req, res, '缺少授权码 code')
+  if (!readState(state, provider.id)) return authFail(req, res, 'state 校验失败，请重新登录')
+
+  try {
+    const redirectUri = buildRedirectUri(req, provider.id)
+    const token = await provider.exchange({ code, redirectUri })
+    const profile = await provider.user(token)
+    const openId = profile.openId || token.openId
+    if (!openId) throw new Error('未能获取用户唯一标识 openId')
+
+    const user = upsertOAuthUser({
+      provider: provider.id,
+      openId,
+      unionId: profile.unionId || token.unionId || '',
+      name: profile.name,
+      avatar: profile.avatar,
+      email: profile.email
+    })
+    const session = createSession(user)
+
+    console.log(`[auth] ${provider.name}登录成功: ${user.username}`)
+    const site = (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '')
+    // 通过查询参数回传 token，前端读取后会立即从地址栏清除
+    res.redirect(`${site}/?auth_token=${session}&auth_provider=${provider.id}`)
+  } catch (e) {
+    console.error(`[auth] ${provider.id} 回调失败:`, e.message)
+    authFail(req, res, `${provider.name}登录失败：${e.message}`)
+  }
+})
+
+/** 登录失败统一回跳站点并带上错误信息 */
+function authFail(req, res, message) {
+  const site = (process.env.SITE_URL || `${req.protocol}://${req.get('host')}`).replace(/\/$/, '')
+  res.redirect(`${site}/?auth_error=${encodeURIComponent(message)}`)
+}
 
 // ===== 支付链路（演示 / 正式 双模式：证件号填进 .env 即自动切换） =====
 

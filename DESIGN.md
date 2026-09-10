@@ -131,7 +131,29 @@
 - 微信回调需 `200 + {code:'SUCCESS'}`，支付宝回调需返回纯文本 `success`。
 - 订单存储当前为内存实现；生产环境请落库并加唯一索引与幂等处理。
 
-## 9. 大厂对标工作流（给 AI 的自检流程）
+## 9. 账号与第三方登录架构（改登录相关代码前必读）
+
+设计目标：**凭据填进 `.env` 即自动启用，无需改代码**。
+
+- `server/oauth.js` 是唯一的第三方登录实现层。`PROVIDERS` 注册表已实现 4 个渠道：
+  **微信**（开放平台「网站应用」扫码登录）/ **QQ 互联** / **飞书** / **钉钉**。
+  `RESERVED_PROVIDERS` 为预留占位：企业微信 / 支付宝 / GitHub / Google / Apple。
+- 每个渠道只需声明 `envKeys` + `authorizeUrl` + `exchange` + `user` 四件事；
+  **新增渠道 = 在 `PROVIDERS` 里补一条**，前端无需改动。
+- `GET /api/auth/providers` 返回各渠道 `configured` / `missing`，前端据此决定按钮可点或灰显。
+- 前端兜底：`src/data/auth-providers.js` 提供渠道列表，
+  **无后端（纯静态部署）时仍渲染出预留入口**，保证 UI 结构稳定。
+- 会话机制：HMAC 签名 token（`SESSION_SECRET`），前端存 `localStorage`，
+  请求带 `Authorization: Bearer`；**不依赖 Cookie**，便于前后端分离 / 跨域部署。
+- 安全要点：
+  - `state` 必须签名校验（防 CSRF）
+  - 回跳 token 经 URL 参数传递，前端读取后**立即 `replaceState` 清除**
+  - `safeUser()` 必须剥离密码等敏感字段，任何接口都不得返回 `password`
+  - 第三方登录用户 `password` 为 `null`，禁止走密码登录
+- **品牌图标注意**：飞书 / 钉钉官方图标在 `simple-icons` v16 已下架，
+  当前用品牌色首字占位；拿到官方 SVG 后替换 `AuthModal.jsx` 里的 `ICON_MAP` 即可。
+
+## 10. 大厂对标工作流（给 AI 的自检流程）
 
 生成或修改 UI 前，先问自己：
 1. 这个页面一屏的**视觉焦点**是什么？其他元素是否在让路？
@@ -147,7 +169,7 @@
 - [ ] 文案与"语音成稿工具"强相关，无输入法大全/推广平台残留
 - [ ] 定价文案与 `PLANS`（¥29.9/月、¥299/年）一致
 
-## 10. 反模式（Don't）
+## 11. 反模式（Don't）
 
 - ❌ 多色霓虹渐变铺满、深色背景+发光文字
 - ❌ 纯黑 `#000` / 纯白 `#fff` 大面积使用

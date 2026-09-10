@@ -2,9 +2,9 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,11 +15,13 @@
 .auth-modal {
   position: relative;
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  padding: 40px 32px 32px;
+  padding: 40px 32px 28px;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.3s ease;
 }
@@ -48,13 +50,14 @@
 }
 
 .auth-close:hover {
-  background: var(--bg-2);
+  background: var(--surface-2);
   color: var(--text);
 }
 
 .auth-title {
   font-size: 1.5rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   margin-bottom: 6px;
   color: var(--text);
 }
@@ -67,7 +70,7 @@
 
 .auth-tabs {
   display: flex;
-  background: var(--bg-2);
+  background: var(--surface-2);
   border-radius: 12px;
   padding: 4px;
   margin-bottom: 24px;
@@ -122,19 +125,20 @@
 }
 
 .auth-error {
-  background: rgba(248, 113, 113, 0.08);
-  color: #F87171;
-  border: 1px solid rgba(248, 113, 113, 0.25);
+  background: rgba(214, 69, 69, 0.07);
+  color: #C0392B;
+  border: 1px solid rgba(214, 69, 69, 0.22);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 0.85rem;
+  line-height: 1.6;
   margin-bottom: 16px;
 }
 
 .auth-success {
-  background: rgba(94, 234, 212, 0.08);
-  color: var(--accent);
-  border: 1px solid rgba(94, 234, 212, 0.25);
+  background: rgba(14, 160, 90, 0.07);
+  color: #0E7A47;
+  border: 1px solid rgba(14, 160, 90, 0.22);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 0.85rem;
@@ -144,4 +148,105 @@
 .auth-submit {
   width: 100%;
   margin-top: 4px;
+}
+
+/* ============ 第三方登录（预留式入口） ============ */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 18px;
+  color: var(--text-light);
+  font-size: 0.78rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-providers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.auth-provider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-soft), background 0.2s var(--ease-soft), transform 0.2s var(--ease-soft);
+}
+
+.auth-provider:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+
+.auth-provider:disabled {
+  cursor: not-allowed;
+}
+
+.auth-provider svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.auth-provider-initial {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.auth-provider-name {
+  white-space: nowrap;
+}
+
+/* 未配置的渠道：视觉弱化，但保留入口位置（预留位） */
+.auth-provider.is-off {
+  opacity: 0.42;
+  background: var(--surface-2);
+}
+
+.auth-provider.is-off svg,
+.auth-provider.is-off .auth-provider-initial {
+  filter: grayscale(1);
+}
+
+.auth-note {
+  margin-top: 14px;
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .auth-modal {
+    padding: 34px 22px 24px;
+  }
+  .auth-providers {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

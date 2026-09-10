@@ -179,6 +179,44 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-10 · 新增第三方登录框架（飞书 / 钉钉 / 微信 / QQ 预留式接入）
+**用户要求**：在登录界面做好预留窗口，未来可能要接入飞书、钉钉、微信、QQ 等办公与社交软件，
+**提前写好相应代码**。
+
+**代码改动痕迹**：
+- **新增 `server/oauth.js`** —— 统一的 OAuth 2.0 实现层
+  - `PROVIDERS` 注册表，**已实现 4 个渠道的真实流程**（端点与字段映射按各家官方文档书写）：
+    微信开放平台「网站应用」扫码登录 / QQ 互联 / 飞书开放平台 / 钉钉新版 OAuth2
+  - `RESERVED_PROVIDERS` 预留占位：企业微信 / 支付宝 / GitHub / Google / Apple
+  - 每个渠道只需声明 `envKeys` + `authorizeUrl` + `exchange` + `user`；
+    并处理各家「坑」：QQ 的 token 返回 **urlencoded 而非 JSON**、openid 需单独取且是 **JSONP**、
+    微信 authorize 必须带 `#wechat_redirect`、飞书与钉钉用的是**新版 OAuth2 端点**
+  - 会话与 state 用 **HMAC 签名**（`SESSION_SECRET`）：无状态、防篡改、防 CSRF
+- **`server/store.js`**：新增 `findUserById` / `upsertOAuthUser`（按 openId / unionId 查找，
+  同邮箱自动绑定，避免重复注册）/ `safeUser`（**剥离密码**）
+- **`server/index.js`**：新增
+  `GET /api/auth/providers`（渠道状态）、`GET /api/auth/:provider/start`（302 到授权页）、
+  `GET /api/auth/:provider/callback`（换 token → 落库 → 签发会话 → 跳回站点）、
+  `GET /api/auth/me`、`POST /api/auth/logout`；密码登录改为返回 token + `safeUser`
+- **`src/context/AuthContext.jsx`**：改为 **token 会话**（不再把明文用户存 localStorage），
+  启动时恢复会话、消费第三方回跳 token 并**立即从地址栏清除**
+- **`src/components/AuthModal.jsx` / `AuthModal.css`**：新增第三方登录区块
+  （3 列网格 + 「或使用以下方式」分隔线），未配置渠道灰显为预留位
+- **新增 `src/data/auth-providers.js`**：前端兜底渠道列表 ——
+  **GitHub Pages 是静态站没有后端，靠它保证线上也能看到预留窗口**
+- `.env.example`：新增会话密钥与 4 个渠道凭据段，并写明各渠道要登记的回调地址格式
+
+**验证与部署结果**（本地起服务实测）：
+- 渠道状态：4 个已实现渠道正确列出缺失 env；5 个预留渠道标记为「即将支持」
+- 注册 → 登录返回 token；`/api/auth/me` 用 token 正确取回用户，且**响应中无密码字段**
+- 防篡改：伪造 token / 篡改 token 均返回 **401**；伪造 `state` 的回调被拒并回跳错误提示
+- 未配置渠道 `/start` 返回 **400 + 明确缺少的环境变量**；未知渠道 **404**
+- `npm run build` 通过（145 模块），lint 无错误
+- 部署 → https://reislinaa.github.io/Artic/
+
+**说明**：飞书、钉钉的官方图标在 `simple-icons` v16 已下架，当前用**品牌色首字占位**；
+拿到官方 SVG 后替换 `AuthModal.jsx` 的 `ICON_MAP` 即可，其余逻辑无需改动。
+
 ### 2026-09-10 · 启用官方 logo + 修正品牌图标（换常用软件、修错误项、放大 20%）
 **用户要求**：
 1. 文件夹里放了 ARTIC 的 logo，要求网站改用这个 logo；
@@ -387,6 +425,7 @@ Slack、OpenAI、Canva、Adobe 全系、LinkedIn、钉钉、飞书、抖音、WP
 | 2026-09-06 | 支付页面 GitHub 上有没有现成的？ | 前端壳有（SK5190/payment-landing-page 等），但真正能收款的成品极少；关键在于后端下单+回调，且必须有自己的商户号。最终改为在项目内自建。 |
 | 2026-09-10 | 上线要提供什么，比如微信账号？ | 微信：商户号 mchid（需营业执照）+ 已认证小程序/服务号 AppID（300 元/年）+ APIv3 密钥 + 商户证书 + 公网 HTTPS 回调域名。支付宝：个人实名可签「当面付」但额度受限，企业额度更高。商户号收款进**对公账户**，不存在"商户微信号"这种概念。支付宝不需要公众号。 |
 | 2026-09-10 | 是不是要新建一个公众号？ | 若公司名下没有已认证的服务号/小程序，就需要新建一个拿 AppID。**建议注册小程序**（更适合工具类产品，后续可做工具入口/会员中心），而非服务号。 |
+| 2026-09-10 | 支付模块需要我提供什么信息？ | 三类：① 平台账号资质（微信支付商户号 / 支付宝应用）② 密钥文件（放入 `server/certs/`）③ 一个公网 HTTPS 域名（后端需公网可达才能收回调）。精确字段见 `.env.example`：**微信 7 项必填 + 1 项建议，支付宝 4 项必填**。要点：支付账号申请**不依赖域名**（`notify_url` 下单时传入，无需预先登记）；但真实收款必须先把 `server/` 部署到公网。另可加支付宝**沙箱开关**（`ALIPAY_SANDBOX=true`）用于正式资质下来前跑通全链路。 |
 
 ---
 
@@ -400,5 +439,9 @@ Slack、OpenAI、Canva、Adobe 全系、LinkedIn、钉钉、飞书、抖音、WP
 - [ ] GitHub 仓库描述仍是旧文案「流星语 - AI 智能输入法」，需在网页手动改
 - [ ] 确认正式邮箱域名（当前暂用 `artic.cn`：support@ / business@ / feedback@）
 - [ ] 订单存储改为数据库 + 幂等处理（当前为内存实现，重启即丢）
+- [ ] **账号安全：`users.json` 目前存的是明文密码，生产前必须改为哈希（scrypt/bcrypt）**
+- [ ] 申请第三方登录凭据：微信开放平台「网站应用」/ QQ 互联 / 飞书开放平台 / 钉钉开放平台
+      （各自需登记回调地址 `https://域名/api/auth/<渠道id>/callback`）
+- [ ] 补飞书 / 钉钉官方图标 SVG（当前为品牌色首字占位，替换 `AuthModal.jsx` 的 `ICON_MAP`）
 - [ ] 订单落库 + 服务端过期与幂等（当前为内存实现，收银台倒计时仅为前端展示）
 - [ ] 接入真实大模型 API（需 API Key）
