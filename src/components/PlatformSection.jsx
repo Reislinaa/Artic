@@ -19,7 +19,7 @@ export default function PlatformSection({ onNavigate }) {
           </p>
         </Reveal>
 
-        <PlatformSpecs />
+        <PlatformSpecs onNavigate={onNavigate} />
 
         <Reveal delay={2} variant="up">
           <div className="platform-cta">
