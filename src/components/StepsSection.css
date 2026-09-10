@@ -1,63 +1,161 @@
-/* ============ 步骤 —— 目录式栅格（编辑式排版） ============
-   左对齐 + 每格上方一条细线 + 极小的橙黄编号，
-   形成「目录 / 规格表」的观感，而不是四张居中的圆形图标卡。 */
+/* ============ 四步开始 —— 贯通式 stepper ============
+   与上一版的差别：
+   · 原来是 4 段**断开**的短线 + 悬在空中孤零零的小数字；
+     现在是一条贯通整轨的线，数字做成线上的圆形节点 → 才读得出「步骤」。
+   · 说明文字固定两行高：原来 4 条分别是 1/1/2/2 行，下边缘参差。
+   · 入场动画交给 GSAP（原来 4 个块各用 up/scale/blur/fade 四种，模板感很重）。 */
+
 .steps-section {
   background: var(--paper-2);
-  padding: 88px 0;
+  padding: 96px 0 104px;
+}
+
+.steps-track {
+  position: relative;
+  padding-top: 1px; /* 给绝对定位的线留出基准 */
+}
+
+/* 贯通细线 + 橙色进度 */
+.steps-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--border);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.steps-line-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
+  /* 默认即「已填满」：JS 未执行 / 减少动效时，线依然是完整的 */
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* 跟随鼠标的光环：沿轨道滑到所悬停的节点上 */
+.steps-halo {
+  position: absolute;
+  top: -17px;
+  left: 0;
+  margin-left: -17px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  background: radial-gradient(
+    circle,
+    rgba(245, 158, 11, 0.30) 0%,
+    rgba(245, 158, 11, 0.10) 46%,
+    transparent 72%
+  );
 }
 
 .steps-grid {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .step-card {
-  text-align: left;
-  padding: 20px 0 28px;
-  border-top: 1px solid var(--border-strong);
+  position: relative;
+  padding-top: 46px;
 }
 
-/* 编号：小、橙黄、宽字距 —— 橙色只落在「索引」这种极小的面积上 */
+/* 节点：数字做成线上的圆点，而不是悬在空中的小字 */
 .step-num {
-  display: block;
-  font-size: 0.82rem;
+  position: absolute;
+  top: -11px;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  color: var(--accent-deep);
-  margin-bottom: 26px;
+  letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
+  color: var(--text-light);
+  background: var(--paper-2);
+  border: 1px solid var(--border-strong);
+  transition: transform 0.35s var(--ease-out), background 0.3s var(--ease-soft),
+    border-color 0.3s var(--ease-soft), color 0.3s var(--ease-soft);
+}
+
+.step-card:hover .step-num,
+.step-card:focus-within .step-num {
+  transform: scale(1.15);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .step-title {
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--text);
-  margin-bottom: 8px;
 }
 
 .step-desc {
   color: var(--text-light);
   font-size: 0.88rem;
   line-height: 1.7;
+  /* 固定两行：原来 4 条说明分别占 1/1/2/2 行，底部参差 */
+  min-height: 3.4em;
 }
 
+/* ============ 窄屏 ============
+   两列/单列时一条横线不再成立，改为每格自带一条上边线，节点贴在自己那条线上。
+   鼠标光环也一并隐藏（触摸设备没有悬停）。 */
 @media (max-width: 992px) {
+  .steps-line,
+  .steps-halo {
+    display: none;
+  }
+
   .steps-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0 28px;
+    gap: 40px 32px;
+  }
+
+  .step-card {
+    padding-top: 34px;
+    border-top: 1px solid var(--border);
   }
 }
 
 @media (max-width: 640px) {
   .steps-section {
-    padding: 56px 0;
+    padding: 64px 0;
   }
+
   .steps-grid {
     grid-template-columns: 1fr;
+    gap: 36px;
   }
-  .step-card {
-    padding: 18px 0 22px;
+
+  .step-desc {
+    min-height: 0;
   }
 }
