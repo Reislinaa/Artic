@@ -407,18 +407,21 @@ export default function FeatureShowcase() {
         if (!band) return
         const visual = band.querySelector('.feature-mockup')
         const texts = band.querySelectorAll('.feature-text-line')
-        const bubbles = band.querySelectorAll('.mockup-chatbox-bubble, .mockup-list-item, .mockup-vocab-item, .mockup-device, .mockup-tone-card, .mockup-privacy-node')
+        /* v11：这里原本还会对 mockup 内部的气泡/列表项逐个做 stagger 入场，
+           意味着它们初始 opacity: 0 —— 一旦某个滚动触发器没及时触发，
+           用户看到的就是一张「空白产品卡」（实测确实出现过）。
+           现在只对整块 mockup 做一次淡入，卡内内容始终可见。 */
         const strikeWords = band.querySelectorAll('.mockup-line-strike')
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: band,
             start: 'top 82%',
-            end: 'top 30%',
-            /* v11：改为「只播一次」。
-               原来的 'play none none reverse' 会在向上滚动时把内容倒放消失，
-               容易被误认为「内容没加载出来」，也是模板感的来源。 */
-            toggleActions: 'play none none none'
+            /* v11：`once: true` —— 播完即销毁该触发器。
+               原来用 'play none none reverse'，向上滚动会把内容倒放消失，
+               容易被误认为「内容没加载出来」；而且 7 个 band 反复重建时间线会拖慢。
+               `once` 之后既不会倒放，也不再重复计算。 */
+            once: true
           }
         })
 
@@ -436,15 +439,6 @@ export default function FeatureShowcase() {
             { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out' },
             '-=0.6'
           )
-
-        if (bubbles.length) {
-          tl.fromTo(
-            bubbles,
-            { opacity: 0, y: 14 },
-            { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, ease: 'power2.out' },
-            '-=0.4'
-          )
-        }
 
         if (strikeWords.length) {
           tl.fromTo(
