@@ -147,6 +147,17 @@ git add -A && git commit -m "..." && git push origin main
 - 腾讯云服务器 + .cn 域名 + ICP 备案（7~20 天）
 - 后端需公网 HTTPS，才能接收微信/支付宝支付回调
 
+### 部署记录
+
+| 时间 | 版本要点 | base 路径 | 结果 |
+|---|---|---|---|
+| 2026-08-26 | 初始深色版（流星语） | `/luixingyu/` | ✅ |
+| 2026-08-27 | 亮色简约重构 | `/liuxingyu/` | ✅ |
+| 2026-09-10 | ARTIC 品牌 + 冷调商务配色 + 支付双模式 | `/liuxingyu/` | ✅ |
+| 2026-09-10 | 仓库改名 **Artic**，base 同步 | **`/Artic/`** | ✅ |
+
+> 每次部署后请在本表追加一行。**旧地址在改名后不再维护**（其页面内的资源路径已失效）。
+
 ---
 
 ## 六、已知坑（省时间用）
@@ -179,7 +190,14 @@ git add -A && git commit -m "..." && git push origin main
 - `F:\网站尝试\启动网站.bat`：标题「AI 智能输入法」→「ARTIC」
 - 用新 base `/Artic/` 重新构建并部署
 
-**验证与部署**：见文末部署记录。
+**验证与部署结果（2026-09-10）**：
+- 全局检索确认：`src/` 下 **0 处**残留旧名；仅本日志保留历史名称作记录
+- 构建：`node scripts/build-with-base.mjs /Artic/` → `build ok, base=/Artic/`
+- 部署：推送 `gh-pages` 成功 → https://reislinaa.github.io/Artic/
+- 核验：读取 `gh-pages` 分支 `index.html`，确认资源路径已是 `/Artic/assets/...`、
+  favicon 为 `/Artic/favicon.svg`（浏览器首次访问若见旧内容属 Pages CDN 缓存，稍后自愈）
+- 源码推送 `main`：commit `03c097c`
+- ⚠️ GitHub 仓库描述仍是旧文案，需在网页手动修改（AI 无仓库设置权限）
 
 ### 2026-09-10 · 品牌升级 ARTIC + 配色重构 + 支付链路双模式（大改）
 **用户要求**：
