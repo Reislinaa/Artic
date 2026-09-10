@@ -209,11 +209,16 @@ git add -A && git commit -m "..." && git push origin main
   - 去掉 `.feature-mockup-frame:hover` 的 `translateY(-6px) scale(1.01)`
   - 麦克风图标由白改**墨色**（白压橙黄约 2.2:1 → 墨色约 9:1）
 - `Footer.css`：页脚由纯黑改米白 + 顶细线（"全站统一浅色"的最后一块黑）
-- `FeatureShowcase.jsx` 的 GSAP 滚动动效（本次新发现的「AI 味」残留）：
+- `FeatureShowcase.jsx` 的 GSAP 滚动动效（本次新发现的「AI 味」残留 + 一处真实风险）：
   - 三条入场动画全部**去掉 `scale`**（缩放淡入是模板页面的签名动作）
   - `ease: 'back.out(1.4)'`（回弹）→ `power2.out`
-  - `toggleActions: 'play none none reverse'` → **`play none none none`**：
-    原来向上滚动会把内容**倒放消失**，容易被误认为「内容没加载出来」
+  - **[真实风险] 删除 mockup 内部的 stagger 入场**：
+    原来会对卡内的气泡/列表项逐个做 `opacity: 0 → 1`，
+    一旦某个滚动触发器没及时触发，用户看到的就是**一张空白产品卡**
+    （实测确实出现过：气泡长时间停在 `opacity: 0`，读到 0.48/0.76/0.91 的缓慢渐变）。
+    现在**只对整块 mockup 做一次淡入，卡内内容始终可见**。
+  - `toggleActions: 'play none none reverse'` → **`once: true`**：
+    原来向上滚动会把内容倒放消失，且 7 个 band 反复重建时间线会拖慢
 - 说明：产品 mockup 自带 `background: var(--surface)` + `border` + 轻阴影，
   从黑底换到米白底**无需改内部样式**即可分层
 
