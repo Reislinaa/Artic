@@ -1,4 +1,4 @@
-import ArticLogo from './ArticLogo'
+const LOGO_SRC = `${import.meta.env.BASE_URL}artic-logo.png`
 
 export default function Footer({ onOpenLegal, onNavigate }) {
   return (
@@ -6,7 +6,7 @@ export default function Footer({ onOpenLegal, onNavigate }) {
       <div className="container footer-inner">
         <div className="footer-brand">
           <div className="footer-logo">
-            <ArticLogo size={28} id="foot" />
+            <img className="brand-mark" src={LOGO_SRC} alt="ARTIC" width="28" height="28" />
             <span>ARTIC</span>
           </div>
           <p className="footer-tagline">Say what you mean, but better.</p>

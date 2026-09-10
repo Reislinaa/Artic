@@ -46,7 +46,7 @@
 | 主文字 | 深墨 `#0F172A` |
 | 字体 | **MiSans**（取自商业计划书）→ 回退 `Noto Sans SC` |
 | 强调色规则 | 全站**只允许 1 个**强调色；支付渠道图标可用微信绿 / 支付宝蓝（功能色） |
-| 品牌标识 | `src/components/ArticLogo.jsx`（声波收敛为规整文字行） |
+| 品牌标识 | **官方 logo**：`public/artic-logo.png`（由 `logo.jpg` 去底生成）+ `favicon.png` / `favicon.ico` |
 | 定价 | ¥29.9/月 · ¥299/年；企业版按人数定价 |
 
 ---
@@ -168,10 +168,57 @@ git add -A && git commit -m "..." && git push origin main
 4. **中文路径命令行乱码**：用 ASCII 链接 `F:\ai-im` 指向项目目录。
 5. **`git push` 提示仓库已重命名**：只是提示，推送仍成功；规范名以 GitHub API 为准。
 6. **临时脚本用完必须删除**，且**别提交进仓库**（曾误提交 `_extract.py` 等，已清理）。
+7. **JSX 里不能写死绝对资源路径**：`<img src="/x.png">` **不会**被 Vite 按 base 改写，
+   子路径部署（`/Artic/`）下会 404。要用 `import.meta.env.BASE_URL` 拼接，或放进 `src/assets/` 用 import。
+8. **`simple-icons` v16 已下架一批品牌**（Microsoft 全系 / Slack / OpenAI / Canva / Adobe /
+   LinkedIn / 钉钉 / 飞书 / 抖音 / WPS 等）。加图标前先确认该版本是否收录；
+   `scripts/gen-icons.mjs` 已加强校验，取不到会直接报错退出。
+9. **Pillow 可用**（12.3.0），处理图片/去底可直接用 Python 脚本。
 
 ---
 
 ## 七、开发日志（倒序，最新在最前）
+
+### 2026-09-10 · 启用官方 logo + 修正品牌图标（换常用软件、修错误项、放大 20%）
+**用户要求**：
+1. 文件夹里放了 ARTIC 的 logo，要求网站改用这个 logo；
+2. 「全场景通用」区块：① 图标改成常用软件（国内外）；② 现有图标**有错误项**；③ 图标偏小，**调大 20%**。
+
+**代码改动痕迹**：
+- **官方 logo 接入**
+  - 用 Pillow 写脚本把 `logo.jpg`（浅灰圆角底 + 黑色笔画）**去底转透明**：
+    按亮度映射 alpha（亮 → 透明、暗 → 不透明），裁到笔画外框后居中放到正方形画布
+  - 输出 `public/artic-logo.png`(512) / `public/favicon.png`(192) / `public/favicon.ico`(16/32/48)
+  - `Navbar.jsx`、`Footer.jsx`：改用 `<img className="brand-mark">`；
+    路径用 `import.meta.env.BASE_URL` 拼接，保证子路径部署（`/Artic/`）下正确加载
+    （**注意**：JSX 里写死 `/xxx.png` 不会被 Vite 改写 base，会 404）
+  - `index.html`：站点图标由 `/favicon.svg` 改为 png + ico + apple-touch-icon
+  - `index.css`：新增 `.brand-mark` 全局样式
+  - **删除** `src/components/ArticLogo.jsx`（自绘图形方案废弃）与 `public/favicon.svg`（旧流星图标）
+- **品牌图标修正**
+  - 重写 `scripts/gen-icons.mjs`：国内 + 国际两组**交替排列**，并对每个条目**强校验**
+    （`simple-icons` 取不到即报错退出）；脚本顶部写明已下架品牌清单，防止后人再踩坑
+  - 重新生成 `src/data/app-icons.js`：**75 个全部验证通过**
+    （国内 13：微信 / QQ / 搜狗 / 知乎 / 小红书 / B站 / 微博 / 百度 / 支付宝 / 淘宝 / 掘金 / CSDN / Gitee；
+      国际 62：Discord / Telegram / WhatsApp / Zoom / Gmail / Notion / Obsidian / DeepL / Grammarly /
+      GitHub / Cursor / Chrome / Safari / Claude / Gemini / X / YouTube 等）
+  - **移除**旧列表中的错误项与不相关项
+  - `EverywhereSection.css`：图标卡片**整体放大 20%**
+    （外环 52 → **62px**、内环 44 → **53px**；响应式同步 38→46、30→36、32→38、26→31）
+
+**根因（为什么之前会混入错误图标）**：
+`simple-icons` **v16 因商标原因下架了一批品牌**，而旧脚本对这些名字「取不到就静默跳过」，
+于是列表里混入了错误或不相关的图标。已下架且**不可用**的品牌包括：
+Microsoft 全系（Windows / Word / Excel / PowerPoint / Outlook / Teams / Edge / OneNote）、
+Slack、OpenAI、Canva、Adobe 全系、LinkedIn、钉钉、飞书、抖音、WPS、阿里云、腾讯系、有道等。
+**新增品牌前必须先确认该版本是否收录。**
+
+**验证与部署结果**：
+- `node scripts/gen-icons.mjs` → ✅ 75 个图标，圆环实际展示 38 个（外 19 + 内 19）
+- `node scripts/build-with-base.mjs /Artic/` 通过；产物含 `artic-logo.png` / `favicon.png` / `favicon.ico`，
+  `index.html` 图标路径已正确改写为 `/Artic/...`
+- lint 无错误
+- 部署 → https://reislinaa.github.io/Artic/
 
 ### 2026-09-10 · 支付改为独立收银台页面 + 引入 hash 路由
 **用户要求**：不能做成点击支付按钮，跳转到另一个支付页面吗？

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import ArticLogo from './ArticLogo'
+
+// 品牌标识：用户提供的官方 logo（已去底处理为透明 PNG，见 public/artic-logo.png）
+// 用 BASE_URL 拼接，保证在子路径部署（如 /Artic/）下也能正确加载
+const LOGO_SRC = `${import.meta.env.BASE_URL}artic-logo.png`
 
 export default function Navbar({ onStartDemo, onOpenAuth, currentPage = 'home', onNavigate }) {
   const [open, setOpen] = useState(false)
@@ -32,7 +35,7 @@ export default function Navbar({ onStartDemo, onOpenAuth, currentPage = 'home', 
     <header className="navbar">
       <div className="container navbar-inner">
         <a href="#" className="navbar-logo" onClick={(e) => { e.preventDefault(); handleNav('home') }}>
-          <ArticLogo size={30} id="nav" />
+          <img className="brand-mark" src={LOGO_SRC} alt="ARTIC" width="30" height="30" />
           <span className="navbar-brand">ARTIC</span>
         </a>
 

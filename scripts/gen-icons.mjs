@@ -2,69 +2,97 @@ import * as simpleIcons from 'simple-icons'
 import { writeFileSync } from 'fs'
 import { join } from 'path'
 
-const APP_NAMES = [
-  'wechat','qq','dingtalk','feishu','telegram','whatsapp','slack','discord','skype','line','signal','matrix','matrixorg',
-  'notion','obsidian','evernote','onenote','googlekeep','logseq','anytype','appflowy','simplenote','joplin','standardnotes','simplenote',
-  'visualstudiocode','sublimetext','jetbrains','intellijidea','webstorm','pycharm','goland','phpstorm','xcode','neovim','codecademy','hackclub',
-  'gmail','protonmail','thunderbird','hey',
-  'googlechrome','firefox','safari','brave','opera','vivaldi','torproject','duckduckgo',
-  'microsoftword','microsoftexcel','microsoftpowerpoint','microsoftonenote','microsoftoutlook','microsoftedge','microsoftteams','microsoftoffice','microsoft',
-  'googledocs','googlesheets','googleslides','google','googlemaps','googletranslate',
-  'x','weibo','zhihu','reddit','facebook','instagram','linkedin','mastodon','threads','tumblr','medium','substack',
-  'github','gitlab','bitbucket','jira','confluence','trello','asana','linear',
-  'figma','sketch','adobephotoshop','adobeillustrator','adobexd','adobe','canva','framer','affinity','blender','inkscape','sketchup','dribbble','behance',
-  'youtube','bilibili','tiktok','twitch','vimeo','dailymotion','netflix','spotify','applemusic','deezer','tidal','soundcloud',
-  'openai','chatbot','anthropic','perplexity','huggingface','replicate',
-  'apple','android','ios','macos','windows','windows11','linux','ubuntu','debian','archlinux','linuxmint',
-  'iterm2','alacritty','tmux','powershell','gnuemacs',
-  'alfred','raycast','todoist','ticktick','things','raindropio','notion',
-  'airtable','coda','miro','mondaycom','n8n','zapier','ifttt',
-  'cursor','codepen','replit','codeberg','sourcegraph','gitkraken','sourcetree',
-  'zoom','googlemeet','webex','teamviewer','anydesk',
-  'miro','lucid','drawio','excalidraw','whimsical',
-  'jupyter','googlecolab','plotly','observable','wakkatime',
-  'wikipedia','wikimedia','stackoverflow','mdnwebdocs','devto','hashnode','freecodecamp',
-  'applepodcasts','pocket','instapaper','matter','readwise',
-  'anchor','transistor','buzzsprout',
-  'obsidian','roamresearch','capacities','heptabase',
-  'nuance','dragon','otterdotai','descript',
-  'hubspot','salesforce','zendesk','intercom','crisp','tawkto',
-  'notion','craft','ulysses','bear','iawriter'
+/**
+ * 生成「全场景通用」区块使用的品牌图标数据。
+ *
+ * 重要：simple-icons v16 因商标原因**下架**了一批品牌，以下均**不存在**，
+ * 不要再往里加（加了也取不到，而且会导致列表里混入错误图标）：
+ *   Microsoft 全系（Windows / Word / Excel / PowerPoint / Outlook / Teams / Edge / OneNote）、
+ *   Slack、OpenAI、Canva、Adobe 全系、LinkedIn、DingTalk、Feishu / Lark、
+ *   Douyin、WPS、Aliyun、Tencent、Youdao、Tmall、Pinduoduo、Jingdong、Toutiao
+ *
+ * 本脚本对每个条目做**强校验**：取不到就直接抛错退出，
+ * 从机制上防止「错误图标」再次混进站点。
+ * 修改后运行：node scripts/gen-icons.mjs
+ */
+
+// —— 国内常用（沟通 / 输入 / 内容 / 社区）——
+const CN = [
+  'wechat', 'qq', 'sogou', 'zhihu', 'xiaohongshu', 'bilibili', 'sinaweibo',
+  'baidu', 'alipay', 'taobao', 'juejin', 'csdn', 'gitee'
 ]
 
-const icons = []
-const seen = new Set()
+// —— 国际常用（沟通 / 邮箱 / 文档 / 笔记 / 协作 / 开发 / 浏览器 / AI）——
+const INTL = [
+  // 沟通
+  'discord', 'telegram', 'whatsapp', 'zoom', 'messenger', 'loom', 'calendly', 'threads', 'mastodon',
+  // 邮箱
+  'gmail', 'thunderbird', 'protonmail',
+  // 文档与云盘
+  'googledocs', 'googlesheets', 'googleslides', 'googledrive', 'googlecalendar',
+  // 笔记与参考
+  'notion', 'obsidian', 'evernote', 'zotero',
+  // 协作与项目管理
+  'trello', 'asana', 'linear', 'jira', 'confluence', 'miro', 'airtable', 'coda',
+  // 写作辅助
+  'deepl', 'grammarly', 'excalidraw',
+  // 开发
+  'github', 'gitlab', 'bitbucket', 'cursor', 'sublimetext', 'jetbrains', 'stackoverflow', 'postman',
+  // 浏览器
+  'googlechrome', 'safari', 'firefox', 'brave', 'opera',
+  // AI
+  'anthropic', 'claude', 'perplexity', 'huggingface', 'googlegemini',
+  // 社交与内容
+  'x', 'facebook', 'instagram', 'reddit', 'medium', 'youtube',
+  // 效率
+  'todoist', 'ticktick', 'raycast', 'alfred',
+  // 平台
+  'apple', 'android'
+]
 
-for (const name of APP_NAMES) {
-  if (seen.has(name)) continue
-  seen.add(name)
-
+const resolve = (name) => {
   const variants = [
     'si' + name.charAt(0).toUpperCase() + name.slice(1),
     'si' + name.toUpperCase(),
     'si' + name
   ]
-
-  let icon = null
-  for (const v of variants) {
-    if (simpleIcons[v]) {
-      icon = simpleIcons[v]
-      break
-    }
-  }
-
-  if (icon) {
-    icons.push({
-      name: name,
-      title: icon.title,
-      hex: icon.hex,
-      path: icon.path
-    })
-  }
+  for (const v of variants) if (simpleIcons[v]) return simpleIcons[v]
+  return null
 }
 
-const output = `// Auto-generated from simple-icons - ${icons.length} app icons
-// Source: https://github.com/simple-icons/simple-icons
+// 国内外交替排列，保证两层圆环里都能看到国内 + 国际软件
+const ordered = []
+const maxLen = Math.max(CN.length, INTL.length)
+for (let i = 0; i < maxLen; i++) {
+  if (CN[i]) ordered.push(CN[i])
+  if (INTL[i]) ordered.push(INTL[i])
+}
+
+const icons = []
+const missing = []
+const seen = new Set()
+for (const name of ordered) {
+  if (seen.has(name)) continue
+  seen.add(name)
+  const icon = resolve(name)
+  if (!icon) {
+    missing.push(name)
+    continue
+  }
+  icons.push({ name, title: icon.title, hex: icon.hex, path: icon.path })
+}
+
+// 强校验：任何取不到的条目都视为错误，直接失败
+if (missing.length) {
+  console.error('❌ 以下图标在 simple-icons 中不存在，请从列表移除或替换：')
+  console.error('   ' + missing.join(', '))
+  process.exit(1)
+}
+
+const output = `// Auto-generated by scripts/gen-icons.mjs — ${icons.length} 个已验证品牌图标
+// 数据来源: https://github.com/simple-icons/simple-icons
+// 注意: simple-icons v16 已下架 Microsoft 全系 / Slack / OpenAI / Canva / Adobe / 钉钉 / 飞书 等，
+//       详见 scripts/gen-icons.mjs 顶部说明。请勿手动添加未经验证的条目。
 export const APP_ICONS = ${JSON.stringify(icons)}
 
 export default APP_ICONS
@@ -72,9 +100,9 @@ export default APP_ICONS
 
 const outPath = join(process.cwd(), 'src', 'data', 'app-icons.js')
 writeFileSync(outPath, output, 'utf-8')
-console.log(`Generated ${icons.length} icons -> ${outPath}`)
-console.log('Titles:', icons.map(i => i.title).join(', '))
 
-const foundNames = new Set(icons.map(i => i.name))
-const missing = APP_NAMES.filter(n => !foundNames.has(n) && !(seen.has(n) && foundNames.has(n)))
-console.log('\nMissing:', [...new Set(missing)].join(', '))
+console.log(`✅ 生成 ${icons.length} 个图标 -> ${outPath}`)
+console.log(`   国内 ${CN.length} 个 / 国际 ${icons.length - CN.length} 个（国内外交替排列）`)
+console.log('   标题:', icons.map((i) => i.title).join(', '))
+const shown = icons.filter((_, i) => i % 4 === 0 || i % 4 === 1).length
+console.log(`   圆环实际展示: ${shown} 个（外环 ${icons.filter((_, i) => i % 4 === 0).length} + 内环 ${icons.filter((_, i) => i % 4 === 1).length}）`)
