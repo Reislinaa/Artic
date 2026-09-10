@@ -153,6 +153,19 @@
   color: var(--on-ink-2);
 }
 
+/* 收紧深色区的垂直节奏：原来的 110/90px 在整块黑底上会显得空、散 */
+.feature-showcase-header {
+  padding: 100px 0 40px;
+}
+
+.feature-showcase .section-subtitle {
+  margin-bottom: 48px;
+}
+
+.feature-showcase .feature-band {
+  padding: 72px 0;
+}
+
 .feature-mockup {
   display: flex;
   align-items: center;

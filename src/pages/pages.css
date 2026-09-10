@@ -230,49 +230,10 @@
   margin: 0;
 }
 
-/* ============ 功能页 - 步骤 ============ */
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.step-card {
-  text-align: center;
-  padding: 28px 20px;
-  position: relative;
-}
-
-.step-num {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 138, 31, 0.3);
-  background: rgba(255, 138, 31, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--primary);
-  font-family: var(--font);
-}
-
-.step-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-
-.step-desc {
-  color: var(--text-light);
-  font-size: 0.85rem;
-  line-height: 1.6;
-}
+/* 步骤区样式统一收在 components/StepsSection.css。
+   这里原有一份**完全重复**的定义，会与 StepsSection.css 按加载顺序互相覆盖
+   （实测：橙色序号外残留了一个 56px 的圆形底）。
+   单一来源原则：同一组件的样式只保留一份定义。 */
 
 /* ============ CTA 横幅 ============ */
 .cta-banner {

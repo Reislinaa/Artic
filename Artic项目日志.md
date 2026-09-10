@@ -195,6 +195,66 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-10 · 排版整理：修掉 3 处真实布局缺陷 + CSS 双重来源
+**用户要求**：整理排版布局，别重叠，有美感。
+
+**排查方法（先用浏览器实测，不靠猜）**：
+- 用 Chrome DevTools 在 1440 / 860 / 768 / 500 / 390（设备模拟）逐档实测：
+  脚本遍历可见元素**两两求包围盒交集**，并检测横向溢出
+- 再把 7 个路由在手机宽度下全扫一遍
+- 结论：**没有真正的元素框体重叠，也没有横向溢出**；但发现 3 处会「看起来乱」的真实缺陷
+
+**代码改动痕迹**：
+
+1. **Hero 速度卡与说明文字被排成一行（真实错位）**
+   - 现象：640–900px 区间，`.hero-compare`（x 92→514）与 `.hero-caption`（x 514→753）
+     **并排**，说明文字被挤到卡片右侧
+   - 根因：`@media (max-width:900px)` 把 `.hero-col-left .reveal` 改成
+     `display:flex; flex-wrap:wrap`，而这一块里有**两个**子元素，于是被排成一行
+   - 修：`Hero.jsx` 用 `.hero-compare-wrap` 包住「速度卡 + 说明文字」；
+     `Hero.css` 新增该容器 `flex-direction:column`，并在 ≤900px 下
+     `width:100%; align-items:center`
+   - 实测：`capBelowCmp: true`、两行各自居中，问题消除
+
+2. **收银台把技术报错直接渲染给用户（最影响观感）**
+   - 现象：线上收银台显示 `下单失败 / Unexpected token '<', "<html> <he"... is not valid JSON`
+   - 根因：GitHub Pages 是纯静态托管，`/api/order/create` 返回的是 HTML 页面，
+     而 `await r.json()` 直接抛解析错误，`e.message` 被原样展示成错误文案
+   - 修：`CheckoutPage.jsx` 新增 `requestJSON()` 网络层——先校验 `content-type`，
+     非 JSON 一律转成 `BACKEND_UNAVAILABLE`；`createOrder` / `handleForcePaid`
+     捕获该情况后切到新的 `offline` 状态
+   - 新增 `offline` 友好态：「演示环境 · 支付通道待开启」+ 说明正式部署后自动开启 +
+     「返回选择方案」按钮；`CheckoutPage.css` 新增 `.co-offline-note`
+   - 后端可用时（`npm run dev`）真实下单与演示流程完全不受影响
+
+3. **`.step-num` 被两份 CSS 同时定义，橙色序号外残留 56px 圆底**
+   - 现象：步骤区数字外面还有一圈橙色圆底（设计意图是 PDF 风格的**纯橙色大数字**）
+   - 根因：`pages.css` 与 `StepsSection.css` **各定义了一份 `.step-num`**；
+     两份都生效——`StepsSection.css` 后加载赢得了 `color/font-size`，
+     而 `pages.css` 独有的 `width/height/border-radius/background` 仍然奏效，
+     于是出现「橙色数字 + 旧圆底」的混合体
+   - 修：删除 `pages.css` 里那段**完全重复**的步骤样式
+     （`.steps-grid` / `.step-card` / `.step-num` / `.step-title` / `.step-desc`），
+     样式单一来源收敛到 `StepsSection.css`
+   - 顺带做了一次全量重复选择器扫描（22 个 CSS 文件、18 处重复）：其余均为
+     `App.css` 的「多卡片共用 hover 钩子」与响应式覆盖，属有意设计；
+     `Features.css` 未被打进产物（组件已是死代码），不会串味
+
+4. **深色区垂直节奏偏空**：`FeatureShowcase.css` 头部 `110px→100px`、
+   副标题下边距 `64px→48px`、功能条 `90px→72px`
+
+5. **橙底白字对比度不达标**：`.plan-badge`（最受欢迎徽章）白字 → **黑字**（约 8:1）
+
+**验证与部署结果**：
+- 构建通过；lint 无错误
+- 线上实测：`.hero-compare-wrap` 为 `column / center`，说明文字在卡片**下方**；
+  步骤区同排卡片 `top` 完全一致、高度一致（182px）；
+  收银台显示**友好态**而非技术报错
+- 部署 → https://reislinaa.github.io/Artic/
+
+**备注**：本次未发现「元素框体互相压住」的情况。若用户看到的是别处的错位，
+需要指出**具体页面 + 浏览器宽度**，可继续按同样方法实测定位。
+
 ### 2026-09-10 · 依据《EMI UI Design Reference》重构视觉：黑白主导 + 橙色点缀
 **用户要求**：按照 `EMI_UI_Design_Reference.pdf` 设计 UI，**保留现在好的部分**，
 更改配色以及文字等视觉效果。

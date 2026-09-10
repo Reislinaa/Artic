@@ -161,6 +161,14 @@
 }
 
 /* ============ Speed comparison（黑底玻璃卡 + 橙色数据高亮） ============ */
+/* 速度卡 + 说明文字的容器：强制纵向堆叠，避免在平板断点被排成一行 */
+.hero-compare-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 100%;
+}
+
 .hero-compare {
   display: inline-flex;
   align-items: center;
@@ -306,6 +314,12 @@
 
   .hero-actions {
     justify-content: center;
+  }
+
+  /* 纵向堆叠并居中：速度卡与说明文字各自独占一行 */
+  .hero-compare-wrap {
+    width: 100%;
+    align-items: center;
   }
 }
 

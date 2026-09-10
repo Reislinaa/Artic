@@ -35,13 +35,39 @@ function fmtTime(sec) {
   return `${m}:${s}`
 }
 
+// ===== 网络层：区分「后端返回 JSON」与「静态托管返回 HTML」 =====
+// GitHub Pages 等纯静态托管没有 Node 后端，请求 /api/* 会拿到一个 HTML 页面。
+// 此时若直接 res.json()，浏览器会抛 `Unexpected token '<' ... is not valid JSON`，
+// 把技术报错原样渲染给用户 —— 看起来像页面坏了。
+// 这里统一识别该情况并转成友好的「演示环境」状态。
+class BackendUnavailable extends Error {
+  constructor() {
+    super('当前为线上静态展示版，尚未接入支付后端')
+    this.code = 'BACKEND_UNAVAILABLE'
+  }
+}
+
+async function requestJSON(url, options) {
+  let res
+  try {
+    res = await fetch(url, options)
+  } catch {
+    throw new BackendUnavailable()
+  }
+  const type = res.headers.get('content-type') || ''
+  if (!type.includes('application/json')) throw new BackendUnavailable()
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error || '请求失败')
+  return data
+}
+
 export default function CheckoutPage({ planKey, onNavigate }) {
   const plan = PLAN_META[planKey] || null
   const [method, setMethod] = useState('wechat')
   const [order, setOrder] = useState(null)
   const [qr, setQr] = useState('')
   const [error, setError] = useState('')
-  // creating | pending | paid | expired | failed
+  // creating | pending | paid | expired | failed | offline(静态展示版无后端)
   const [status, setStatus] = useState('creating')
   const [remain, setRemain] = useState(ORDER_TTL)
   const [payStatus, setPayStatus] = useState(null)
@@ -65,17 +91,20 @@ export default function CheckoutPage({ planKey, onNavigate }) {
     setQr('')
     setStatus('creating')
     try {
-      const r = await fetch('/api/order/create', {
+      const d = await requestJSON('/api/order/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planKey, method: payMethod })
       })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d.error || '创建订单失败')
       setOrder(d)
       setStatus('pending')
       setRemain(ORDER_TTL)
     } catch (e) {
+      // 静态托管没有后端：走「演示环境」友好态，不暴露技术报错
+      if (e.code === 'BACKEND_UNAVAILABLE') {
+        setStatus('offline')
+        return
+      }
       setError(e.message || '网络异常，请稍后再试')
       setStatus('failed')
     }
@@ -131,15 +160,18 @@ export default function CheckoutPage({ planKey, onNavigate }) {
   const handleForcePaid = async () => {
     if (!order) return
     try {
-      const r = await fetch('/api/order/forcepaid', {
+      await requestJSON('/api/order/forcepaid', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderId: order.orderId })
       })
-      if (!r.ok) throw new Error('模拟支付失败')
       setStatus('paid')
     } catch (e) {
-      setError(e.message)
+      if (e.code === 'BACKEND_UNAVAILABLE') {
+        setStatus('offline')
+        return
+      }
+      setError(e.message || '模拟支付失败')
     }
   }
 
@@ -239,6 +271,17 @@ export default function CheckoutPage({ planKey, onNavigate }) {
                     <p className="co-qr-state-title">订单已超时</p>
                     <p className="co-qr-state-desc">二维码已失效，请重新下单</p>
                     <button className="btn btn-primary" onClick={() => createOrder(method)}>重新下单</button>
+                  </div>
+                ) : status === 'offline' ? (
+                  <div className="co-qr-state">
+                    <p className="co-qr-state-title">演示环境 · 支付通道待开启</p>
+                    <p className="co-offline-note">
+                      当前为线上静态展示版，尚未部署支付后端，因此暂不生成支付二维码。
+                      正式环境部署后，微信与支付宝扫码会自动开启，页面无需任何改动。
+                    </p>
+                    <button className="btn btn-ghost" onClick={() => onNavigate('pricing')}>
+                      返回选择方案
+                    </button>
                   </div>
                 ) : status === 'failed' ? (
                   <div className="co-qr-state">

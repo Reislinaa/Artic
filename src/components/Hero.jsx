@@ -42,26 +42,31 @@ export default function Hero({ onStartDemo, onNavigate }) {
 
           {/* speed comparison sits below the buttons in the LEFT column */}
           <Reveal delay={5} variant="up">
-            <div className="hero-compare">
-              <div className="compare-item">
-                <span className="compare-label">传统打字</span>
-                <div className="compare-value">
-                  <span className="compare-num">45</span>
-                  <span className="compare-unit">wpm</span>
+            {/* 这一层保证「速度卡 + 说明文字」永远纵向堆叠：
+                平板断点会把 .reveal 变成 flex 行布局，若两者直接作为
+                .reveal 的子元素会被排成一行（实测 860px 下并排错位）。 */}
+            <div className="hero-compare-wrap">
+              <div className="hero-compare">
+                <div className="compare-item">
+                  <span className="compare-label">传统打字</span>
+                  <div className="compare-value">
+                    <span className="compare-num">45</span>
+                    <span className="compare-unit">wpm</span>
+                  </div>
+                  <div className="compare-bar compare-bar-slow"><span /></div>
                 </div>
-                <div className="compare-bar compare-bar-slow"><span /></div>
-              </div>
-              <div className="compare-arrow">→</div>
-              <div className="compare-item">
-                <span className="compare-label">ARTIC</span>
-                <div className="compare-value">
-                  <span className="compare-num compare-num-fast">220</span>
-                  <span className="compare-unit">wpm</span>
+                <div className="compare-arrow">→</div>
+                <div className="compare-item">
+                  <span className="compare-label">ARTIC</span>
+                  <div className="compare-value">
+                    <span className="compare-num compare-num-fast">220</span>
+                    <span className="compare-unit">wpm</span>
+                  </div>
+                  <div className="compare-bar compare-bar-fast"><span /></div>
                 </div>
-                <div className="compare-bar compare-bar-fast"><span /></div>
               </div>
+              <p className="hero-caption">超长音频稳定 3 秒内出稿，说完即所得</p>
             </div>
-            <p className="hero-caption">超长音频稳定 3 秒内出稿，说完即所得</p>
           </Reveal>
         </div>
 

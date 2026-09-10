@@ -50,7 +50,8 @@
   top: -12px;
   right: 24px;
   background: var(--grad-brand);
-  color: #fff;
+  /* 橙底配黑字（对比度约 8:1）；白字在橙底上只有 ~2.6:1，不达标 */
+  color: var(--ink);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.5px;

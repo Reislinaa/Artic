@@ -182,6 +182,16 @@
   cursor: default;
 }
 
+/* 静态展示版（未部署支付后端）时的友好说明 */
+.co-offline-note {
+  max-width: 400px;
+  margin: 0 auto 24px;
+  font-size: 0.92rem;
+  line-height: 1.85;
+  color: var(--text-2);
+  text-align: center;
+}
+
 /* 二维码区 */
 .co-qr-area {
   display: flex;
