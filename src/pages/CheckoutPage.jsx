@@ -92,7 +92,7 @@ export default function CheckoutPage({ planKey, onNavigate }) {
     let cancelled = false
     QRCode.toDataURL(order.payUrl, {
       width: 260, margin: 1,
-      color: { dark: '#0F172A', light: '#FFFFFF' }
+      color: { dark: '#0A0A0A', light: '#FFFFFF' }
     }).then((url) => { if (!cancelled) setQr(url) }).catch(() => {})
     return () => { cancelled = true }
   }, [order?.payUrl])

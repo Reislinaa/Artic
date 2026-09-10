@@ -461,7 +461,7 @@ export default function FeatureShowcase() {
   }, [])
 
   return (
-    <section className="feature-showcase" id="features" ref={sectionRef}>
+    <section className="feature-showcase ink" id="features" ref={sectionRef}>
       <div className="feature-showcase-header">
         <div className="container-wide">
           <Reveal variant="fade">

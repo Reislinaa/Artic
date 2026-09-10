@@ -1,52 +1,65 @@
-/* ============ Design system tokens ============ */
-:root {
-  --bg: #FAFAF8;
-  --surface: #FFFFFF;
-  --border: rgba(0, 0, 0, 0.06);
-  --border-strong: rgba(0, 0, 0, 0.1);
-  --primary: #2B4BF2;
-  --secondary: #0F766E;
-  --gold: #D97706;
-  --text: #1A1A1A;
-  --text-2: #4A4A4A;
-  --text-light: #8A8A8A;
-  --grad-brand: linear-gradient(135deg, #2B4BF2, #6D4BFF);
-  --radius-lg: 20px;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --font: 'Bricolage Grotesque', 'Noto Sans SC', sans-serif;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
+/* ============ Hero —— 深色底 + 橙色光晕 ============
+   依据《万物本相 UI DESIGN REFERENCE》01 节「黑 + 白 + 橙 · 深色底 / 橙色光晕」：
+   大面积黑为底、白色文字，橙色以**光晕/渐变**形式小面积出现。
 
-/* ============ Hero section ============ */
+   注意：这里**不再重复定义 :root 令牌**。早期本文件在局部重定义了一套
+   --bg/--primary/--text 等变量，由于 CSS 全局作用域 + 加载顺序，会静默覆盖
+   index.css 的设计令牌，导致「改了 index.css 却看不到效果」。
+   现已统一由 src/index.css 作为唯一令牌来源。 */
+
 .hero {
   min-height: 100vh;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(900px 500px at 80% -10%, rgba(43, 75, 242, 0.06), transparent 60%),
-    radial-gradient(700px 420px at 10% 110%, rgba(15, 118, 110, 0.05), transparent 60%),
-    var(--bg);
+  background: var(--ink);
   padding: 60px 0 100px;
+  isolation: isolate;
 }
 
+/* 主光斑：偏右上的巨大柔和橙光（“日出”感，PDF 01 节手法） */
 .hero-glow {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    600px circle at 50% 30%,
-    rgba(43, 75, 242, 0.06),
-    rgba(245, 158, 11, 0.03) 45%,
-    transparent 65%
-  );
-  animation: glowDrift 18s ease-in-out infinite alternate;
+  top: -16%;
+  right: -8%;
+  width: min(920px, 80vw);
+  height: min(920px, 80vw);
+  border-radius: 50%;
   pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 173, 71, 0.88) 0%,
+    rgba(255, 138, 31, 0.48) 24%,
+    rgba(255, 122, 24, 0.18) 46%,
+    rgba(255, 122, 24, 0.05) 60%,
+    transparent 72%
+  );
+  filter: blur(46px);
+  animation: glowDrift 22s ease-in-out infinite alternate;
+}
+
+/* 地平线光带：底部中央的橙色弧光收尾（PDF 04 节 Contact 页手法） */
+.hero-horizon {
+  position: absolute;
+  left: 50%;
+  bottom: -14%;
+  width: min(1500px, 135%);
+  height: 440px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 100% at 50% 100%,
+    rgba(255, 138, 31, 0.40) 0%,
+    rgba(255, 122, 24, 0.13) 44%,
+    transparent 74%
+  );
+  filter: blur(52px);
 }
 
 @keyframes glowDrift {
-  0% { opacity: 0.6; transform: translate3d(0, 0, 0); }
-  100% { opacity: 1; transform: translate3d(-3%, 2%, 0); }
+  0% { opacity: 0.72; transform: translate3d(0, 0, 0) scale(1); }
+  100% { opacity: 1; transform: translate3d(-3%, 2%, 0) scale(1.06); }
 }
 
 /* ============ Wide two-column grid ============ */
@@ -79,19 +92,32 @@
   align-items: center;
 }
 
-/* ============ Hero text elements ============ */
+/* ============ Hero text elements（黑底白字层级） ============ */
 .hero-tag {
-  display: inline-block;
-  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.76rem;
   font-weight: 600;
-  letter-spacing: 2px;
-  color: var(--text-2);
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--on-ink);
   padding: 9px 20px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--hairline-ink-strong);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
   margin-bottom: 44px;
+}
+
+/* 标签前的橙色小圆点 —— 点缀色的最小用法 */
+.hero-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px rgba(255, 138, 31, 0.85);
 }
 
 .hero-title {
@@ -104,12 +130,13 @@
   font-size: clamp(3rem, 9vw, 7rem);
   font-weight: 700;
   line-height: 1.05;
-  letter-spacing: -0.04em;
-  color: var(--text);
+  letter-spacing: -0.045em;
+  color: var(--on-ink);
 }
 
+/* 「即成文」用橙色渐变 —— 全站最大的橙色面积，作为品牌记忆点 */
 .hero-gradient {
-  background: var(--grad-brand);
+  background: var(--grad-accent);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -118,10 +145,10 @@
 
 .hero-subtitle {
   font-size: 1.18rem;
-  color: var(--text-2);
+  color: var(--on-ink-2);
   max-width: 580px;
   margin: 0 0 44px;
-  line-height: 1.75;
+  line-height: 1.8;
   margin-left: 0;
 }
 
@@ -133,17 +160,16 @@
   margin-bottom: 48px;
 }
 
-/* ============ Speed comparison (left-aligned) ============ */
+/* ============ Speed comparison（黑底玻璃卡 + 橙色数据高亮） ============ */
 .hero-compare {
   display: inline-flex;
   align-items: center;
   gap: 32px;
   padding: 22px 36px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--hairline-ink);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(14px);
 }
 
 .compare-item {
@@ -155,10 +181,10 @@
 }
 
 .compare-label {
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 1.5px;
-  color: var(--text-light);
+  letter-spacing: 1.8px;
+  color: var(--on-ink-3);
   text-transform: uppercase;
 }
 
@@ -171,24 +197,25 @@
 .compare-num {
   font-size: 2.6rem;
   font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--text-2);
+  letter-spacing: -0.035em;
+  color: var(--on-ink-2);
 }
 
+/* 核心数据高亮 —— PDF 明确允许橙色用于「核心数据」 */
 .compare-num-fast {
-  color: var(--primary);
+  color: var(--accent);
 }
 
 .compare-unit {
   font-size: 0.9rem;
-  color: var(--text-light);
+  color: var(--on-ink-3);
 }
 
 .compare-bar {
   width: 130px;
-  height: 5px;
+  height: 4px;
   border-radius: 99px;
-  background: var(--surface-3);
+  background: rgba(255, 255, 255, 0.14);
   overflow: hidden;
 }
 
@@ -200,29 +227,30 @@
 
 .compare-bar-slow span {
   width: 22%;
-  background: var(--text-light);
+  background: var(--on-ink-3);
 }
 
 .compare-bar-fast span {
   width: 100%;
-  background: var(--grad-brand);
+  background: var(--grad-accent);
+  box-shadow: 0 0 14px rgba(255, 138, 31, 0.6);
 }
 
 .hero-caption {
   margin-top: 14px;
   font-size: 0.86rem;
-  color: var(--text-light);
+  color: var(--on-ink-3);
   letter-spacing: 0.01em;
 }
 
 .compare-arrow {
   font-size: 1.5rem;
-  color: var(--text-light);
+  color: var(--accent);
   animation: arrowPulse 2s ease-in-out infinite;
 }
 
 @keyframes arrowPulse {
-  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  0%, 100% { transform: translateX(0); opacity: 0.55; }
   50% { transform: translateX(6px); opacity: 1; }
 }
 
@@ -278,10 +306,6 @@
 
   .hero-actions {
     justify-content: center;
-  }
-
-  .hero-compare {
-    /* keep inline-flex so it stays a tidy pill, but centered via parent */
   }
 }
 

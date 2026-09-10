@@ -34,16 +34,17 @@
   overflow: hidden;
 }
 
+/* PDF 规范：橙色只用于「关键行动按钮」→ 主 CTA = 橙底黑字（对比度约 8:1） */
 .btn-primary {
-  background: var(--text);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(28, 28, 30, 0.18);
+  background: var(--accent);
+  color: var(--ink);
+  box-shadow: var(--shadow-accent);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  background: #000;
-  box-shadow: 0 10px 30px rgba(28, 28, 30, 0.24);
+  background: var(--accent-bright);
+  box-shadow: 0 12px 34px rgba(255, 138, 31, 0.42);
 }
 
 .btn-primary:active {
@@ -51,46 +52,59 @@
 }
 
 .btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   transform: none;
   cursor: not-allowed;
 }
 
 .btn-ghost {
-  background: var(--surface);
-  color: var(--text);
+  background: transparent;
+  color: var(--ink);
   border: 1px solid var(--border-strong);
 }
 
 .btn-ghost:hover {
-  border-color: var(--text);
-  color: var(--text);
+  border-color: var(--ink);
+  color: var(--ink);
   transform: translateY(-2px);
-  background: var(--surface-2);
+  background: var(--surface);
   box-shadow: var(--shadow-sm);
+}
+
+/* 深色区块上的次要按钮（白描边） */
+.btn-on-ink {
+  background: transparent;
+  color: var(--on-ink);
+  border: 1px solid var(--hairline-ink-strong);
+}
+
+.btn-on-ink:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.52);
+  transform: translateY(-2px);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--text);
-  border: 1px solid var(--text);
+  color: var(--ink);
+  border: 1px solid var(--ink);
 }
 
 .btn-outline:hover {
-  background: var(--text);
-  color: var(--bg);
+  background: var(--ink);
+  color: var(--on-ink);
   transform: translateY(-2px);
 }
 
 .btn-accent {
-  background: var(--grad-brand);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(43, 75, 242, 0.28);
+  background: var(--grad-accent);
+  color: var(--ink);
+  box-shadow: var(--shadow-accent);
 }
 
 .btn-accent:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(43, 75, 242, 0.36);
+  box-shadow: 0 12px 34px rgba(255, 138, 31, 0.42);
 }
 
 .btn-lg {

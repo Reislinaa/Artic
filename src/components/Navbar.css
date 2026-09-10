@@ -1,11 +1,13 @@
+/* ============ 导航 —— 黑底白字（PDF 06 节「黑底白字导航菜单」） ============ */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(250, 250, 248, 0.82);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom: 1px solid var(--hairline-ink);
+  color: var(--on-ink);
 }
 
 .navbar-inner {
@@ -20,7 +22,7 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: var(--text);
+  color: var(--on-ink);
 }
 
 .navbar-logo:hover {
@@ -31,7 +33,7 @@
   font-size: 1.18rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--text);
+  color: var(--on-ink);
 }
 
 .navbar-links {
@@ -42,7 +44,7 @@
 
 .navbar-links a,
 .navbar-link {
-  color: var(--text-2);
+  color: var(--on-ink-2);
   font-weight: 500;
   font-size: 0.94rem;
   transition: color 0.2s;
@@ -56,14 +58,15 @@
 
 .navbar-links a:hover,
 .navbar-link:hover {
-  color: var(--text);
+  color: var(--on-ink);
   text-decoration: none;
 }
 
 .navbar-link.active {
-  color: var(--text);
+  color: var(--on-ink);
 }
 
+/* 选中态用橙色短横 —— 点缀色只做「记忆点」 */
 .navbar-link.active::after {
   content: '';
   position: absolute;
@@ -72,8 +75,9 @@
   transform: translateX(-50%);
   width: 16px;
   height: 2px;
-  background: var(--primary);
+  background: var(--accent);
   border-radius: 2px;
+  box-shadow: 0 0 10px rgba(255, 138, 31, 0.8);
 }
 
 .navbar-cta {
@@ -99,15 +103,16 @@
 }
 
 .navbar-user:hover {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.07);
 }
 
+/* 头像用橙色渐变 + 黑字：小面积、高识别 */
 .navbar-avatar {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--grad-brand);
-  color: #fff;
+  background: var(--grad-accent);
+  color: var(--ink);
   font-size: 0.9rem;
   font-weight: 700;
   display: flex;
@@ -118,7 +123,7 @@
 .navbar-username {
   font-weight: 500;
   font-size: 0.9rem;
-  color: var(--text);
+  color: var(--on-ink);
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,10 +134,10 @@
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
+  background: var(--ink-2);
+  border: 1px solid var(--hairline-ink);
   border-radius: 12px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   min-width: 160px;
   padding: 8px;
   z-index: 120;
@@ -143,8 +148,8 @@
   display: block;
   padding: 8px 12px;
   font-size: 0.85rem;
-  color: var(--text-light);
-  border-bottom: 1px solid var(--border);
+  color: var(--on-ink-3);
+  border-bottom: 1px solid var(--hairline-ink);
   margin-bottom: 6px;
 }
 
@@ -153,7 +158,7 @@
   padding: 8px 12px;
   border: none;
   background: none;
-  color: var(--primary);
+  color: var(--accent);
   font-size: 0.9rem;
   font-weight: 500;
   border-radius: 8px;
@@ -162,7 +167,7 @@
 }
 
 .navbar-user-menu button:hover {
-  background: rgba(43, 75, 242, 0.08);
+  background: rgba(255, 138, 31, 0.12);
 }
 
 .navbar-toggle {
@@ -178,7 +183,7 @@
   display: block;
   width: 22px;
   height: 2px;
-  background: var(--text-2);
+  background: var(--on-ink);
   border-radius: 2px;
   transition: 0.3s;
 }
@@ -193,11 +198,11 @@
     left: 0;
     right: 0;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.98);
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(20px);
     padding: 24px;
     gap: 20px;
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
+    border-bottom: 1px solid var(--hairline-ink);
     transform: translateY(-130%);
     transition: transform 0.3s;
     align-items: stretch;

@@ -4,7 +4,9 @@ import InputMockup from './InputMockup'
 export default function Hero({ onStartDemo, onNavigate }) {
   return (
     <section className="hero" id="home">
+      {/* 黑底 + 橙色光晕：主光斑（右上）+ 地平线光带（底部中央） */}
       <div className="hero-glow" aria-hidden="true" />
+      <div className="hero-horizon" aria-hidden="true" />
 
       <div className="hero-content">
         {/* Left column: copy + actions + compare */}
@@ -32,7 +34,7 @@ export default function Hero({ onStartDemo, onNavigate }) {
               <button className="btn btn-primary btn-lg" onClick={() => onNavigate('pricing')}>
                 开始使用
               </button>
-              <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('features')}>
+              <button className="btn btn-on-ink btn-lg" onClick={() => onNavigate('features')}>
                 了解更多
               </button>
             </div>

@@ -103,6 +103,56 @@
   margin: 0;
 }
 
+/* ============================================================
+   v8 · 深色改造 —— 依据《万物本相 UI DESIGN REFERENCE》
+   整块黑底，产品 UI 卡保持白色 → 复刻 PDF「黑底 + 白色卡片」的对比手法；
+   橙色只给 01–07 序号（PDF 标题版式的序号用色）。
+   ============================================================ */
+.feature-showcase {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.feature-showcase-header {
+  background: var(--ink);
+}
+
+.feature-showcase .section-title {
+  color: var(--on-ink);
+}
+
+.feature-showcase .section-subtitle {
+  color: var(--on-ink-2);
+}
+
+.feature-showcase .section-kicker {
+  color: var(--accent);
+}
+
+/* 奇偶两条带在黑底上靠「极淡的明度差」区分，而不是卡片色块 */
+.feature-showcase .feature-band:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.022);
+  border-top: 1px solid var(--hairline-ink);
+  border-bottom: 1px solid var(--hairline-ink);
+}
+
+.feature-showcase .feature-label {
+  color: var(--accent);
+  letter-spacing: 2.6px;
+}
+
+.feature-showcase .feature-en {
+  color: var(--on-ink-3);
+}
+
+.feature-showcase .feature-title {
+  color: var(--on-ink);
+}
+
+.feature-showcase .feature-desc {
+  color: var(--on-ink-2);
+}
+
 .feature-mockup {
   display: flex;
   align-items: center;
@@ -300,8 +350,8 @@
   background: var(--surface-3);
 }
 
-.mockup-editor-dot:first-child { background: #2B4BF2; }
-.mockup-editor-dot:nth-child(2) { background: #6D4BFF; }
+.mockup-editor-dot:first-child { background: #FF8A1F; }
+.mockup-editor-dot:nth-child(2) { background: #FFC24B; }
 .mockup-editor-dot:nth-child(3) { background: #0F766E; }
 
 .mockup-editor-body {
@@ -475,7 +525,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 10px 24px rgba(43, 75, 242, 0.3);
+  box-shadow: 0 10px 24px rgba(255, 138, 31, 0.3);
 }
 
 .mockup-command-chip svg {
@@ -783,7 +833,7 @@
 }
 
 .mockup-shield path:first-child {
-  fill: rgba(43, 75, 242, 0.08);
+  fill: rgba(255, 138, 31, 0.08);
   stroke: var(--primary);
   stroke-width: 2.5;
 }
@@ -806,7 +856,7 @@
   font-weight: 700;
   padding: 5px 10px;
   border-radius: 99px;
-  box-shadow: 0 4px 12px rgba(43, 75, 242, 0.25);
+  box-shadow: 0 4px 12px rgba(255, 138, 31, 0.25);
 }
 
 .mockup-privacy-flow {
@@ -836,7 +886,7 @@
 }
 
 .mockup-privacy-mic {
-  background: rgba(43, 75, 242, 0.1);
+  background: rgba(255, 138, 31, 0.1);
   color: var(--primary);
 }
 

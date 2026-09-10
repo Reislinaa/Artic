@@ -1,13 +1,19 @@
+/* ============ 产品 UI 模拟（聊天 / 语音转写） ============
+   PDF 规范：黑白主导，橙色只用于「关键行动按钮」。
+   因此气泡与头像统一为墨黑，橙色只保留在麦克风按钮（核心动作）上。
+   这张白卡在黑底区块里正好复刻 PDF「黑底 + 白色卡片」的对比。 */
 .chatbox {
   width: 100%;
   max-width: 360px;
   margin: 0 auto;
   background: var(--surface);
+  /* 显式声明文字色：本组件常被放进深色区块，避免继承白色导致白底白字 */
+  color: var(--text);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 1px 2px rgba(28, 28, 30, 0.04),
-    0 32px 72px rgba(28, 28, 30, 0.10);
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 32px 72px rgba(0, 0, 0, 0.28);
   overflow: hidden;
   font-family: var(--font);
 }
@@ -25,11 +31,11 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: var(--grad-brand);
+  background: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--on-ink);
   font-weight: 700;
   font-size: 0.95rem;
 }
@@ -59,15 +65,16 @@
 
 .chat-msg-them {
   align-self: flex-start;
-  background: var(--bg-2);
+  background: var(--surface-2);
   color: var(--text);
   border-bottom-left-radius: 6px;
 }
 
+/* 我方消息：墨黑（不再用橙色，避免橙面积超规范） */
 .chat-msg-me {
   align-self: flex-end;
-  background: var(--grad-brand);
-  color: #fff;
+  background: var(--ink);
+  color: var(--on-ink);
   border-bottom-right-radius: 6px;
 }
 
@@ -129,16 +136,18 @@
   color: var(--text-light);
 }
 
+/* 唯一的橙色：核心行动（按住说话） */
 .chatbox-input-mic {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--grad-brand);
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--ink);
   flex-shrink: 0;
+  box-shadow: 0 0 0 4px rgba(255, 138, 31, 0.16);
 }
 
 .chatbox-input-mic svg {

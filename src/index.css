@@ -1,39 +1,73 @@
 :root {
-  /* ARTIC v7 —— 高端商务表达工具
-     视觉基调取自品牌 PPT：MiSans 字体 + 中性冷调底 + 深墨字。
-     单一强调色（电光蓝）只出现在 CTA / 选中态 / 关键数字上，保持稀缺。 */
-  --bg: #F7F8FA;
-  --bg-2: #FFFFFF;
-  --surface: #FFFFFF;
-  --surface-2: #F1F3F7;
-  --surface-3: #E6E9EF;
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.16);
+  /* ============================================================
+     ARTIC v8 —— 依据《万物本相 UI DESIGN REFERENCE》(EMI · 2026.09) 重构
+     ------------------------------------------------------------
+     核心规范（PDF 第 07 节「EMI 的建议」）：
+       1. 基础品牌色 = 黑与白，在界面中**大面积主导**（标识系统亦为黑白）
+       2. 第三色一律**小面积、点缀式**使用，占比 ≤ 5%~10%
+       3. 点缀色 = 橙：**色相偏黄、明度偏高**，避免偏红（太橘）或偏暗
+       4. 橙色以 **渐变 / 光晕** 形式呈现，只用于关键行动按钮、核心数据高亮、品牌记忆点
+     因此本文件里 --ink / --paper 是主角，--accent 只在少数位置出现。
+     ============================================================ */
 
-  --text: #0F172A;
-  --text-2: #475569;
-  --text-light: #8A94A6;
+  /* —— 墨（黑）：主色之一 —— */
+  --ink: #0A0A0A;
+  --ink-2: #141414;
+  --ink-3: #1E1E1E;
 
-  /* 品牌主色：电光蓝（精确 · 可信 · 商务） */
-  --primary: #2B4BF2;
-  --primary-dark: #1E38C9;
-  --primary-light: #5A73FF;
-  --secondary: #0E7490;
-  --secondary-light: #22D3EE;
-  --gold: #6D4BFF;
+  /* —— 纸：白 / 暖米白（不用冷白，避免廉价感） —— */
+  --paper: #FFFFFF;
+  --paper-2: #F7F5F2;
+  --paper-3: #EFEBE5;
 
-  --grad-brand: linear-gradient(135deg, #2B4BF2 0%, #6D4BFF 100%);
-  --grad-soft: linear-gradient(180deg, rgba(43, 75, 242, 0.08) 0%, transparent 100%);
+  /* —— 黑底上的文字与线 —— */
+  --on-ink: #FFFFFF;
+  --on-ink-2: rgba(255, 255, 255, 0.68);
+  --on-ink-3: rgba(255, 255, 255, 0.44);
+  --hairline-ink: rgba(255, 255, 255, 0.14);
+  --hairline-ink-strong: rgba(255, 255, 255, 0.28);
 
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 28px 64px rgba(15, 23, 42, 0.12);
+  /* —— 点缀色：橙（偏黄 / 高明度 / 不偏红） —— */
+  --accent: #FF8A1F;          /* 光晕、深色底上的强调 */
+  --accent-bright: #FFA53D;
+  --accent-soft: #FFC24B;
+  --accent-deep: #C2410C;     /* 浅色底上的文字/图形，保证对比度 ≥ 4.5:1 */
+  --accent-ink: #7C2D12;
+  --grad-accent: linear-gradient(135deg, #FFC24B 0%, #FF7A18 100%);
+
+  /* —— 浅色区（默认）语义变量 —— */
+  --bg: var(--paper-2);
+  --bg-2: var(--paper);
+  --surface: var(--paper);
+  --surface-2: var(--paper-2);
+  --surface-3: var(--paper-3);
+  --border: rgba(10, 10, 10, 0.10);
+  --border-strong: rgba(10, 10, 10, 0.20);
+
+  --text: #0A0A0A;
+  --text-2: #454545;
+  --text-light: #8C8C86;
+
+  /* —— 兼容旧变量名（避免大面积重写组件 CSS）—— */
+  --primary: var(--accent-deep);
+  --primary-dark: #9A3412;
+  --primary-light: var(--accent);
+  --secondary: #3F3F3F;
+  --secondary-light: #A3A3A3;
+  --gold: var(--accent);
+  --grad-brand: var(--grad-accent);
+  --grad-soft: linear-gradient(180deg, rgba(255, 138, 31, 0.10) 0%, transparent 100%);
+
+  /* 阴影：黑白体系下更克制，靠明度差而非大阴影 */
+  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.05);
+  --shadow-md: 0 10px 30px rgba(10, 10, 10, 0.07);
+  --shadow-lg: 0 24px 60px rgba(10, 10, 10, 0.10);
+  --shadow-accent: 0 8px 26px rgba(255, 138, 31, 0.30);
 
   --radius: 14px;
   --radius-lg: 20px;
   --radius-xl: 28px;
 
-  /* 平滑缓动 */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   --transition: 0.45s var(--ease-out);
@@ -61,29 +95,13 @@ body {
   overflow-x: hidden;
 }
 
-body::before {
-  /* 极淡暖调网点肌理 */
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 20% 30%, rgba(43, 75, 242, 0.04) 50%, transparent 51%),
-    radial-gradient(1px 1px at 60% 70%, rgba(15, 118, 110, 0.04) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 80% 20%, rgba(109, 75, 255, 0.03) 50%, transparent 51%),
-    radial-gradient(1px 1px at 35% 80%, rgba(43, 75, 242, 0.04) 50%, transparent 51%);
-  background-size: 260px 260px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.6;
-}
-
 #root {
   position: relative;
   z-index: 1;
 }
 
 a {
-  color: var(--primary);
+  color: var(--accent-deep);
   text-decoration: none;
   transition: color 0.3s var(--ease-soft);
 }
@@ -98,8 +116,8 @@ button {
 }
 
 ::selection {
-  background: rgba(43, 75, 242, 0.14);
-  color: var(--text);
+  background: rgba(255, 138, 31, 0.22);
+  color: var(--ink);
 }
 
 .container {
@@ -133,24 +151,78 @@ button {
   position: relative;
 }
 
+/* ============ 深色区块（黑白主导 + 橙色光晕） ============
+   用法：<section class="section ink"> + 内部放 .ink-glow / .ink-horizon 装饰 */
+.ink {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.ink .section-title,
+.ink .section-subtitle {
+  color: var(--on-ink);
+}
+
+.ink .section-subtitle {
+  color: var(--on-ink-2);
+}
+
+.ink .section-kicker {
+  color: var(--accent);
+}
+
+/* 大而柔和的橙色光斑（PDF 01 节核心手法） */
+.ink-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 138, 31, 0.58) 0%,
+    rgba(255, 122, 24, 0.26) 38%,
+    rgba(255, 122, 24, 0.06) 60%,
+    transparent 72%
+  );
+  filter: blur(70px);
+}
+
+/* 中央橙色「地平线」光带（PDF 04 节 Contact 页手法） */
+.ink-horizon {
+  position: absolute;
+  left: 50%;
+  bottom: -6%;
+  width: min(1280px, 118%);
+  height: 340px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 58% 100% at 50% 100%,
+    rgba(255, 138, 31, 0.55) 0%,
+    rgba(255, 122, 24, 0.20) 42%,
+    transparent 72%
+  );
+  filter: blur(38px);
+}
+
 .section-title {
-  font-size: 2.6rem;
+  font-size: 2.7rem;
   font-weight: 700;
   text-align: center;
   margin-bottom: 16px;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+  line-height: 1.22;
   color: var(--text);
 }
 
-/* 区块短语 */
+/* 区块短语（英文大写小字 + 橙色 —— PDF 标题版式的「小字注释」层级） */
 .section-kicker {
   display: block;
   text-align: center;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 3px;
+  letter-spacing: 3.4px;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--accent-deep);
   margin-bottom: 18px;
 }
 
@@ -160,7 +232,51 @@ button {
   font-size: 1.08rem;
   max-width: 620px;
   margin: 0 auto 64px;
-  line-height: 1.7;
+  line-height: 1.75;
+}
+
+/* 区块标题下方的细分割线 —— PDF「标题 + 细线」的版面节奏（全站统一） */
+.section-subtitle::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin: 34px auto 0;
+  background: var(--border);
+}
+
+.ink .section-subtitle::after {
+  background: var(--hairline-ink);
+}
+
+/* ============ 细线分割（版面节奏，替代重阴影与大色块） ============ */
+.hairline {
+  height: 1px;
+  background: var(--border);
+  border: 0;
+}
+
+.ink .hairline {
+  background: var(--hairline-ink);
+}
+
+/* 区块标题组：kicker + 标题 + 细线（PDF 页面头部的版式） */
+.section-head {
+  max-width: 900px;
+  margin: 0 auto 56px;
+}
+
+.section-head .section-title {
+  margin-bottom: 20px;
+}
+
+.section-rule {
+  height: 1px;
+  background: var(--border);
+  margin-top: 4px;
+}
+
+.ink .section-rule {
+  background: var(--hairline-ink);
 }
 
 /* ============ 滚动渐入动画 ============ */
@@ -261,7 +377,7 @@ button {
     padding: 72px 0;
   }
   .section-title {
-    font-size: 1.9rem;
+    font-size: 1.95rem;
   }
   .container {
     padding: 0 20px;

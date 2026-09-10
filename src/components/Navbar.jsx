@@ -63,7 +63,7 @@ export default function Navbar({ onStartDemo, onOpenAuth, currentPage = 'home', 
             </div>
           ) : (
             <>
-              <button className="btn btn-ghost navbar-login" onClick={() => { setOpen(false); onOpenAuth() }}>
+              <button className="btn btn-on-ink navbar-login" onClick={() => { setOpen(false); onOpenAuth() }}>
                 登录
               </button>
               <button className="btn btn-primary navbar-cta" onClick={() => { setOpen(false); onStartDemo('pricing') }}>
