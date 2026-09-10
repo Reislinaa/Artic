@@ -25,7 +25,8 @@ export default function Hero({ onStartDemo, onNavigate }) {
           <Reveal delay={2} variant="blur">
             <p className="hero-subtitle">
               把说出口的话，变成能直接发出去的商务稿。
-              语音转写 · 商务润色 · 跨语言翻译 · 一键唤起
+              <br />
+              语音转写&nbsp;·&nbsp;商务润色&nbsp;·&nbsp;跨语言翻译&nbsp;·&nbsp;一键唤起
             </p>
           </Reveal>
 
@@ -34,7 +35,7 @@ export default function Hero({ onStartDemo, onNavigate }) {
               <button className="btn btn-primary btn-lg" onClick={() => onNavigate('pricing')}>
                 开始使用
               </button>
-              <button className="btn btn-on-ink btn-lg" onClick={() => onNavigate('features')}>
+              <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('features')}>
                 了解更多
               </button>
             </div>

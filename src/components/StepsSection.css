@@ -1,70 +1,63 @@
-/* ============ 步骤 —— 橙色序号 + 细线分割（PDF 标题版式手法） ============ */
+/* ============ 步骤 —— 目录式栅格（编辑式排版） ============
+   左对齐 + 每格上方一条细线 + 极小的橙黄编号，
+   形成「目录 / 规格表」的观感，而不是四张居中的圆形图标卡。 */
 .steps-section {
-  background: var(--bg);
-  padding: 80px 0;
+  background: var(--paper-2);
+  padding: 88px 0;
 }
 
 .steps-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+  gap: 0 32px;
 }
 
-/* 不再给每格加顶部细线：4 条线 + 2x2 排布后线条过多，反而显乱。
-   步骤之间的分隔交给间距。 */
 .step-card {
-  text-align: center;
-  padding: 28px 20px;
-  position: relative;
+  text-align: left;
+  padding: 20px 0 28px;
+  border-top: 1px solid var(--border-strong);
 }
 
-/* 序号：不再用色块圆点，改为橙色大数字（PDF 中 01 / 02 的处理） */
+/* 编号：小、橙黄、宽字距 —— 橙色只落在「索引」这种极小的面积上 */
 .step-num {
   display: block;
-  margin: 0 auto 14px;
-  font-size: 1.65rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: #EA580C;
-  font-family: var(--font);
-  transition: color 0.35s var(--ease-out), transform 0.35s var(--ease-out);
-}
-
-.step-card:hover .step-num {
-  color: var(--accent);
-  transform: translateY(-2px);
+  letter-spacing: 0.16em;
+  color: var(--accent-deep);
+  margin-bottom: 26px;
+  font-variant-numeric: tabular-nums;
 }
 
 .step-title {
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--text);
   margin-bottom: 8px;
 }
 
 .step-desc {
   color: var(--text-light);
-  font-size: 0.85rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.7;
 }
 
 @media (max-width: 992px) {
   .steps-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0 28px;
   }
 }
 
 @media (max-width: 640px) {
   .steps-section {
-    padding: 48px 0;
+    padding: 56px 0;
   }
   .steps-grid {
     grid-template-columns: 1fr;
   }
   .step-card {
-    padding: 20px 16px;
+    padding: 18px 0 22px;
   }
 }

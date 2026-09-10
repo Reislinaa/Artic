@@ -5,59 +5,62 @@
   position: relative;
 }
 
+/* v10：内页页头改为编辑式左对齐。
+   同时移除了三处「AI 味」信号：
+     1. 居中排版 → 左对齐
+     2. 标题背后的橙色柔光斑 → 删除（每个内页顶部都有一团橙色光晕，是最典型的模板特征）
+     3. 渐变填充文字 → 改为一道橙色下划线，与首页「即成文」处理一致 */
 .page-hero {
-  background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 88px 0 72px;
-  text-align: center;
+  background: var(--paper-2);
+  padding: 84px 0 48px;
+  text-align: left;
   position: relative;
-  overflow: hidden;
-}
-
-.page-hero::before {
-  content: '';
-  position: absolute;
-  top: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 138, 31, 0.12) 0%, transparent 70%);
-  filter: blur(60px);
-  pointer-events: none;
 }
 
 .page-hero-tag {
-  display: inline-block;
-  font-size: 0.8rem;
-  letter-spacing: 3px;
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
   color: var(--text-light);
-  margin-bottom: 24px;
+  margin-bottom: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
   text-transform: uppercase;
 }
 
 .page-hero-title {
-  font-size: 2.6rem;
-  font-weight: 700;
-  letter-spacing: -1px;
-  margin-bottom: 16px;
-  line-height: 1.3;
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+  line-height: 1.25;
 }
 
 .page-hero-title em {
   font-style: normal;
-  background: var(--grad-brand);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
+}
+
+.page-hero-title em::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0.06em;
+  bottom: 0.02em;
+  height: 0.09em;
+  background: var(--accent);
+  z-index: -1;
 }
 
 .page-hero-sub {
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--text-light);
-  max-width: 560px;
-  margin: 0 auto;
-  line-height: 1.8;
+  max-width: 34em;
+  margin: 0;
+  line-height: 1.85;
 }
 
 .page-section {

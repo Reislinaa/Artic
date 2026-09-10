@@ -1,42 +1,41 @@
 :root {
   /* ============================================================
-     ARTIC v9 —— 配色重构（修正 v8 的「暖色互相污染」问题）
+     ARTIC v10 —— 依据《EMI UI Design Reference》05 节
+     「黑 + 白 + 黄 / 其他」：**浅色为主** + 一大团橙黄弥散光斑
      ------------------------------------------------------------
-     v8 的病根：底色(#F7F5F2 暖米白) + 灰阶(偏暖) + 橙色，三者都是暖色，
-       叠在一起互相污染 → 页面整体发灰发脏、层次糊在一起。
-     v9 的解法：
-       1. 中性色一律**纯中性**（不带暖褐调）——白、纯灰、近黑
-       2. 橙色是**全站唯一的暖色**，因此它一出现就是焦点，也才压得住
-       3. 橙色出现的位置严格收敛：只给「行动（CTA）」「数据高亮」「品牌记忆点」
-          —— 标题装饰、序号、导航下划线、区块分割线一律不用橙
-     仍然遵循《万物本相 UI DESIGN REFERENCE》黑白主导 + 第三色点缀 ≤5~10%。
+     与 v8/v9 的关键差别：不再用深色 Hero。
+     参考图(艺术活动官网 / WeTransfer)的共同语言是：
+       米白或白底 + 黑字 + 一团弥散彩色光斑 + 编辑式栅格
+     版式取向也一并改掉「AI 味」：
+       · 区块标题**左对齐**（此前全居中，是三行套模板的最大信号）
+       · 标签用**极小的宽字距大写**小字（11–12px / letter-spacing 0.2em）
+       · **小圆角**（6–8px），不再是胶囊 + 大圆角
+       · **几乎不用阴影**，层次交给细线与留白
      ============================================================ */
 
-  /* —— 墨（黑）：纯中性 —— */
-  --ink: #0A0A0B;
-  --ink-2: #151517;
-  --ink-3: #1F1F22;
+  /* —— 墨：近黑，极轻微暖调以贴合米白底 —— */
+  --ink: #101010;
+  --ink-2: #1A1A1A;
+  --ink-3: #262626;
 
-  /* —— 纸：纯白 + 干净的中性浅灰 —— */
+  /* —— 纸：纯白 + 米白（参考图的底） —— */
   --paper: #FFFFFF;
-  --paper-2: #F4F4F5;
-  --paper-3: #E9E9EA;
+  --paper-2: #F5F2EC;
+  --paper-3: #EAE5DC;
 
-  /* —— 黑底上的文字与线 —— */
+  /* —— 深色区（仍保留一个黑色区块作为「黑」的表达） —— */
   --on-ink: #FFFFFF;
-  --on-ink-2: rgba(255, 255, 255, 0.72);
-  --on-ink-3: rgba(255, 255, 255, 0.48);
-  --hairline-ink: rgba(255, 255, 255, 0.12);
-  --hairline-ink-strong: rgba(255, 255, 255, 0.26);
+  --on-ink-2: rgba(255, 255, 255, 0.70);
+  --on-ink-3: rgba(255, 255, 255, 0.44);
+  --hairline-ink: rgba(255, 255, 255, 0.16);
+  --hairline-ink-strong: rgba(255, 255, 255, 0.30);
 
-  /* —— 点缀色：橙（全站唯一的暖色）
-       去掉蓝通道（#FF8A1F → #FF8A00）可减少它压黑底时过渡出的褐色浑浊。 —— */
-  --accent: #FF8A00;
-  --accent-bright: #FFA233;
-  --accent-soft: #FFC14D;
-  --accent-deep: #C2410C;
-  --accent-ink: #7C2D12;
-  --grad-accent: linear-gradient(135deg, #FFC14D 0%, #FF7A00 100%);
+  /* —— 点缀色：橙黄（参考图光斑的固有色） —— */
+  --accent: #F59E0B;
+  --accent-bright: #FBBF24;
+  --accent-soft: #FDE68A;
+  --accent-deep: #B45309;
+  --grad-accent: linear-gradient(135deg, #FDE68A 0%, #F97316 100%);
 
   /* —— 浅色区语义变量 —— */
   --bg: var(--paper-2);
@@ -44,32 +43,34 @@
   --surface: var(--paper);
   --surface-2: var(--paper-2);
   --surface-3: var(--paper-3);
-  --border: rgba(10, 10, 11, 0.10);
-  --border-strong: rgba(10, 10, 11, 0.20);
+  --border: rgba(16, 16, 16, 0.12);
+  --border-strong: rgba(16, 16, 16, 0.24);
 
-  --text: #0A0A0B;
-  --text-2: #52525B;
-  --text-light: #8A8A93;
+  --text: #101010;
+  --text-2: #4B4A47;
+  --text-light: #85827C;
 
   /* —— 兼容旧变量名 —— */
   --primary: var(--accent-deep);
-  --primary-dark: #9A3412;
+  --primary-dark: #92400E;
   --primary-light: var(--accent);
-  --secondary: #3F3F46;
-  --secondary-light: #A1A1AA;
+  --secondary: #444444;
+  --secondary-light: #A3A3A3;
   --gold: var(--accent);
   --grad-brand: var(--grad-accent);
-  --grad-soft: linear-gradient(180deg, rgba(255, 138, 0, 0.08) 0%, transparent 100%);
+  --grad-soft: linear-gradient(180deg, rgba(245, 158, 11, 0.10) 0%, transparent 100%);
 
-  /* 阴影：双层结构（贴地 + 扩散），比单层大模糊干净得多 */
-  --shadow-sm: 0 1px 2px rgba(10, 10, 11, 0.05);
-  --shadow-md: 0 2px 4px rgba(10, 10, 11, 0.04), 0 12px 28px rgba(10, 10, 11, 0.07);
-  --shadow-lg: 0 4px 8px rgba(10, 10, 11, 0.05), 0 24px 56px rgba(10, 10, 11, 0.11);
-  --shadow-accent: 0 6px 20px rgba(255, 138, 0, 0.28);
+  /* —— 圆角：大幅收小。大圆角 + 胶囊是「AI 生成感」最强的视觉信号之一 —— */
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 
-  --radius: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* —— 阴影：几乎不用。层次靠细线与留白 —— */
+  --shadow-sm: 0 1px 2px rgba(16, 16, 16, 0.04);
+  --shadow-md: 0 1px 2px rgba(16, 16, 16, 0.05), 0 6px 18px rgba(16, 16, 16, 0.05);
+  --shadow-lg: 0 2px 6px rgba(16, 16, 16, 0.05), 0 18px 44px rgba(16, 16, 16, 0.08);
+  --shadow-accent: 0 4px 14px rgba(245, 158, 11, 0.26);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
@@ -104,7 +105,7 @@ body {
 }
 
 a {
-  color: var(--accent-deep);
+  color: inherit;
   text-decoration: none;
   transition: color 0.3s var(--ease-soft);
 }
@@ -119,7 +120,7 @@ button {
 }
 
 ::selection {
-  background: rgba(255, 138, 0, 0.20);
+  background: rgba(245, 158, 11, 0.26);
   color: var(--ink);
 }
 
@@ -131,16 +132,16 @@ button {
 
 /* 品牌标识（导航栏 / 页脚共用） */
 .brand-mark {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   display: block;
   object-fit: contain;
   flex-shrink: 0;
 }
 
 .footer-logo .brand-mark {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
 }
 
 .container-wide {
@@ -150,18 +151,17 @@ button {
 }
 
 .section {
-  padding: 120px 0;
+  padding: 116px 0;
   position: relative;
 }
 
-/* ============ 深色区块（黑白主导 + 橙色光晕） ============ */
+/* ============ 深色区块（保留「黑」的表达） ============ */
 .ink {
   background: var(--ink);
   color: var(--on-ink);
 }
 
-.ink .section-title,
-.ink .section-subtitle {
+.ink .section-title {
   color: var(--on-ink);
 }
 
@@ -169,80 +169,83 @@ button {
   color: var(--on-ink-2);
 }
 
-/* 深色区的 kicker 用中性灰，不再用橙（橙色留给行动与数据） */
 .ink .section-kicker {
   color: var(--on-ink-3);
+  border-top-color: var(--hairline-ink);
 }
 
-/* 柔和的橙色光斑 —— 尺寸与不透明度都刻意压低：
-   大面积低透明度的橙压在黑上，过渡带会变成褐色雾面，是「脏」的来源。 */
-.ink-glow {
+/* 弥散光斑 —— 参考图的核心元素：
+   边缘要「化开」，所以用多段径向渐变 + 较大 blur，而不是实心圆。 */
+.ink-glow,
+.blob {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
   background: radial-gradient(
-    circle,
-    rgba(255, 168, 64, 0.85) 0%,
-    rgba(255, 138, 0, 0.42) 22%,
-    rgba(255, 122, 0, 0.13) 44%,
-    transparent 66%
+    circle at 50% 50%,
+    rgba(253, 230, 138, 0.95) 0%,
+    rgba(251, 191, 36, 0.72) 18%,
+    rgba(245, 158, 11, 0.42) 36%,
+    rgba(249, 115, 22, 0.16) 56%,
+    transparent 74%
   );
-  filter: blur(40px);
+  filter: blur(52px);
 }
 
-/* 底部橙色「地平线」光带 —— 强度大幅调低，避免整块发脏 */
 .ink-horizon {
   position: absolute;
   left: 50%;
-  bottom: -8%;
-  width: min(1200px, 110%);
-  height: 260px;
+  bottom: -10%;
+  width: min(1300px, 115%);
+  height: 300px;
   transform: translateX(-50%);
   pointer-events: none;
   background: radial-gradient(
-    ellipse 52% 100% at 50% 100%,
-    rgba(255, 138, 0, 0.22) 0%,
-    rgba(255, 122, 0, 0.07) 46%,
+    ellipse 50% 100% at 50% 100%,
+    rgba(245, 158, 11, 0.18) 0%,
+    rgba(249, 115, 22, 0.05) 46%,
     transparent 72%
   );
-  filter: blur(44px);
+  filter: blur(46px);
+}
+
+/* ============ 区块头：编辑式排版 ============
+   左对齐 + 上方一条贯穿细线 + 极小的宽字距大写标签。
+   （全居中的「kicker / 标题 / 副标题」三行套模板是 AI 味最重的版式） */
+.section-kicker {
+  display: block;
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  margin-bottom: 22px;
 }
 
 .section-title {
-  font-size: 2.6rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 14px;
-  letter-spacing: -0.035em;
-  line-height: 1.24;
-  color: var(--text);
-}
-
-/* 区块短语（英文大写小字）—— 中性灰，靠字距与字号建立层级 */
-.section-kicker {
-  display: block;
-  text-align: center;
-  font-size: 0.72rem;
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
   font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-light);
-  margin-bottom: 16px;
+  text-align: left;
+  margin-bottom: 14px;
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+  color: var(--text);
+  max-width: 22em;
 }
 
 .section-subtitle {
-  text-align: center;
+  text-align: left;
   color: var(--text-light);
-  font-size: 1.06rem;
-  max-width: 620px;
-  margin: 0 auto 60px;
-  line-height: 1.75;
+  font-size: 1rem;
+  max-width: 34em;
+  margin: 0 0 56px;
+  line-height: 1.8;
 }
 
-/* 说明：v8 曾在每个区块副标题下加一条 1px 细线，实测「线太多、太碎」，
-   反而更不整洁。v9 已移除 —— 层次交给留白与字号；
-   线条只保留在真正承担分隔职责的地方（深色功能条、平台规格表）。 */
-
+/* 细分割线工具类 */
 .hairline {
   height: 1px;
   background: var(--border);
@@ -253,16 +256,16 @@ button {
   background: var(--hairline-ink);
 }
 
-/* ============ 滚动渐入动画 ============ */
+/* ============ 滚动渐入 ============ */
 .reveal {
   opacity: 0;
-  transform: translateY(32px);
+  transform: translateY(24px);
   filter: blur(0);
   transition:
-    opacity var(--rv-duration, 0.9s) var(--ease-out),
-    transform var(--rv-duration, 0.9s) var(--ease-out),
-    filter var(--rv-duration, 0.9s) var(--ease-out);
-  will-change: opacity, transform, filter;
+    opacity var(--rv-duration, 0.8s) var(--ease-out),
+    transform var(--rv-duration, 0.8s) var(--ease-out),
+    filter var(--rv-duration, 0.8s) var(--ease-out);
+  will-change: opacity, transform;
 }
 
 .reveal.reveal-visible {
@@ -271,61 +274,56 @@ button {
   filter: blur(0);
 }
 
-.reveal.rv-up { transform: translateY(34px); }
+.reveal.rv-up { transform: translateY(26px); }
 .reveal.rv-up.reveal-visible { transform: translateY(0); }
 
-.reveal.rv-left { transform: translateX(-44px); }
+.reveal.rv-left { transform: translateX(-32px); }
 .reveal.rv-left.reveal-visible { transform: translateX(0); }
 
-.reveal.rv-right { transform: translateX(44px); }
+.reveal.rv-right { transform: translateX(32px); }
 .reveal.rv-right.reveal-visible { transform: translateX(0); }
 
-.reveal.rv-scale { transform: scale(0.92); }
-.reveal.rv-scale.reveal-visible { transform: scale(1); }
-
+/* v10 起不再用缩放/模糊入场：这类「弹一下 + 虚化」的动效
+   是 AI 生成页面的常见套路，改为一律轻微上移淡入。 */
+.reveal.rv-scale,
+.reveal.rv-fade,
 .reveal.rv-blur {
-  transform: translateY(16px) scale(1.02);
-  filter: blur(8px);
+  transform: translateY(26px);
 }
+.reveal.rv-scale.reveal-visible,
+.reveal.rv-fade.reveal-visible,
 .reveal.rv-blur.reveal-visible {
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: translateY(0);
+  filter: none;
 }
 
-.reveal.rv-fade { transform: none; opacity: 0; }
-.reveal.rv-fade.reveal-visible { opacity: 1; }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.4s; }
 
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-.reveal-delay-5 { transition-delay: 0.5s; }
-
-/* 页面切换过渡 */
 .page-transition {
-  animation: pageIn 0.5s var(--ease-out);
+  animation: pageIn 0.4s var(--ease-out);
 }
 
 @keyframes pageIn {
   from {
     opacity: 0;
-    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* 主内容加载动画 */
 .hero-loading {
-  animation: heroIn 1s var(--ease-out) both;
+  animation: heroIn 0.8s var(--ease-out) both;
 }
 
 @keyframes heroIn {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -333,7 +331,6 @@ button {
   }
 }
 
-/* 减少动画 */
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
@@ -351,7 +348,7 @@ button {
     padding: 72px 0;
   }
   .section-title {
-    font-size: 1.95rem;
+    font-size: 1.7rem;
   }
   .container {
     padding: 0 20px;

@@ -1,72 +1,71 @@
-/* ============ Hero —— 深色底 + 橙色光晕 ============
-   依据《万物本相 UI DESIGN REFERENCE》01 节「黑 + 白 + 橙 · 深色底 / 橙色光晕」：
-   大面积黑为底、白色文字，橙色以**光晕/渐变**形式小面积出现。
+/* ============ Hero —— 米白底 + 橙黄弥散光斑 ============
+   依据《EMI UI Design Reference》05 节参考图（艺术活动官网 / WeTransfer）：
+   浅底 + 黑字 + 一团**化开**的彩色光斑，版式走编辑式栅格。
 
-   注意：这里**不再重复定义 :root 令牌**。早期本文件在局部重定义了一套
-   --bg/--primary/--text 等变量，由于 CSS 全局作用域 + 加载顺序，会静默覆盖
-   index.css 的设计令牌，导致「改了 index.css 却看不到效果」。
-   现已统一由 src/index.css 作为唯一令牌来源。 */
+   与 v8/v9 的三处关键改动（都是为了去掉「AI 味」）：
+     1. 不再用深色 Hero —— 参考图是浅色底
+     2. 标题**不再用渐变文字** —— 渐变文字是最典型的 AI 生成套路；
+        参考图的彩色全部来自光斑，文字是纯黑的
+     3. 标签不再是胶囊 —— 改成极小的宽字距大写小字
+
+   注意：本文件**不重复定义 :root 令牌**（历史上重复定义曾静默覆盖全局令牌）。 */
 
 .hero {
-  min-height: 100vh;
+  min-height: 92vh;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
-  background: var(--ink);
-  padding: 60px 0 100px;
+  background: var(--paper-2);
+  padding: 72px 0 96px;
   isolation: isolate;
 }
 
-/* 主光斑：偏右上的巨大柔和橙光（“日出”感，PDF 01 节手法） */
+/* 弥散光斑：大、软、偏右，边缘必须完全化开 */
 .hero-glow {
   position: absolute;
-  top: -8%;
-  right: -4%;
-  width: min(760px, 68vw);
-  height: min(760px, 68vw);
+  top: 46%;
+  right: -6%;
+  width: min(880px, 76vw);
+  height: min(880px, 76vw);
   border-radius: 50%;
   pointer-events: none;
-  /* 核心更小更亮、衰减更短。
-     褐色浑浊的来源是「大范围 + 低不透明度的橙压在黑上」，
-     把过渡带收窄，同样的橙就会显得干净通透而不是发脏。 */
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(255, 176, 74, 0.90) 0%,
-    rgba(255, 138, 0, 0.50) 18%,
-    rgba(255, 128, 0, 0.16) 36%,
-    rgba(255, 122, 0, 0.04) 52%,
-    transparent 64%
+    rgba(253, 230, 138, 0.92) 0%,
+    rgba(251, 191, 36, 0.70) 22%,
+    rgba(245, 158, 11, 0.42) 40%,
+    rgba(249, 115, 22, 0.15) 60%,
+    transparent 76%
   );
-  filter: blur(36px);
-  animation: glowDrift 22s ease-in-out infinite alternate;
+  filter: blur(64px);
+  transform: translateY(-50%);
+  animation: blobDrift 24s ease-in-out infinite alternate;
 }
 
-/* 地平线光带：底部中央的橙色弧光收尾。
-   强度已大幅调低 —— 它是全页最容易「糊成一片褐色」的元素。 */
+@keyframes blobDrift {
+  0% { transform: translateY(-50%) translateX(0) scale(1); }
+  100% { transform: translateY(-50%) translateX(-2%) scale(1.05); }
+}
+
+/* 左下再补一小团，避免画面只有单点 */
 .hero-horizon {
   position: absolute;
-  left: 50%;
-  bottom: -10%;
-  width: min(1300px, 115%);
-  height: 300px;
-  transform: translateX(-50%);
+  left: -8%;
+  bottom: -14%;
+  width: min(560px, 58vw);
+  height: min(560px, 58vw);
+  border-radius: 50%;
   pointer-events: none;
   background: radial-gradient(
-    ellipse 50% 100% at 50% 100%,
-    rgba(255, 138, 0, 0.20) 0%,
-    rgba(255, 122, 0, 0.06) 46%,
-    transparent 72%
+    circle at 50% 50%,
+    rgba(253, 230, 138, 0.80) 0%,
+    rgba(251, 191, 36, 0.42) 34%,
+    transparent 70%
   );
-  filter: blur(46px);
+  filter: blur(70px);
 }
 
-@keyframes glowDrift {
-  0% { opacity: 0.72; transform: translate3d(0, 0, 0) scale(1); }
-  100% { opacity: 1; transform: translate3d(-3%, 2%, 0) scale(1.06); }
-}
-
-/* ============ Wide two-column grid ============ */
 .hero-content {
   position: relative;
   z-index: 3;
@@ -74,13 +73,12 @@
   margin: 0 auto;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 72px;
   align-items: center;
   padding: 0 clamp(24px, 4vw, 48px);
 }
 
-/* Left column: text + actions + compare, left-aligned */
 .hero-col-left {
   text-align: left;
   max-width: 560px;
@@ -89,107 +87,103 @@
   align-items: flex-start;
 }
 
-/* Right column: mockup centered */
 .hero-col-right {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* ============ Hero text elements（黑底白字层级） ============ */
+/* ============ 编辑式小标签：极小 + 宽字距 + 大写，无胶囊 ============ */
 .hero-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 0.76rem;
+  display: block;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 2.4px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--on-ink);
-  padding: 9px 20px;
-  border: 1px solid var(--hairline-ink-strong);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  margin-bottom: 44px;
+  color: var(--text-light);
+  margin-bottom: 34px;
 }
 
-/* 说明：v8 在标签前加过一个橙色发光小圆点。v9 已移除 ——
-   橙色应当稀缺，胶囊边框本身就足以定义这个标签。 */
-
 .hero-title {
-  margin: 0 0 32px;
+  margin: 0 0 30px;
   text-align: left;
 }
 
 .hero-line {
   display: block;
-  font-size: clamp(3rem, 9vw, 7rem);
-  font-weight: 700;
-  line-height: 1.05;
+  font-size: clamp(2.7rem, 7.2vw, 5.6rem);
+  font-weight: 600;
+  line-height: 1.06;
   letter-spacing: -0.045em;
-  color: var(--on-ink);
+  color: var(--text);
 }
 
-/* 「即成文」用橙色渐变 —— 全站最大的橙色面积，作为品牌记忆点 */
+/* 强调行不再用渐变填充，只把字重提上去 + 一道短下划线。
+   参考图的彩色全部来自光斑，文字保持纯黑。 */
 .hero-gradient {
-  background: var(--grad-accent);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  padding-bottom: 0.08em;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.06em;
+}
+
+.hero-gradient::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0.06em;
+  bottom: 0.02em;
+  height: 0.09em;
+  background: var(--accent);
+  z-index: -1;
 }
 
 .hero-subtitle {
-  font-size: 1.18rem;
-  color: var(--on-ink-2);
-  max-width: 580px;
-  margin: 0 0 44px;
-  line-height: 1.8;
-  margin-left: 0;
+  font-size: 1.05rem;
+  color: var(--text-2);
+  max-width: 30em;
+  margin: 0 0 40px;
+  line-height: 1.85;
 }
 
 .hero-actions {
   display: flex;
   justify-content: flex-start;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 48px;
+  margin-bottom: 52px;
 }
 
-/* ============ Speed comparison（黑底玻璃卡 + 橙色数据高亮） ============ */
-/* 速度卡 + 说明文字的容器：强制纵向堆叠，避免在平板断点被排成一行 */
+/* ============ 速度对比：编辑式，用细线而不是卡片 ============ */
 .hero-compare-wrap {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
   max-width: 100%;
 }
 
 .hero-compare {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 32px;
-  padding: 22px 36px;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid var(--hairline-ink);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(14px);
+  gap: 40px;
+  width: 100%;
+  padding-top: 22px;
+  border-top: 1px solid var(--border-strong);
 }
 
 .compare-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  min-width: 130px;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .compare-label {
-  font-size: 0.74rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 1.8px;
-  color: var(--on-ink-3);
+  letter-spacing: 0.18em;
+  color: var(--text-light);
   text-transform: uppercase;
 }
 
@@ -200,144 +194,107 @@
 }
 
 .compare-num {
-  font-size: 2.6rem;
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  color: var(--on-ink-2);
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
 }
 
-/* 核心数据高亮 —— PDF 明确允许橙色用于「核心数据」 */
+/* 核心数据高亮 —— 橙色只给数据 */
 .compare-num-fast {
-  color: var(--accent);
+  color: var(--accent-deep);
 }
 
 .compare-unit {
-  font-size: 0.9rem;
-  color: var(--on-ink-3);
+  font-size: 0.85rem;
+  color: var(--text-light);
 }
 
 .compare-bar {
-  width: 130px;
-  height: 4px;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.14);
+  width: 120px;
+  height: 3px;
+  background: var(--border);
   overflow: hidden;
 }
 
 .compare-bar span {
   display: block;
   height: 100%;
-  border-radius: 99px;
 }
 
 .compare-bar-slow span {
   width: 22%;
-  background: var(--on-ink-3);
+  background: var(--text-light);
 }
 
 .compare-bar-fast span {
   width: 100%;
-  background: var(--grad-accent);
-  box-shadow: 0 0 14px rgba(255, 138, 31, 0.6);
+  background: var(--accent);
 }
 
 .hero-caption {
   margin-top: 14px;
-  font-size: 0.86rem;
-  color: var(--on-ink-3);
-  letter-spacing: 0.01em;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  letter-spacing: 0.02em;
 }
 
 .compare-arrow {
-  font-size: 1.5rem;
-  /* 中性灰：这一块只让「220」这个数据用橙，箭头不再抢色 */
-  color: var(--on-ink-3);
+  font-size: 1.1rem;
+  color: var(--text-light);
   animation: arrowPulse 2s ease-in-out infinite;
 }
 
 @keyframes arrowPulse {
-  0%, 100% { transform: translateX(0); opacity: 0.55; }
-  50% { transform: translateX(6px); opacity: 1; }
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(5px); opacity: 1; }
 }
 
-/* ============ Responsive ============ */
+/* ============ 响应式 ============ */
 @media (max-width: 900px) {
   .hero-content {
-    /* 必须用 minmax(0, 1fr) 而非 1fr：
-       网格子项默认 min-width:auto，右侧 mockup 的固有宽度会把整列撑宽
-       （390 屏实测被撑到 374px > 内容区 342px），导致整块内容向右溢出、
-       视觉上「首页没居中」。minmax(0,1fr) 允许列收缩到容器宽度以内。 */
+    /* minmax(0,1fr) 而非 1fr：网格子项默认 min-width:auto，
+       右侧 mockup 的固有宽度会把列撑宽导致横向溢出 */
     grid-template-columns: minmax(0, 1fr);
-    gap: 56px;
-    text-align: center;
+    gap: 48px;
   }
 
-  /* 允许网格子项收缩 */
   .hero-col-left,
   .hero-col-right {
     min-width: 0;
     max-width: 100%;
   }
 
-  .hero-col-left {
-    text-align: center;
-    max-width: 100%;
-    align-items: center;
-  }
-
-  .hero-col-left .reveal {
-    width: 100%;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
+  /* 平板及以下：文案在前、产品卡在后。
+     参考图是「先读到字，再看到图」的编辑式顺序；
+     此前把 mockup 排到前面，会让首屏先看到一张聊天截图，主标题被挤到折线以下。 */
   .hero-col-right {
-    order: -1; /* mockup moves above the text on tablet */
+    order: 0;
   }
 
-  .hero-tag {
-    margin-bottom: 32px;
-  }
-
-  .hero-title {
-    text-align: center;
-  }
-
-  .hero-subtitle {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-actions {
-    justify-content: center;
-  }
-
-  /* 纵向堆叠并居中：速度卡与说明文字各自独占一行 */
   .hero-compare-wrap {
     width: 100%;
-    align-items: center;
   }
 }
 
 @media (max-width: 768px) {
   .hero {
     min-height: auto;
-    padding: 80px 0 64px;
+    padding: 56px 0 64px;
   }
 
   .hero-col-right {
-    order: 0; /* let it flow naturally below on small phones */
+    order: 0;
   }
 
   .hero-tag {
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 
   .hero-subtitle {
-    font-size: 1rem;
-    margin-bottom: 36px;
+    font-size: 0.98rem;
+    margin-bottom: 32px;
   }
 
   .hero-actions {
@@ -345,24 +302,15 @@
   }
 
   .hero-compare {
-    gap: 14px;
-    padding: 18px 18px;
-    max-width: 100%;
-  }
-
-  .compare-item {
-    min-width: 0;
+    gap: 20px;
+    flex-wrap: wrap;
   }
 
   .compare-bar {
-    width: 96px;
-  }
-
-  .compare-arrow {
-    font-size: 1.2rem;
+    width: 84px;
   }
 
   .compare-num {
-    font-size: 1.9rem;
+    font-size: 1.8rem;
   }
 }

@@ -1,38 +1,18 @@
-/* ============ 页脚 —— 黑底白字收尾 ============ */
+/* ============ 页脚 —— 一条纯黑收尾 ============
+   v10：去掉 v8 加的那层橙色余光（大面积柔光最容易显脏、也最像模板），
+   改为纯黑 + 细线，把「黑」这一极干净地落下来。 */
 .footer {
   position: relative;
   background: var(--ink);
   color: var(--on-ink);
-  border-top: 1px solid var(--hairline-ink);
-  padding: 60px 0 0;
-  overflow: hidden;
-}
-
-/* 页脚顶部极淡的橙色余光，把「黑」收得不那么死 */
-.footer::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: -180px;
-  width: min(1000px, 110%);
-  height: 320px;
-  transform: translateX(-50%);
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 50% 100% at 50% 100%,
-    rgba(255, 138, 31, 0.16) 0%,
-    transparent 70%
-  );
-  filter: blur(30px);
+  padding: 64px 0 0;
 }
 
 .footer-inner {
-  position: relative;
-  z-index: 1;
   display: flex;
   justify-content: space-between;
   gap: 48px;
-  padding-bottom: 40px;
+  padding-bottom: 44px;
   flex-wrap: wrap;
 }
 
@@ -45,27 +25,30 @@
   align-items: center;
   gap: 10px;
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
   color: var(--on-ink);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .footer-tagline {
   color: var(--on-ink-3);
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-size: 0.86rem;
+  line-height: 1.75;
 }
 
 .footer-links {
   display: flex;
-  gap: 64px;
+  gap: 56px;
   flex-wrap: wrap;
 }
 
 .footer-col h4 {
-  color: var(--on-ink);
-  font-size: 0.9rem;
+  color: var(--on-ink-3);
+  font-size: 0.68rem;
   font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   margin-bottom: 16px;
 }
 
@@ -76,20 +59,20 @@
 }
 
 .footer-col a {
-  color: var(--on-ink-3);
+  color: var(--on-ink-2);
   font-size: 0.88rem;
   transition: color 0.2s;
 }
 
 .footer-col a:hover {
-  color: var(--accent);
+  color: var(--on-ink);
   text-decoration: none;
 }
 
 .footer-link-btn {
   background: none;
   border: none;
-  color: var(--on-ink-3);
+  color: var(--on-ink-2);
   font-size: 0.88rem;
   font-family: inherit;
   padding: 0;
@@ -99,15 +82,13 @@
 }
 
 .footer-link-btn:hover {
-  color: var(--accent);
+  color: var(--on-ink);
 }
 
 .footer-bottom {
-  position: relative;
-  z-index: 1;
   border-top: 1px solid var(--hairline-ink);
-  padding: 24px 0;
-  text-align: center;
-  font-size: 0.82rem;
+  padding: 22px 0;
+  font-size: 0.78rem;
   color: var(--on-ink-3);
+  letter-spacing: 0.02em;
 }

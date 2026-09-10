@@ -16,62 +16,53 @@
   flex-direction: column;
 }
 
-/* ===== 通用按钮 ===== */
+/* ===== 按钮 =====
+   v10：去掉胶囊（999px）与大圆角 —— 胶囊 + 大圆角是「AI 生成感」最强的信号之一。
+   改为 8px 直角偏方，字号略小、字重 600，更接近编辑式版面的按钮。 */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   border: none;
-  border-radius: 999px;
-  padding: 12px 26px;
-  font-size: 0.95rem;
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-size: 0.92rem;
   font-weight: 600;
-  transition: all 0.35s var(--ease-out);
+  letter-spacing: 0.01em;
+  transition: background 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft),
+    color 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
   white-space: nowrap;
   font-family: inherit;
-  position: relative;
-  overflow: hidden;
 }
 
-/* PDF 规范：橙色只用于「关键行动按钮」→ 主 CTA = 橙底黑字（对比度约 8:1） */
+/* 主 CTA：橙底黑字（对比度约 9:1） */
 .btn-primary {
   background: var(--accent);
   color: var(--ink);
-  box-shadow: var(--shadow-accent);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
   background: var(--accent-bright);
-  box-shadow: 0 12px 34px rgba(255, 138, 31, 0.42);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
 }
 
 .btn-primary:disabled {
   opacity: 0.45;
-  transform: none;
   cursor: not-allowed;
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--ink);
+  color: var(--text);
   border: 1px solid var(--border-strong);
 }
 
 .btn-ghost:hover {
-  border-color: var(--ink);
-  color: var(--ink);
-  transform: translateY(-2px);
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--text);
+  background: rgba(16, 16, 16, 0.03);
 }
 
-/* 深色区块上的次要按钮（白描边） */
+/* 深色区块上的次要按钮 */
 .btn-on-ink {
   background: transparent;
   color: var(--on-ink);
@@ -79,47 +70,44 @@
 }
 
 .btn-on-ink:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.52);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--ink);
+  color: var(--text);
+  border: 1px solid var(--text);
 }
 
 .btn-outline:hover {
-  background: var(--ink);
-  color: var(--on-ink);
-  transform: translateY(-2px);
+  background: var(--text);
+  color: var(--paper);
 }
 
 .btn-accent {
-  background: var(--grad-accent);
+  background: var(--accent);
   color: var(--ink);
-  box-shadow: var(--shadow-accent);
 }
 
 .btn-accent:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 34px rgba(255, 138, 31, 0.42);
+  background: var(--accent-bright);
 }
 
 .btn-lg {
-  padding: 14px 32px;
-  font-size: 1rem;
+  padding: 13px 26px;
+  font-size: 0.98rem;
 }
 
 .btn-sm {
-  padding: 8px 18px;
-  font-size: 0.85rem;
+  padding: 8px 16px;
+  font-size: 0.84rem;
 }
 
-/* ===== 全局卡片：默认轻阴影 + 悬浮抬升 =====
-   v9 起统一给白卡一层「双层轻阴影」(贴地 1px + 扩散)：
-   底色是 #F4F4F5 的中性浅灰，白卡只靠 1px 边框会显得平、整页发灰。 */
+/* ===== 卡片 =====
+   v10：**不再给卡片默认阴影、不再 hover 上浮**。
+   层次交给 1px 细线 + 留白（编辑式版面的做法）；
+   hover 只做边框加深，避免「一片卡片集体浮起」的模板感。 */
 .feature-card,
 .value-card,
 .contact-card,
@@ -133,9 +121,7 @@
 .detail-side-card,
 .plan-card,
 .co-card {
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.5s var(--ease-out), border-color 0.4s var(--ease-out),
-    box-shadow 0.5s var(--ease-out), background 0.4s var(--ease-out);
+  transition: border-color 0.25s var(--ease-soft), background 0.25s var(--ease-soft);
 }
 
 .feature-card:hover,
@@ -149,6 +135,5 @@
 .timeline-content:hover,
 .detail-side-card:hover,
 .plan-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
 }

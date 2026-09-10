@@ -1,28 +1,30 @@
-/* ============ 导航 —— 黑底白字（PDF 06 节「黑底白字导航菜单」） ============ */
+/* ============ 导航 —— 米白底 + 黑字（编辑式，无重色块） ============
+   v10：随整体改为浅色主调。参考图里顶部只是极小的宽字距文字，
+   没有重色导航条，所以这里也压薄：米白半透明 + 一条细线收边。 */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10, 10, 10, 0.78);
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
-  border-bottom: 1px solid var(--hairline-ink);
-  color: var(--on-ink);
+  background: rgba(245, 242, 236, 0.86);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
 }
 
 .navbar-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 70px;
+  height: 64px;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-decoration: none;
-  color: var(--on-ink);
+  color: var(--text);
 }
 
 .navbar-logo:hover {
@@ -30,64 +32,61 @@
 }
 
 .navbar-brand {
-  font-size: 1.18rem;
+  font-size: 1.06rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--on-ink);
+  letter-spacing: 0.06em;
+  color: var(--text);
 }
 
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 32px;
 }
 
 .navbar-links a,
 .navbar-link {
-  color: var(--on-ink-2);
+  color: var(--text-2);
   font-weight: 500;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
   transition: color 0.2s;
   background: none;
   border: none;
   font-family: inherit;
   cursor: pointer;
-  padding: 4px 2px;
+  padding: 4px 0;
   position: relative;
 }
 
 .navbar-links a:hover,
 .navbar-link:hover {
-  color: var(--on-ink);
+  color: var(--text);
   text-decoration: none;
 }
 
 .navbar-link.active {
-  color: var(--on-ink);
+  color: var(--text);
 }
 
-/* 选中态：白短横。
-   黑底上白线本身就是最强对比，不需要再用橙色（橙留给右侧 CTA）。 */
+/* 选中态：一道墨色短横。橙色留给右侧 CTA，保持稀缺 */
 .navbar-link.active::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16px;
-  height: 2px;
-  background: var(--on-ink);
-  border-radius: 2px;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--text);
 }
 
 .navbar-cta {
-  padding: 9px 20px;
-  font-size: 0.9rem;
+  padding: 8px 18px;
+  font-size: 0.88rem;
 }
 
 .navbar-login {
-  padding: 9px 20px;
-  font-size: 0.9rem;
+  padding: 8px 18px;
+  font-size: 0.88rem;
 }
 
 /* 用户信息 */
@@ -97,23 +96,22 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
   transition: background 0.2s;
 }
 
 .navbar-user:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(16, 16, 16, 0.05);
 }
 
-/* 头像用橙色渐变 + 黑字：小面积、高识别 */
 .navbar-avatar {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--grad-accent);
-  color: var(--ink);
-  font-size: 0.9rem;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 0.84rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -122,8 +120,8 @@
 
 .navbar-username {
   font-weight: 500;
-  font-size: 0.9rem;
-  color: var(--on-ink);
+  font-size: 0.88rem;
+  color: var(--text);
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,42 +130,42 @@
 
 .navbar-user-menu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 8px);
   right: 0;
-  background: var(--ink-2);
-  border: 1px solid var(--hairline-ink);
-  border-radius: 12px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
   min-width: 160px;
-  padding: 8px;
+  padding: 6px;
   z-index: 120;
   animation: fadeIn 0.2s ease;
 }
 
 .navbar-user-email {
   display: block;
-  padding: 8px 12px;
-  font-size: 0.85rem;
-  color: var(--on-ink-3);
-  border-bottom: 1px solid var(--hairline-ink);
-  margin-bottom: 6px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+  color: var(--text-light);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
 }
 
 .navbar-user-menu button {
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border: none;
   background: none;
-  color: var(--accent);
-  font-size: 0.9rem;
+  color: var(--text);
+  font-size: 0.88rem;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   text-align: left;
 }
 
 .navbar-user-menu button:hover {
-  background: rgba(255, 138, 31, 0.12);
+  background: rgba(16, 16, 16, 0.05);
 }
 
 .navbar-toggle {
@@ -181,9 +179,9 @@
 
 .navbar-toggle span {
   display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--on-ink);
+  width: 20px;
+  height: 1.5px;
+  background: var(--text);
   border-radius: 2px;
   transition: 0.3s;
 }
@@ -194,18 +192,17 @@
   }
   .navbar-links {
     position: fixed;
-    top: 70px;
+    top: 64px;
     left: 0;
     right: 0;
     flex-direction: column;
-    background: rgba(10, 10, 10, 0.98);
-    backdrop-filter: blur(20px);
+    align-items: flex-start;
+    background: var(--paper-2);
     padding: 24px;
-    gap: 20px;
-    border-bottom: 1px solid var(--hairline-ink);
+    gap: 18px;
+    border-bottom: 1px solid var(--border);
     transform: translateY(-130%);
     transition: transform 0.3s;
-    align-items: stretch;
   }
   .navbar-links.open {
     transform: translateY(0);
