@@ -182,10 +182,67 @@ git add -A && git commit -m "..." && git push origin main
 13. **桌面浏览器窗口有最小宽度（约 500px）**，`resize_page` 压不到手机尺寸；
     测移动端要用 DevTools 的设备模拟（`emulate` 的 `viewport` 参数，如 `390x844x3,mobile,touch`），
     并用 `evaluate_script` 量 `getBoundingClientRect()` 与 `documentElement.scrollWidth` 来确认。
+14. **GitHub Pages 的 HTML 被 CDN 强缓存**：换 `?v=` 查询参数**不一定能绕过**，
+    部署后若页面还是旧版，先确认「本地 `dist/index.html` 的资源名」与「浏览器实际加载的资源名」，
+    再用 DevTools 的**忽略缓存重新加载**验证（不要误判成部署失败）。
+15. **图标清单的分组过滤要留意会丢内容**：早期用 `i % 4` 分组导致一半图标永不出现——
+    用 `node scripts/gen-icons.mjs` 输出里的「外环 + 内环 = 总数」自查是否全部呈现。
 
 ---
 
 ## 七、开发日志（倒序，最新在最前）
+
+### 2026-09-10 · 飞书/钉钉官方 logo + 平台区块去 AI 化 + 图标环换主流 App
+**用户要求**：
+1. 下载飞书和钉钉的 logo，替换当前的占位图标；
+2. 登录入口**不要 GitHub、Google、Apple 三个选项**（但**代码保留**）；
+3. 平台区块（截图 1）**「AI 味太重」**，要求参考简约网站与主流 App 的布局与文案；
+4. 图标环（截图 2）里图标大多不常见，换成 **2025 年热度前 100 的办公 / 社交 App**
+   （海内外、合法、能找到正版 logo），并要求**上网核验 logo 正确性**。
+
+**先调研再动手**：
+- GitHub 检索正版图标库：`simple-icons`(25.8k★)、`lobehub/lobe-icons`(2.5k★)、
+  `glincker/thesvg`(2.7k★)、`dheereshag/coloured-icons`(335★)
+- 设计调研（SUUR《2026 最佳 SaaS 网站设计》对 Linear / Stripe / Vercel / PostHog / Retool 的拆解），
+  提炼出可照抄的规律：**统一容器承载异质 logo、三行信息结构（图标→名称→状态标签）、
+  一行一平台一句能力、网格做概览+列表做细节、用数字与状态替代形容词、层级靠留白与字号而非分割线**
+
+**代码改动痕迹**：
+- **飞书 / 钉钉官方 logo（下载 + 核验）**
+  - 先回溯 `simple-icons` 的 **v10~v15 全部 tag，两者均不存在**（该库从未收录或已彻底下架）
+  - 改用 **App Store 官方接口**（`itunes.apple.com/search`）取回 512px 官方 App 图标，
+    开发者署名分别为 **DingTalk Technology Co., Ltd.** / **Beijing Feishu Technology Co., Ltd.**
+  - 下载后**逐张目视核验**（钉钉＝蓝底白羽翼标；飞书＝白底蓝青双色标）→ 确认正版
+  - Pillow 转存 256px 自托管资源：`public/brand/dingtalk.png`(21KB) / `feishu.png`(10KB)
+  - `AuthModal.jsx` 新增 `IMG_MAP`：飞书 / 钉钉用官方位图渲染，其余渠道仍用矢量 glyph
+- **登录入口精简（代码保留）**
+  - `server/oauth.js`：GitHub / Google / Apple 加 `hidden: true`，
+    `getProvidersStatus()` 过滤 hidden —— **定义与代码完整保留，去掉 hidden 即可恢复**
+  - `src/data/auth-providers.js`：兜底列表同步为 6 个渠道（微信/QQ/飞书/钉钉/企业微信/支付宝）
+- **平台区块重做（去掉卡片墙）**
+  - **删除** `AdapterCarousel.jsx` / `.css`（6 张大卡片 + 下方重复的平台列表）
+  - **新建** `PlatformSpecs.jsx` / `.css`：改为**规格表**，桌面三列 `168px | 88px | 1fr`
+    （图标+名称 / 状态标签 / 一句话能力），移动端单列；层级只靠留白、字号与极细分隔线
+  - iOS 行图标改用 **App Store** 图标：`simple-icons` 的 iOS 图标本身就是「iOS」字形，
+    放在「iOS」文字前会重复成「iOS iOS」（该版本没有 iphone / ipad 图标）
+  - `PlatformSection.jsx`：副标题改「同一套热键与词库，跟着你在六个平台上工作」，
+    CTA 改「选择你的平台下载」
+- **图标环换成主流办公社交 App**
+  - `scripts/gen-icons.mjs`：清单重构为 **44 个主流 App**（国内 10 + 国际 34，国内外交替排列）
+  - **修掉一个隐藏缺陷**：原 `i % 4` 分组导致**一半图标永远不会出现**（飞书正好被丢掉），
+    改为「偶数索引→外环 / 奇数索引→内环」→ **44 个全部呈现**（22 + 22）
+  - `Rinner` 由 `0.22w` 调至 `0.24w`，避免内环图标变多后拥挤
+  - `EverywhereSection.jsx` 支持 `img` 与 `path` 两种图标来源；新增 `.ev-icon img` 样式（72%）
+
+**验证（线上实测，Chrome DevTools）**：
+- 登录弹窗：6 个渠道；飞书 / 钉钉图片 `naturalWidth=256` **加载成功**；
+  GitHub / Google / Apple **已不出现**
+- 平台区块：`.pspec` 6 行，`grid-template-columns: 168px 88px 588px`
+- 图标环：`.ev-icon` **44 个**（外环 22 + 内环 22）；`brand/dingtalk.png` 与 `brand/feishu.png` 均 256px 加载成功
+- `npm run build` 通过，lint 无错误；部署 → https://reislinaa.github.io/Artic/
+
+**踩坑**：GitHub Pages 的 CDN 对 HTML 缓存很顽固，`?v=` 查询参数**不一定能绕过**；
+验证新版必须用 DevTools 的「忽略缓存重新加载」（已记入已知坑）。
 
 ### 2026-09-10 · 密码改哈希存储 + 修复移动端首页不居中
 **用户要求**：① 同意把密码改成哈希存储；② 手机端打开首页没居中，其他页面正常。

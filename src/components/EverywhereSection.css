@@ -58,6 +58,16 @@
   display: block;
 }
 
+/* 自托管位图图标（飞书 / 钉钉）：官方 App 图标自带底色与内边距，
+   放大到 72% 让内部标识与其余矢量图标视觉重量接近 */
+.ev-icon img {
+  width: 72%;
+  height: 72%;
+  display: block;
+  object-fit: contain;
+  border-radius: 7px;
+}
+
 /* 渐隐遮罩：图标进出视口时柔化淡入淡出 */
 .ev-fade {
   position: absolute;

@@ -3,16 +3,25 @@ import { siWechat, siQq } from 'simple-icons'
 import { useAuth } from '../context/AuthContext'
 import { FALLBACK_PROVIDERS } from '../data/auth-providers'
 
-// simple-icons 中仍可用的品牌图标（微信 / QQ）
-// 飞书、钉钉的官方图标在 simple-icons v16 已下架，此处用品牌色首字占位，
-// 待拿到官方 SVG 后替换 ICON_MAP 即可，其余逻辑无需改动。
+// 微信 / QQ：simple-icons 官方矢量路径，按品牌色着色
 const ICON_MAP = {
   wechat: siWechat,
   qq: siQq
 }
 
+// 飞书 / 钉钉：simple-icons v16 已下架，改用 App Store 官方图标
+// （开发者分别为 DingTalk Technology / Beijing Feishu Technology），
+// 已转存到 public/brand/ 自托管，避免外链依赖。
+const IMG_MAP = {
+  feishu: 'brand/feishu.png',
+  dingtalk: 'brand/dingtalk.png'
+}
+
+const BASE = import.meta.env.BASE_URL || '/'
+
 function ProviderButton({ p, onSelect }) {
   const icon = ICON_MAP[p.id]
+  const img = IMG_MAP[p.id]
   return (
     <button
       type="button"
@@ -21,7 +30,9 @@ function ProviderButton({ p, onSelect }) {
       title={p.configured ? `使用${p.name}登录` : `${p.name}：${p.tip || '即将支持'}`}
       onClick={() => p.configured && onSelect(p.id)}
     >
-      {icon ? (
+      {img ? (
+        <img className="auth-provider-img" src={`${BASE}${img}`} alt="" />
+      ) : icon ? (
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d={icon.path} fill={p.color} />
         </svg>

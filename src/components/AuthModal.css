@@ -208,6 +208,15 @@
   display: block;
 }
 
+/* 飞书 / 钉钉使用官方 App 图标（自托管位图） */
+.auth-provider-img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
 .auth-provider-initial {
   width: 24px;
   height: 24px;

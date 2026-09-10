@@ -280,9 +280,10 @@ export const PROVIDERS = [
 export const RESERVED_PROVIDERS = [
   { id: 'wecom', name: '企业微信', color: '#2F7DFF' },
   { id: 'alipay', name: '支付宝', color: '#1677FF' },
-  { id: 'github', name: 'GitHub', color: '#181717' },
-  { id: 'google', name: 'Google', color: '#4285F4' },
-  { id: 'apple', name: 'Apple', color: '#000000' }
+  // 以下三个按产品决定暂不上线，**代码保留**：去掉 hidden 即可恢复入口
+  { id: 'github', name: 'GitHub', color: '#181717', hidden: true },
+  { id: 'google', name: 'Google', color: '#4285F4', hidden: true },
+  { id: 'apple', name: 'Apple', color: '#000000', hidden: true }
 ]
 
 export const getProvider = (id) => PROVIDERS.find((p) => p.id === id) || null
@@ -299,9 +300,11 @@ export function getProvidersStatus() {
     const { configured, missing } = checkProvider(p)
     return { id: p.id, name: p.name, color: p.color, tip: p.tip, implemented: true, configured, missing }
   })
-  const reserved = RESERVED_PROVIDERS.map((p) => ({
-    id: p.id, name: p.name, color: p.color, tip: '即将支持', implemented: false, configured: false, missing: []
-  }))
+  const reserved = RESERVED_PROVIDERS
+    .filter((p) => !p.hidden) // hidden 的渠道代码保留，但不对前端暴露
+    .map((p) => ({
+      id: p.id, name: p.name, color: p.color, tip: '即将支持', implemented: false, configured: false, missing: []
+    }))
   return { providers: [...implemented, ...reserved] }
 }
 

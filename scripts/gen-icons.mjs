@@ -3,64 +3,73 @@ import { writeFileSync } from 'fs'
 import { join } from 'path'
 
 /**
- * 生成「全场景通用」区块使用的品牌图标数据。
+ * 生成「全场景通用」区块（图标环）使用的品牌图标数据。
  *
- * 重要：simple-icons v16 因商标原因**下架**了一批品牌，以下均**不存在**，
- * 不要再往里加（加了也取不到，而且会导致列表里混入错误图标）：
+ * 选品原则：**只收 2025 年主流「办公 / 社交 / 沟通 / 文档 / 效率」类 App**，
+ * 海内外兼顾、均为大众高频使用；不收游戏、不收纯娱乐（音乐/流媒体）、
+ * 不收小众开发者工具（避免出现用户不认识的图标）。
+ *
+ * 两个来源：
+ *  1. `simple-icons`（https://github.com/simple-icons/simple-icons，25.8k★）
+ *     —— 收录了大量品牌的官方 path。脚本对每个 slug 做**强校验**，取不到即报错退出。
+ *  2. **自托管位图**（`{ img: '...' }`）—— 飞书 / 钉钉 在 simple-icons 已下架，
+ *     改用 **App Store 官方接口**取得的 512px 官方图标（开发者署名分别为
+ *     DingTalk Technology Co., Ltd. / Beijing Feishu Technology Co., Ltd.），
+ *     已转存到 `public/brand/`。
+ *
+ * 重要：simple-icons v16 因商标原因下架了一批品牌，以下均**不存在**，不要再加：
  *   Microsoft 全系（Windows / Word / Excel / PowerPoint / Outlook / Teams / Edge / OneNote）、
- *   Slack、OpenAI、Canva、Adobe 全系、LinkedIn、DingTalk、Feishu / Lark、
- *   Douyin、WPS、Aliyun、Tencent、Youdao、Tmall、Pinduoduo、Jingdong、Toutiao
+ *   Slack、OpenAI、Canva、Adobe 全系、LinkedIn、钉钉、飞书、抖音、WPS、阿里云、腾讯系、有道。
  *
- * 本脚本对每个条目做**强校验**：取不到就直接抛错退出，
- * 从机制上防止「错误图标」再次混进站点。
  * 修改后运行：node scripts/gen-icons.mjs
  */
 
-// —— 国内常用（沟通 / 输入 / 内容 / 社区）——
+// —— 国内：沟通 / 办公 / 内容社区 / 输入法（均为大众高频 App）——
 const CN = [
-  'wechat', 'qq', 'sogou', 'zhihu', 'xiaohongshu', 'bilibili', 'sinaweibo',
-  'baidu', 'alipay', 'taobao', 'juejin', 'csdn', 'gitee'
+  'wechat',                        // 微信
+  'qq',                            // QQ
+  { img: 'dingtalk' },             // 钉钉（自托管官方图标）
+  { img: 'feishu' },               // 飞书（自托管官方图标）
+  'sogou',                         // 搜狗输入法
+  'zhihu',                         // 知乎
+  'xiaohongshu',                   // 小红书
+  'bilibili',                      // 哔哩哔哩
+  'sinaweibo',                     // 微博
+  'kuaishou'                       // 快手
 ]
 
-// —— 国际常用（沟通 / 邮箱 / 文档 / 笔记 / 协作 / 开发 / 浏览器 / AI）——
+// —— 国际：社交沟通 / 会议协作 / 邮箱文档 / 效率 ——
+// 只保留全球范围内最主流的，避免出现用户不认识的图标
 const INTL = [
-  // 沟通
-  'discord', 'telegram', 'whatsapp', 'zoom', 'messenger', 'loom', 'calendly', 'threads', 'mastodon',
-  // 邮箱
-  'gmail', 'thunderbird', 'protonmail',
-  // 文档与云盘
-  'googledocs', 'googlesheets', 'googleslides', 'googledrive', 'googlecalendar',
-  // 笔记与参考
-  'notion', 'obsidian', 'evernote', 'zotero',
-  // 协作与项目管理
-  'trello', 'asana', 'linear', 'jira', 'confluence', 'miro', 'airtable', 'coda',
-  // 写作辅助
-  'deepl', 'grammarly', 'excalidraw',
-  // 开发
-  'github', 'gitlab', 'bitbucket', 'cursor', 'sublimetext', 'jetbrains', 'stackoverflow', 'postman',
-  // 浏览器
-  'googlechrome', 'safari', 'firefox', 'brave', 'opera',
-  // AI
-  'anthropic', 'claude', 'perplexity', 'huggingface', 'googlegemini',
-  // 社交与内容
-  'x', 'facebook', 'instagram', 'reddit', 'medium', 'youtube',
-  // 效率
-  'todoist', 'ticktick', 'raycast', 'alfred',
-  // 平台
-  'apple', 'android'
+  // 社交与即时通讯
+  'whatsapp', 'telegram', 'discord', 'messenger', 'instagram', 'facebook',
+  'x', 'reddit', 'snapchat', 'pinterest', 'threads', 'tiktok',
+  // 会议与团队协作
+  'zoom', 'googlemeet', 'notion', 'trello', 'asana', 'jira', 'confluence',
+  'miro', 'figma', 'dropbox', 'evernote', 'googlekeep', 'googlechat',
+  // 邮箱与文档
+  'gmail', 'googledrive', 'googledocs', 'googlesheets', 'googlecalendar',
+  // 效率与知识管理
+  'todoist', 'ticktick', 'obsidian', 'airtable'
 ]
 
-const resolve = (name) => {
+const resolve = (slug) => {
   const variants = [
-    'si' + name.charAt(0).toUpperCase() + name.slice(1),
-    'si' + name.toUpperCase(),
-    'si' + name
+    'si' + slug.charAt(0).toUpperCase() + slug.slice(1),
+    'si' + slug.toUpperCase(),
+    'si' + slug
   ]
   for (const v of variants) if (simpleIcons[v]) return simpleIcons[v]
   return null
 }
 
-// 国内外交替排列，保证两层圆环里都能看到国内 + 国际软件
+// 自托管位图条目（title 为品牌官方名）
+const CUSTOM = {
+  dingtalk: { title: 'DingTalk', hex: '1B6EFF', img: 'brand/dingtalk.png' },
+  feishu: { title: 'Feishu', hex: '00B394', img: 'brand/feishu.png' }
+}
+
+// 国内外交替排列，保证两层图标环里国内外都能看到
 const ordered = []
 const maxLen = Math.max(CN.length, INTL.length)
 for (let i = 0; i < maxLen; i++) {
@@ -70,29 +79,34 @@ for (let i = 0; i < maxLen; i++) {
 
 const icons = []
 const missing = []
-const seen = new Set()
-for (const name of ordered) {
-  if (seen.has(name)) continue
-  seen.add(name)
-  const icon = resolve(name)
-  if (!icon) {
-    missing.push(name)
+for (const item of ordered) {
+  if (typeof item === 'object' && item.img) {
+    const c = CUSTOM[item.img]
+    if (!c) {
+      missing.push(`custom:${item.img}`)
+      continue
+    }
+    icons.push({ name: item.img, title: c.title, hex: c.hex, img: c.img })
     continue
   }
-  icons.push({ name, title: icon.title, hex: icon.hex, path: icon.path })
+  const icon = resolve(item)
+  if (!icon) {
+    missing.push(item)
+    continue
+  }
+  icons.push({ name: item, title: icon.title, hex: icon.hex, path: icon.path })
 }
 
-// 强校验：任何取不到的条目都视为错误，直接失败
 if (missing.length) {
-  console.error('❌ 以下图标在 simple-icons 中不存在，请从列表移除或替换：')
+  console.error('❌ 以下图标取不到，请从清单移除或改用自托管 img：')
   console.error('   ' + missing.join(', '))
   process.exit(1)
 }
 
-const output = `// Auto-generated by scripts/gen-icons.mjs — ${icons.length} 个已验证品牌图标
-// 数据来源: https://github.com/simple-icons/simple-icons
-// 注意: simple-icons v16 已下架 Microsoft 全系 / Slack / OpenAI / Canva / Adobe / 钉钉 / 飞书 等，
-//       详见 scripts/gen-icons.mjs 顶部说明。请勿手动添加未经验证的条目。
+const output = `// Auto-generated by scripts/gen-icons.mjs — ${icons.length} 个已验证图标
+// 取舍原则与数据来源见 scripts/gen-icons.mjs 顶部注释（办公/社交类主流 App，海内外兼顾）。
+// 注意：simple-icons v16 已下架 Microsoft 全系 / Slack / OpenAI / Canva / Adobe / 钉钉 / 飞书 等，
+//       其中钉钉、飞书改用 App Store 官方图标并自托管于 public/brand/（字段为 img）。
 export const APP_ICONS = ${JSON.stringify(icons)}
 
 export default APP_ICONS
@@ -101,8 +115,11 @@ export default APP_ICONS
 const outPath = join(process.cwd(), 'src', 'data', 'app-icons.js')
 writeFileSync(outPath, output, 'utf-8')
 
+const bySvg = icons.filter((i) => i.path).length
+const byImg = icons.filter((i) => i.img).length
+const outer = icons.filter((_, i) => i % 2 === 0).length
+const inner = icons.filter((_, i) => i % 2 === 1).length
 console.log(`✅ 生成 ${icons.length} 个图标 -> ${outPath}`)
-console.log(`   国内 ${CN.length} 个 / 国际 ${icons.length - CN.length} 个（国内外交替排列）`)
-console.log('   标题:', icons.map((i) => i.title).join(', '))
-const shown = icons.filter((_, i) => i % 4 === 0 || i % 4 === 1).length
-console.log(`   圆环实际展示: ${shown} 个（外环 ${icons.filter((_, i) => i % 4 === 0).length} + 内环 ${icons.filter((_, i) => i % 4 === 1).length}）`)
+console.log(`   矢量 path ${bySvg} 个 / 自托管图 ${byImg} 个`)
+console.log(`   圆环分组：外环 ${outer} + 内环 ${inner} = ${outer + inner}（偶数索引→外环，奇数索引→内环，全部呈现）`)
+console.log('   名单:', icons.map((i) => i.title).join(', '))

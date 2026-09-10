@@ -5,10 +5,16 @@ import './EverywhereSection.css'
 
 /* 品牌图标沿双层圆环反向缓慢旋转。
    圆心位于容器底部正中，仅露出上半弧（overflow hidden）。
-   外环顺时针 40s/圈，内环逆时针 50s/圈。 */
+   外环顺时针 40s/圈，内环逆时针 50s/圈。
 
-const OUTER = APP_ICONS.filter((_, i) => i % 4 === 0)
-const INNER = APP_ICONS.filter((_, i) => i % 4 === 1)
+   图标两种来源（见 src/data/app-icons.js）：
+     · path —— simple-icons 的官方矢量路径，按品牌色着色
+     · img  —— 自托管位图（飞书 / 钉钉，simple-icons 已下架，改用 App Store 官方图标） */
+
+// 偶数索引进外环、奇数索引进内环 —— 保证**清单里每个图标都会出现**
+// （早期用 i % 4 过滤，导致一半图标永远不会被展示）
+const OUTER = APP_ICONS.filter((_, i) => i % 2 === 0)
+const INNER = APP_ICONS.filter((_, i) => i % 2 === 1)
 const N_OUTER = OUTER.length
 const N_INNER = INNER.length
 const STEP_OUTER = (2 * Math.PI) / N_OUTER
@@ -17,7 +23,19 @@ const STEP_INNER = (2 * Math.PI) / N_INNER
 const SPEED_OUTER = (2 * Math.PI) / 40000
 const SPEED_INNER = (2 * Math.PI) / 50000
 
+const BASE = import.meta.env.BASE_URL || '/'
 const brandColor = (hex) => '#' + String(hex || '1A1A1A').replace(/^#/, '')
+
+function IconMark({ icon }) {
+  if (icon.img) {
+    return <img src={`${BASE}${icon.img}`} alt="" loading="lazy" decoding="async" />
+  }
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d={icon.path} fill={brandColor(icon.hex)} />
+    </svg>
+  )
+}
 
 export default function EverywhereSection() {
   const containerRef = useRef(null)
@@ -34,7 +52,7 @@ export default function EverywhereSection() {
     const h = el.offsetHeight
     dimsRef.current = {
       Router: w * 0.38,
-      Rinner: w * 0.22,
+      Rinner: w * 0.24, // 每环图标数增加后，内环半径相应外扩，避免拥挤
       cx: w / 2,
       cy: h,
     }
@@ -98,11 +116,11 @@ export default function EverywhereSection() {
           <span className="section-kicker">Works Everywhere</span>
         </Reveal>
         <Reveal variant="blur">
-          <h2 className="section-title">全场景通用</h2>
+          <h2 className="section-title">你在哪写，它就在哪</h2>
         </Reveal>
         <Reveal delay={1} variant="fade">
           <p className="section-subtitle">
-            在微信、飞书、邮件、笔记、代码编辑器甚至浏览器表单中都能使用，不挑应用。
+            微信、飞书、钉钉、邮件、文档、会议——你在哪个 App 里沟通，就在哪里成稿。
           </p>
         </Reveal>
 
@@ -116,9 +134,7 @@ export default function EverywhereSection() {
                   outerRefs.current[i] = el
                 }}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d={icon.path} fill={brandColor(icon.hex)} />
-                </svg>
+                <IconMark icon={icon} />
               </div>
             ))}
           </div>
@@ -131,9 +147,7 @@ export default function EverywhereSection() {
                   innerRefs.current[i] = el
                 }}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d={icon.path} fill={brandColor(icon.hex)} />
-                </svg>
+                <IconMark icon={icon} />
               </div>
             ))}
           </div>
