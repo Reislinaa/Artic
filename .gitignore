@@ -19,6 +19,11 @@ deploy-log.txt
 # 运行时数据（用户账号、日志等，绝不入库）
 server/data/
 
+# 临时分析/调试文件（本项目约定：临时脚本与产物一律以 _ 开头）
+# 已多次误提交过 _extract.py / _pdf_*.png 等，此规则用于防复发
+_*
+
+
 # 系统文件
 .DS_Store
 Thumbs.db
