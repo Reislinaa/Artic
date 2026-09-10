@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARTIC · UI 设计栈</title>
+<style>
+  :root { --bg:#0B0B12; --card:#15151F; --line:rgba(255,255,255,.08); --primary:#6366F1; --text:#F2F2F5; --muted:#9A9AA8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter, "Noto Sans SC", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 64px 24px; }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  .kicker { color: var(--primary); font-size: .78rem; letter-spacing: 3px; text-transform: uppercase; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -.03em; margin: 12px 0 8px; }
+  .lead { color: var(--muted); font-size: 1.05rem; margin-bottom: 48px; }
+  .grid { display: grid; gap: 14px; }
+  .item { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }
+  .item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .item .no { color: var(--primary); font-variant-numeric: tabular-nums; font-size: .85rem; }
+  .item p { color: var(--muted); font-size: .92rem; }
+  .item .src { margin-top: 10px; font-size: .8rem; color: #6E6E82; }
+  .item code { background: rgba(255,255,255,.06); padding: 2px 7px; border-radius: 5px; font-size: .78rem; }
+  .cmd { margin-top: 48px; background: #0F0F17; border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }
+  .cmd h3 { font-size: .95rem; color: var(--muted); font-weight: 500; margin-bottom: 12px; }
+  pre { background: #07070C; border: 1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; font-size: .82rem; color: #C7C7D6; }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  footer { margin-top: 40px; color: #5A5A6A; font-size: .82rem; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Design Stack</div>
+  <h1>ARTIC · UI 设计栈</h1>
+  <p class="lead">本项目开发官网时加载的全部设计 Skill / 工具。任何 AI 读完本页，即等同于拥有同等设计能力。</p>
+
+  <div class="grid">
+    <div class="item">
+      <h3><span class="no">01</span> Impeccable（前端设计工具集）</h3>
+      <p>生成有设计感、不像"AI 通病"的界面；提供配色 / 排版 / 动效 / 组件规范。</p>
+      <div class="src">调用：<code>@skill://Impeccable（前端设计工具集）</code> · 公开搜索 "Impeccable frontend skill"</div>
+    </div>
+    <div class="item">
+      <h3><span class="no">02</span> GSAP 动画开发助手</h3>
+      <p>GSAP 时间线 / ScrollTrigger / 插件用法、清理与性能指导，保证动效有含义。</p>
+      <div class="src">调用：<code>@skill://GSAP 动画开发助手</code> · 官网 <a href="https://gsap.com" target="_blank">gsap.com</a> · <code>npm i gsap</code></div>
+    </div>
+    <div class="item">
+      <h3><span class="no">03</span> 品牌设计风格专家</h3>
+      <p>基于顶级公司（Linear / Stripe / Apple）的 DESIGN.md 设计系统合集，提供配色与排版样本。</p>
+      <div class="src">调用：<code>@skill://品牌设计风格专家</code> · 概念源自 Google Stitch 的 DESIGN.md</div>
+    </div>
+    <div class="item">
+      <h3><span class="no">04</span> Taste</h3>
+      <p>审美校准：先判断、再问、记录纠正，逐步对齐人类审美而非堆效果。</p>
+      <div class="src">调用：<code>@skill://Taste</code></div>
+    </div>
+    <div class="item">
+      <h3><span class="no">05</span> Shadcn UI</h3>
+      <p>可访问、可定制的 React 组件（Radix + Tailwind），加速界面搭建。</p>
+      <div class="src">调用：<code>@skill://Shadcn UI</code> · 官网 <a href="https://shadcn.com" target="_blank">shadcn.com</a> · <code>npx shadcn@latest init</code></div>
+    </div>
+    <div class="item">
+      <h3><span class="no">06</span> Ui Ux Pro Max</h3>
+      <p>UI/UX 设计智能：50 风格、21 配色、组件、动画、设计评审。</p>
+      <div class="src">调用：<code>@skill://Ui Ux Pro Max</code></div>
+    </div>
+    <div class="item">
+      <h3><span class="no">07</span> Web Deploy GitHub Pages</h3>
+      <p>把静态站点自动构建并部署到 GitHub Pages。</p>
+      <div class="src">调用：<code>@skill://Web Deploy GitHub Pages</code></div>
+    </div>
+  </div>
+
+  <div class="cmd">
+    <h3>给「另一个 AI」的加载命令（复制即用）</h3>
+    <pre>你是ARTIC·AI 输入法官网的开发助手。请先加载设计栈说明：
+1. 网页版：https://Reislinaa.github.io/Artic/ui-kit.html
+2. 纯文本：https://raw.githubusercontent.com/Reislinaa/Artic/main/ui-skills.md
+3. 完整规范：同仓库根目录 DESIGN.md
+
+读完后再动手：先说明本次修改的「一屏视觉焦点」，生成后按 DESIGN.md 自检再交付。</pre>
+  </div>
+
+  <footer>ARTIC · 本页为设计栈说明书，与官网同仓库部署</footer>
+</div>
+</body>
+</html>
