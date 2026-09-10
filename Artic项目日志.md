@@ -174,6 +174,9 @@ git add -A && git commit -m "..." && git push origin main
    LinkedIn / 钉钉 / 飞书 / 抖音 / WPS 等）。加图标前先确认该版本是否收录；
    `scripts/gen-icons.mjs` 已加强校验，取不到会直接报错退出。
 9. **Pillow 可用**（12.3.0），处理图片/去底可直接用 Python 脚本。
+10. **运行时数据绝不能入库**：`server/data/`（用户账号、AI 日志）已加入 `.gitignore`。
+    新增任何存储目录都要同步加进 `.gitignore`——已发生过一次用户数据被提交的事故。
+11. **提交前先看 `git status` 的输出列表**，确认没有 `server/data/`、`.env`、测试脚本等不该提交的内容。
 
 ---
 
@@ -216,6 +219,12 @@ git add -A && git commit -m "..." && git push origin main
 
 **说明**：飞书、钉钉的官方图标在 `simple-icons` v16 已下架，当前用**品牌色首字占位**；
 拿到官方 SVG 后替换 `AuthModal.jsx` 的 `ICON_MAP` 即可，其余逻辑无需改动。
+
+**附带修复（运行时数据误入库）**：
+- 发现 `server/data/users.json`（含测试账号**明文密码**）随本次提交进入仓库
+- `.gitignore` 增加 `server/data/`；执行 `git rm -r --cached server/data` 取消跟踪；本地测试数据已删除
+- ⚠️ **git 历史（commit `d14906b`）中仍留有该测试数据**。因其仅为本机联调用的假账号
+  （密码是固定测试值、非真实用户），未做历史重写；若后续清理可考虑 `git filter-repo`
 
 ### 2026-09-10 · 启用官方 logo + 修正品牌图标（换常用软件、修错误项、放大 20%）
 **用户要求**：
