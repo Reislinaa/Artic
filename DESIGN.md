@@ -87,6 +87,9 @@
 - 间距用 **8pt 标尺**（8/16/24/32/48/56/72/120）。
 - 区块垂直留白 120px，移动端 72px。
 - 每屏只有一个视觉重心；Hero 用三段式（顶标/主内容/底提示）避免内容堆顶。
+- **网格必须写 `minmax(0, 1fr)`，不要写 `1fr`**：网格子项默认 `min-width: auto`，
+  内容的固有宽度会把整列撑宽、溢出容器（移动端表现为「页面没居中」）。
+  同时给网格子项加 `min-width: 0`。已在 `.hero-content` 踩过一次。
 
 ## 6. 动效规范
 
@@ -150,6 +153,8 @@
   - 回跳 token 经 URL 参数传递，前端读取后**立即 `replaceState` 清除**
   - `safeUser()` 必须剥离密码等敏感字段，任何接口都不得返回 `password`
   - 第三方登录用户 `password` 为 `null`，禁止走密码登录
+  - **密码一律 scrypt 哈希**（`server/password.js`，格式 `scrypt$N$r$p$salt$hash`），
+    绝不落明文；校验返回 `needsRehash` 以兼容历史明文数据并在登录成功后透明迁移
 - **品牌图标注意**：飞书 / 钉钉官方图标在 `simple-icons` v16 已下架，
   当前用品牌色首字占位；拿到官方 SVG 后替换 `AuthModal.jsx` 里的 `ICON_MAP` 即可。
 

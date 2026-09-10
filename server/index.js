@@ -4,7 +4,8 @@ import cors from 'cors'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { generateSuggestion } from './aiService.js'
-import { findUser, findUserByEmail, createUser, addLog, findUserById, upsertOAuthUser, safeUser } from './store.js'
+import { findUser, findUserByEmail, createUser, addLog, findUserById, upsertOAuthUser, safeUser, setPasswordHash } from './store.js'
+import { verifyPassword } from './password.js'
 import {
   getProvider,
   checkProvider,
@@ -93,8 +94,16 @@ app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body
   const user = findUser(username)
   // 第三方登录用户没有密码，禁止用密码登录
-  if (!user || !user.password || user.password !== password) {
+  if (!user || !user.password) {
     return res.status(401).json({ error: '用户名或密码错误' })
+  }
+  const { ok, needsRehash } = verifyPassword(password, user.password)
+  if (!ok) {
+    return res.status(401).json({ error: '用户名或密码错误' })
+  }
+  // 命中历史明文数据 → 登录成功后立即透明迁移为哈希（老用户无感）
+  if (needsRehash) {
+    setPasswordHash(user.id, password)
   }
   res.json({ success: true, message: '登录成功', user: safeUser(user), token: createSession(user) })
 })

@@ -177,10 +177,44 @@ git add -A && git commit -m "..." && git push origin main
 10. **运行时数据绝不能入库**：`server/data/`（用户账号、AI 日志）已加入 `.gitignore`。
     新增任何存储目录都要同步加进 `.gitignore`——已发生过一次用户数据被提交的事故。
 11. **提交前先看 `git status` 的输出列表**，确认没有 `server/data/`、`.env`、测试脚本等不该提交的内容。
+12. **移动端「页面没居中」优先查网格溢出**：`grid-template-columns: 1fr` 会被子项固有宽度
+    撑宽整列导致横向溢出，必须写 `minmax(0, 1fr)`，并给网格子项加 `min-width: 0`。
+13. **桌面浏览器窗口有最小宽度（约 500px）**，`resize_page` 压不到手机尺寸；
+    测移动端要用 DevTools 的设备模拟（`emulate` 的 `viewport` 参数，如 `390x844x3,mobile,touch`），
+    并用 `evaluate_script` 量 `getBoundingClientRect()` 与 `documentElement.scrollWidth` 来确认。
 
 ---
 
 ## 七、开发日志（倒序，最新在最前）
+
+### 2026-09-10 · 密码改哈希存储 + 修复移动端首页不居中
+**用户要求**：① 同意把密码改成哈希存储；② 手机端打开首页没居中，其他页面正常。
+
+**代码改动痕迹**：
+- **新增 `server/password.js`**：用 Node 内置 `crypto.scrypt` 实现（零依赖）
+  - 存储格式 `scrypt$N$r$p$salt$hash`，参数 N=16384 / r=8 / p=1 / keylen=32
+  - `verifyPassword()` 返回 `{ ok, needsRehash }`：命中**历史明文数据**时提示调用方迁移
+- `server/store.js`：`createUser` 改为只存哈希；新增 `setPasswordHash(userId, 明文)`（内部哈希）
+- `server/index.js`：登录改用 `verifyPassword`；命中明文老数据时**登录成功后立即改存哈希**（用户无感）
+- **移动端首页不居中（含根因）**：
+  - 现象：其他页面都正常，只有首页整块偏右
+  - 定位：用 Chrome DevTools 以 390×844 **真机视口**量取，发现 `.hero-content`
+    的单列被撑到 **374px**，而内容区只有 **342px**（390 − 48 padding），
+    子元素右边界跑到 **398** → 溢出 8px
+  - 根因：CSS Grid 子项默认 `min-width: auto`，右侧 mockup 的固有宽度把整列撑宽
+  - 修复 `src/components/Hero.css`：移动端 `grid-template-columns: minmax(0, 1fr)`，
+    并给 `.hero-col-left` / `.hero-col-right` 加 `min-width: 0; max-width: 100%`
+  - 顺带修 `.hero-compare`（原宽 374px，比容器还宽）：移动端收紧 padding/gap、
+    `.compare-item { min-width: 0 }`、`.compare-bar { width: 96px }` → 宽度降到 **277px**
+- `DESIGN.md`：布局原则补充「网格必须用 `minmax(0,1fr)`」；账号章节补充密码哈希要求
+
+**验证与部署结果**：
+- **密码**：注册后 `users.json` 中为 `scrypt$16384$8$1$…` ✅；正确密码 200 ✅；错误密码 401 ✅；
+  手工写入的**明文老账号登录成功并自动迁移为哈希** ✅；迁移后再登录仍成功 ✅
+- **移动端**（Chrome DevTools 设备模拟实测）：
+  - 390px：两列均 **342px**，左右各 **24px** 完全对称；标题居中；`scrollWidth == 390` 无横向溢出
+  - 360px：列宽 312px，左右各 24px；速度对比条 277px 居中；无溢出
+- `npm run build` 通过；部署 → https://reislinaa.github.io/Artic/
 
 ### 2026-09-10 · 新增第三方登录框架（飞书 / 钉钉 / 微信 / QQ 预留式接入）
 **用户要求**：在登录界面做好预留窗口，未来可能要接入飞书、钉钉、微信、QQ 等办公与社交软件，
@@ -448,7 +482,7 @@ Slack、OpenAI、Canva、Adobe 全系、LinkedIn、钉钉、飞书、抖音、WP
 - [ ] GitHub 仓库描述仍是旧文案「流星语 - AI 智能输入法」，需在网页手动改
 - [ ] 确认正式邮箱域名（当前暂用 `artic.cn`：support@ / business@ / feedback@）
 - [ ] 订单存储改为数据库 + 幂等处理（当前为内存实现，重启即丢）
-- [ ] **账号安全：`users.json` 目前存的是明文密码，生产前必须改为哈希（scrypt/bcrypt）**
+- [x] ~~账号安全：明文密码改哈希~~ ✅ **已完成**（2026-09-10，scrypt + 历史数据透明迁移）
 - [ ] 申请第三方登录凭据：微信开放平台「网站应用」/ QQ 互联 / 飞书开放平台 / 钉钉开放平台
       （各自需登记回调地址 `https://域名/api/auth/<渠道id>/callback`）
 - [ ] 补飞书 / 钉钉官方图标 SVG（当前为品牌色首字占位，替换 `AuthModal.jsx` 的 `ICON_MAP`）

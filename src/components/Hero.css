@@ -229,9 +229,20 @@
 /* ============ Responsive ============ */
 @media (max-width: 900px) {
   .hero-content {
-    grid-template-columns: 1fr;
+    /* 必须用 minmax(0, 1fr) 而非 1fr：
+       网格子项默认 min-width:auto，右侧 mockup 的固有宽度会把整列撑宽
+       （390 屏实测被撑到 374px > 内容区 342px），导致整块内容向右溢出、
+       视觉上「首页没居中」。minmax(0,1fr) 允许列收缩到容器宽度以内。 */
+    grid-template-columns: minmax(0, 1fr);
     gap: 56px;
     text-align: center;
+  }
+
+  /* 允许网格子项收缩 */
+  .hero-col-left,
+  .hero-col-right {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .hero-col-left {
@@ -298,15 +309,24 @@
   }
 
   .hero-compare {
-    gap: 20px;
-    padding: 18px 24px;
+    gap: 14px;
+    padding: 18px 18px;
+    max-width: 100%;
   }
 
   .compare-item {
-    min-width: 100px;
+    min-width: 0;
+  }
+
+  .compare-bar {
+    width: 96px;
+  }
+
+  .compare-arrow {
+    font-size: 1.2rem;
   }
 
   .compare-num {
-    font-size: 2rem;
+    font-size: 1.9rem;
   }
 }

@@ -4,6 +4,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { hashPassword } from './password.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.join(__dirname, 'data')
@@ -65,12 +66,23 @@ export const createUser = (username, email, password) => {
     id: Date.now(),
     username,
     email,
-    password,
+    // 只存 scrypt 哈希，绝不落明文
+    password: hashPassword(password),
     created_at: new Date().toISOString()
   }
   users.push(user)
   writeJSON('users.json', users)
   return user
+}
+
+/** 更新密码（传明文，内部哈希）；用于历史明文数据的透明迁移 */
+export const setPasswordHash = (userId, plainPassword) => {
+  const users = readJSON('users.json')
+  const u = users.find((x) => String(x.id) === String(userId))
+  if (!u) return false
+  u.password = hashPassword(plainPassword)
+  writeJSON('users.json', users)
+  return true
 }
 
 /**
