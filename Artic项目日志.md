@@ -195,6 +195,31 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-20 · 修复隐形按钮 + 重构 Hero 大字为 ARTIC 字标 + 补全站动效（用户：附两张截图）
+
+**用户要求**：①「你有很多这种图一黑方块，字呢」→ 下载平台主按钮黑底文字几乎看不见，需修复；②「图二修改一下这部分，大字肯定是 artic，小字再写别的」→ Hero 大标题改为 ARTIC，小字重写；③「整个页面可以多一点动效」。
+
+**代码改动痕迹**：
+
+1. **修隐形按钮（图一根因）** `src/App.css`：
+   - 上次主色调改黑白时，点缀色 `--accent` 从橙 `#F59E0B` 改为近黑 `#1A1A1A`，但 `.btn-primary`/`.btn-accent` 仍是 `color: var(--ink)`（黑字）→ 全站主按钮「黑底黑字」隐形。
+   - 改为 `color: var(--on-ink)`（白字），恢复高对比。所有 `btn-primary`/`btn-accent` 按钮同步修复。
+2. **重构 Hero 大字（图二）** `src/components/Hero.jsx` + `Hero.css`：
+   - 删除原中文口号大标题「说出来 / 就是商务稿」及 `.hero-title/hero-line/hero-gradient` 样式。
+   - 新增巨大化品牌字标 `.hero-wordmark`（五个 `.wm` 字母，`clamp(4.25rem,15vw,10rem)`，800 字重）作为首屏记忆点；`aria-label="ARTIC"`，字母 `aria-hidden`。
+   - 子标下新增 `.hero-wordmark-rule` 细横线由左到右 draw-in。
+   - **小字重写**：副标题改为「说出即稿——让说出口的话，直接变成能发出去的商务稿。 口语自动改书面语 · 说错即时纠正 · 一处习惯，处处能用」；标签改为「AI 语音成稿 · Say what you mean, but better」。
+3. **补动效**（全部在 `prefers-reduced-motion` 下自动关闭）：
+   - ARTIC 字母逐字「上浮 + 去模糊」入场（GSAP，贴合输入法逐字落字意象）；细横线 draw-in。
+   - 两团弥散光斑随滚动轻量视差（`.hero-glow-wrap` 用 `marginTop`、`.hero-horizon` 用 `y`，避免覆盖 wrap 的 `translateY(-50%)` 居中）。
+   - 右侧演示窗口 `.hero-window-float` 缓慢呼吸浮动（CSS 关键帧）。
+   - **移除末尾闪烁输入光标**：竖条光标会被误读成字母 I，实测像「ARTICI」，故去掉，光标相关的 `.wm-caret/@keyframes caretBlink` 一并清理。
+   - 其余区块（FeatureShowcase 逐行浮现、StepsSection 滚动画线、EverywhereSection 双环旋转、PlatformSpecs 逐行入场、Reveal 标题）本就具备滚动动效，本次不动。
+
+**验证与部署结果**：`npm run build` ✅（146 modules）。浏览器实测：ARTIC 字标拼写正确、小字与按钮完整、速度对比 45/220wpm 正常、主按钮白字清晰、控制台零错误。已 push `main`，并用 `node scripts/deploy-gh-pages.mjs` 推送 `gh-pages` 更新线上静态站。
+
+---
+
 ### 2026-09-20 · 重构「轮转图标墙」选品（用户：多数图标不常见且有错，参考 typeless 图标墙补充替换）
 
 **用户要求**：图标墙里大部分图标不常见、个别还放错了，参考 typeless 官网那种「你真正在哪些 App 里写字」的图标墙，补充/替换成大众一眼能认出的常见 App。

@@ -36,10 +36,11 @@
   font-family: inherit;
 }
 
-/* 主 CTA：橙底黑字（对比度约 9:1） */
+/* 主 CTA：深底白字（主色调改黑白后 accent 已为近黑，
+   文字必须用 on-ink 白，否则会「黑底黑字」隐形） */
 .btn-primary {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--on-ink);
 }
 
 .btn-primary:hover {
@@ -87,7 +88,7 @@
 
 .btn-accent {
   background: var(--accent);
-  color: var(--ink);
+  color: var(--on-ink);
 }
 
 .btn-accent:hover {

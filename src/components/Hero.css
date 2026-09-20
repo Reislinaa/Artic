@@ -121,41 +121,56 @@
   margin-bottom: 34px;
 }
 
-.hero-title {
-  margin: 0 0 30px;
-  text-align: left;
+/* ============ ARTIC 品牌字标（大字） ============
+   巨大字标承载首屏记忆点；中文卖点下沉到 hero-subtitle 小字。
+   字母入场由 Hero.jsx 的 GSAP 逐字驱动（上浮 + 去模糊），
+   这里只提供默认静态状态与光标闪烁。 */
+.hero-wordmark {
+  margin: 0 0 6px;
+  display: flex;
+  align-items: baseline;
+  font-size: clamp(4.25rem, 15vw, 10rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+  text-transform: uppercase;
+  user-select: none;
 }
 
-.hero-line {
-  display: block;
-  font-size: clamp(2.7rem, 7.2vw, 5.6rem);
-  font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -0.045em;
-  color: var(--text);
+.wm {
+  display: inline-block;
+  will-change: transform, filter, opacity;
 }
 
-/* 强调行不再用渐变填充，只把字重提上去 + 一道短下划线。
-   参考图的彩色全部来自光斑，文字保持纯黑。 */
-/* 注意：这里**刻意不写 display**。
-   `.hero-line` 的 `display: block` 负责强制换行，`width: fit-content` 让下划线
-   只覆盖文字长度。两者都写 display 会互相覆盖，导致两行标题并排。 */
-.hero-gradient {
-  color: var(--text);
-  position: relative;
-  width: fit-content;
-  padding-bottom: 0.06em;
-}
+/* 末尾闪烁输入光标：呼应「输入法逐字落字」意象。 */
+/* v16 复核：竖条光标紧贴 W 之后会被误读成字母 I（测得「ARTICI」），
+   故移除光标，入场动效只保留「逐字上浮 + 下划线生长」。 */
 
-.hero-gradient::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0.06em;
-  bottom: 0.02em;
-  height: 0.09em;
+/* 字标下的细规则横线，入场时由左到右 draw-in */
+.hero-wordmark-rule {
+  height: 2px;
+  width: clamp(150px, 20vw, 220px);
   background: var(--accent);
-  z-index: -1;
+  margin: 0 0 26px;
+  transform-origin: left center;
+}
+
+/* 产品演示窗口：缓慢的呼吸浮动（与内部逐字落字不冲突） */
+.hero-window-float {
+  animation: heroFloat 7s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 响应「减少动态效果」偏好：去掉窗口浮动 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-window-float {
+    animation: none;
+  }
 }
 
 .hero-subtitle {
