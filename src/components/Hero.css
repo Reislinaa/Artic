@@ -65,6 +65,26 @@
   filter: blur(70px);
 }
 
+/* 点阵网格背景：极小点、缓慢向下漂移（参考黑白极简落地页常见的最小网格背景）。
+   只在中上部可见，四周用径向遮罩化开，做成「有质感的氛围层」而非图案。 */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(16, 16, 16, 0.16) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 74%);
+  mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 74%);
+  opacity: 0.5;
+  animation: gridDrift 44s linear infinite;
+}
+
+@keyframes gridDrift {
+  from { background-position: 0 0; }
+  to { background-position: 0 68px; }
+}
+
 .hero-content {
   position: relative;
   z-index: 3;
@@ -76,6 +96,7 @@
   gap: 72px;
   align-items: center;
   padding: 0 clamp(24px, 4vw, 48px);
+  will-change: transform;
 }
 
 .hero-col-left {
@@ -98,6 +119,16 @@
    演示卡就是「产品凭什么不一样」的证据，它必须够醒目。 */
 .hero-col-right > * {
   width: 100%;
+}
+
+/* ============ 产品演示窗口 ============
+   v15：这里原来分三层承载「浮动 / 3D 倾斜 / 内层视差」，并有一层跟随光标的高光。
+   三层都是鼠标驱动，已全部移除 —— 窗口现在静置，动效只发生在它内部
+   （文字逐字出现，见 InputMockup.jsx）。 */
+.hero-window {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 /* ============ 编辑式小标签：极小 + 宽字距 + 大写，无胶囊 ============ */
@@ -137,13 +168,39 @@
 /* v16 复核：竖条光标紧贴 W 之后会被误读成字母 I（测得「ARTICI」），
    故移除光标，入场动效只保留「逐字上浮 + 下划线生长」。 */
 
-/* 字标下的细规则横线，入场时由左到右 draw-in */
+/* 字标下的细规则横线，入场时由左到右 draw-in；
+   常驻时做一次极弱的「呼吸」描光（沿用黑白，仅 box-shadow 的 opacity 变化）。 */
 .hero-wordmark-rule {
   height: 2px;
   width: clamp(150px, 20vw, 220px);
   background: var(--accent);
   margin: 0 0 26px;
   transform-origin: left center;
+  animation: rulePulse 6s ease-in-out infinite;
+}
+
+@keyframes rulePulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(16, 16, 16, 0); }
+  50% { box-shadow: 0 0 16px 2px rgba(16, 16, 16, 0.16); }
+}
+
+/* 产品演示窗口：缓慢的呼吸浮动（与内部逐字落字不冲突） */
+.hero-window-float {
+  animation: heroFloat 7s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 响应「减少动态效果」偏好：去掉窗口浮动与网格漂移 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-window-float,
+  .hero-grid,
+  .hero-wordmark-rule {
+    animation: none;
+  }
 }
 
 .hero-subtitle {

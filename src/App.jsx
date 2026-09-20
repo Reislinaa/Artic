@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import { AuthProvider } from './context/AuthContext'
+import { initSmoothScroll, scrollToTopImmediate } from './lib/smoothScroll'
+import ScrollProgress from './components/ScrollProgress'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import StepsSection from './components/StepsSection'
@@ -57,9 +59,10 @@ function App() {
 
   // 监听 hash 变化（浏览器前进/后退、手改地址）
   useEffect(() => {
+    initSmoothScroll()
     const onHashChange = () => {
       setRoute(parseHash(window.location.hash))
-      window.scrollTo({ top: 0 })
+      scrollToTopImmediate()
     }
     window.addEventListener('hashchange', onHashChange)
     return () => window.removeEventListener('hashchange', onHashChange)
@@ -70,7 +73,7 @@ function App() {
     if (window.location.hash === hash) {
       // 同一地址：直接切换，避免 hashchange 不触发
       setRoute({ page: target, plan: opts.plan || null })
-      window.scrollTo({ top: 0 })
+      scrollToTopImmediate()
     } else {
       window.location.hash = hash
     }
@@ -103,6 +106,7 @@ function App() {
   return (
     <AuthProvider>
       <div className="app">
+        <ScrollProgress />
         <Navbar
           onStartDemo={handleNavigate}
           onOpenAuth={() => setAuthOpen(true)}

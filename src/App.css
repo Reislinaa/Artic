@@ -7,8 +7,30 @@
 @import './components/Showcase.css';
 @import './components/MindSection.css';
 @import './components/PlatformSection.css';
-@import './components/SpokenToDraft.css';
+@import './components/InputMockup.css';
 @import './pages/pages.css';
+
+/* 顶部极细阅读进度条：固定在导航栏之上，黑白极简下的单条黑线。
+   宽度由 ScrollProgress.jsx 用 GSAP scaleX scrub 驱动（合成器友好）。 */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 1000;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress {
+    display: none;
+  }
+}
 
 .app {
   min-height: 100vh;
@@ -20,6 +42,8 @@
    v10：去掉胶囊（999px）与大圆角 —— 胶囊 + 大圆角是「AI 生成感」最强的信号之一。
    改为 8px 直角偏方，字号略小、字重 600，更接近编辑式版面的按钮。 */
 .btn {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +55,7 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   transition: background 0.25s var(--ease-soft), border-color 0.25s var(--ease-soft),
-    color 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft);
+    color 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft), transform 0.25s var(--ease-soft);
   white-space: nowrap;
   font-family: inherit;
 }
@@ -103,6 +127,85 @@
 .btn-sm {
   padding: 8px 16px;
   font-size: 0.84rem;
+}
+
+/* ===== 按钮悬停微交互 =====
+   手法取自现成参考（Hover.css / MyUIHub / CSS3Shapes 的按钮 hover 集合）：
+   不引整套库，只摘「光泽扫过」「下划线滑动」「箭头位移」三种通用 micro-interaction，
+   并适配黑白极简。全部在 prefers-reduced-motion 下关闭。 */
+
+/* 箭头：随 hover 滑入 */
+.btn .btn-arrow {
+  display: inline-flex;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: transform 0.28s var(--ease-soft), opacity 0.28s var(--ease-soft);
+  will-change: transform, opacity;
+}
+.btn:hover .btn-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 主按钮：白色光泽一次扫过（经典「Shine Sweep」），hover 时轻微上浮 */
+.btn-primary {
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -85%;
+  width: 62%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
+  transform: skewX(-20deg) translateX(-130%);
+  transition: transform 0.7s var(--ease-soft);
+  pointer-events: none;
+}
+.btn-primary:hover::after {
+  transform: skewX(-20deg) translateX(280%);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px -14px rgba(16, 16, 16, 0.5);
+}
+
+/* 次要按钮：文字下方一道黑下划线由右 → 左展开 */
+.btn-ghost::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 9px;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.32s var(--ease-soft);
+  pointer-events: none;
+}
+.btn-ghost:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+.btn-ghost:hover {
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::after,
+  .btn .btn-arrow {
+    transition: none;
+    transform: none;
+    opacity: 0;
+  }
+  .btn-primary::after {
+    display: none;
+  }
+  .btn-ghost::after {
+    display: none;
+  }
 }
 
 /* ===== 卡片 =====

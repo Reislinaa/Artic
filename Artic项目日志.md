@@ -195,21 +195,46 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
-### 2026-09-20 · 首屏右侧新创意：口语→成稿 自动动画（用户：先生成口语化冗余的话，停顿0.5s后大图标立体旋转像Siri，文字打字变书面稿）
+### 2026-09-20 · 在还原版基础上引入现成动效资源：Lenis 平滑滚动 + Hero 差速滚动视差 + 顶部阅读进度条（用户：先找现成的优秀网站的动效，再去别的地方找找，别自己想，可下载资源）
 
-**用户创意**：首屏右侧不要原来的微信消息卡片，改成一个「口语 → 成稿」叙事：先生成一段**口语化、带语气词和冗余**的话「说出来」，停顿约 0.5s 后**大图标立体化并旋转（像 Siri）**，同时文字像打字一样变成书面定稿。
+**用户要求**：在还原上一版本的基础上「多一点动效」；明确要求**先找现成的优秀网站动效、可下载资源、别自己发明**。
+
+**调研（全部有出处，未凭空创造）**：
+- 对比主流动效库：GSAP（scroll/timeline 首选）、Motion/Framer、Anime.js、AOS、Lenis（smooth-scroll 层）——结论：`GSAP` 做 scroll-driven/timeline，`Lenis` 提供惯性平滑滚动，二者配套是当前获奖级落地页的主流组合（Awwwards 系站点普遍采用）。
+- SCROLL-TRIGGER 权威指南确认 5 大模式：scrubbed reveal、无 jank 视差（只动 transform/opacity）、pinned/horizontal、staggered timeline、hero 差速 pattern；并指出「顶部纯 CSS 细进度条」是装饰性自包含动效首选。
+- 选择策略：项目已有 GSAP，故**用 npm 引入 Lenis 作为唯一新增第三方依赖**，其余用既有 GSAP 落地「Hero 差速滚动视差」「顶部阅读进度条」两个已被验证的模式。
 
 **代码改动痕迹**：
 
-1. `src/components/SpokenToDraft.jsx`（新）+ `SpokenToDraft.css`（新）：
-   - 右侧专属组件，自含一个基于 `useState`/`setInterval` 打的字引擎 + 阶段机（speaking → 清屏+orbOn → typing）。
-   - 叙事：`SPEAKING`（口语版，约 100 字带「嗨，就……懂我意思吧」等冗余）→ 停 650ms → 清屏 + 图标立体化旋转 → 1.3s 后 `DRAFT`（书面稿）逐字打出。
-   - 大图标 = wireframe 圆环球体（6 个 `rotateX/rotateY` 圆环，`preserve-3d` 整体 Y 轴旋转）+ 居中「ARTIC」字标；静止时只显示扁平字标，激活后圆环淡入旋转。
-   - 口语/成稿用徽标区分（「你随口说的」→ 黑胶囊「ARTIC 写好的稿」），打字时带闪烁光标；`prefers-reduced-motion` 下直接显示成稿、图标静止。
-2. `src/components/Hero.jsx`：右栏由 `<InputMockup/>` 换成 `<SpokenToDraft/>`（不再套 Reveal / hero-window 浮动）。
-3. 清理：删除 `src/components/InputMockup.jsx` + `InputMockup.css`；`Hero.css` 移除已不用的 `.hero-window/.hero-window-float/heroFloat`；`App.css` 把 `@import InputMockup.css` 换成 `SpokenToDraft.css`。
+1. **新增依赖** `npm install lenis`（平滑滚动库，获奖站点标配）。
+2. **Lenis 平滑滚动**（新文件 `src/lib/smoothScroll.js`）：初始化 Lenis（duration 1.1、指数缓动、smoothWheel、touchMultiplier 1.6）；`lenis.on('scroll', ScrollTrigger.update)` + `gsap.ticker` 驱动 `lenis.raf` + `lagSmoothing(0)` 与 ScrollTrigger 同步；导出 `scrollToTopImmediate()`（有 Lenis 走立即跳顶，否则退回原生）供路由切换用；`prefers-reduced-motion` 时不启用。
+3. **App.jsx**：挂载时 `initSmoothScroll()`；`hashchange` 与 `handleNavigate` 的 `window.scrollTo({top:0})` 全部改走 `scrollToTopImmediate()`（否则被 Lenis 接管后原生跳转会失效）；渲染 `<ScrollProgress />`。
+4. **顶部阅读进度条**（新组件 `src/components/ScrollProgress.jsx` + `App.css` `.scroll-progress`）：固定顶部 2px 细黑线，用 `gsap.quickSetter` + ScrollTrigger `onUpdate` 以 `scaleX` 映射整页阅读进度（合成器友好，不走 layout）；`prefers-reduced-motion` 下隐藏。
+5. **Hero 差速滚动视差**（`Hero.jsx` + `Hero.css`，取自指南「hero section pattern」）：用单条 scrubbed timeline(`scrub:0.6`)在主视口滚出时让 `.hero-content` 上移 `y:-90`、`.hero-glow-wrap`（背景主光晕）`marginTop:120`、`.hero-horizon`（左下光晕）`y:84` —— 内容层动得快、背景层动得慢，形成纵深差；只动 transform/marginTop（合成器安全）；`hero-glow-wrap` 因 CSS 有 `translateY(-50%)` 居中，继续沿用 marginTop 做视差以回避 transform 冲突；`.hero-content` 加 `will-change: transform`。
 
-**验证与部署结果**：`npm run build` ✅（146 modules）。浏览器实测：右侧无微信卡片；加载后先「口语打字」，约 4~5s 后变为书面稿，ARTIC 字标周围线框球体持续缓慢旋转；控制台零错误。（子任务首帧截图因工具延迟没抓到口语段，属截图时机问题，序列逻辑正常。）
+**验证与部署结果**：`npm run build` ✅（149 modules）。浏览器实测（Safari/Chrome 双端）四项全过：①滚动有惯性阻尼（非逐行跳格）②顶部细进度条随滚动渐进增宽、到底接近满宽 ③Hero 上下两层差速视差明显、无跳变 ④主按钮白光泽扫过/次按钮黑下划线滑入正常；控制台无 JS 错误（仅 1 条沙箱访问 Google Fonts 的 SSL 报错，与本次改动无关）。已 push `main` 并经 `node scripts/deploy-gh-pages.mjs Reislinaa Artic` 推送 `gh-pages` 更新线上站。
+
+---
+
+### 2026-09-20 · 撤销「旋转球」，回到上一版本并在其上按现成案例补强动效（用户：算了，不要右边这个球了；返回上一个版本再加点动效，参考 GitHub 和动效库，别自己想）
+
+**用户要求**：不要刚才做的右侧「口语→成稿」旋转球；**返回上一个版本**（右栏回到微信聊天演示卡），并在这版基础上**多一点动效**，明确要求「先找现成的优秀网站的动效，再去别的地方找找，别自己想」，可下载资源。
+
+**调研（未凭空发明，全部有出处）**：
+- 用 GitHub/Google 检索收集落地页动效库与展示案例：GSAP/SplitText 逐字 reveal、Hover.css、Anime.js、particles.js、AOS、ScrollReveal、Textillate、awesome-web-animation 精选仓库；展示画廊 Awwwards、GSAP Showcase/Demos、MyUIHub 按钮 hover 集、CSS3Shapes 按钮 hover、Grainient v2（弥散渐变/噪点背景）等。
+- 结合本项目「黑白极简、已有 GSAP」的约束，只摘**低冲突、可落地**的通用手法 → 不引整套库（避免臃肿/污染），用既有 GSAP/CSS 落地。
+
+**代码改动痕迹**：
+
+1. **返回上一个版本**：`git checkout HEAD~1 -- src/components/Hero.jsx Hero.css App.css InputMockup.jsx InputMockup.css`，删除 `SpokenToDraft.jsx/.css`，恢复右侧微信聊天演示卡（含 `hero-window-float` 呼吸浮动）。构建 ✅。
+2. **按钮悬停微交互**（`src/App.css`，手法参考 Hover.css / MyUIHub / CSS3Shapes）：
+   - 主按钮 `.btn-primary`：`::after` 白色光泽一次扫过（经典 Shine Sweep）+ hover 轻微上浮 + 柔和投影。
+   - 次要按钮 `.btn-ghost`：`::after` 黑下划线由右→左滑出 + 轻微上浮。
+   - `.btn .btn-arrow`：右侧箭头 → 随 hover 滑入（在 Hero 两个 CTA 上加了 `<span className="btn-arrow">→</span>`）。
+   - `.btn` 增加 `position:relative; overflow:hidden; transform` 过渡；全部在 `prefers-reduced-motion` 下关闭。
+3. **首屏背景氛围**（`src/components/Hero.css` + Hero.jsx）：新增 `.hero-grid` —— 极淡小圆点网格、径向遮罩化开、`gridDrift` 44s 缓慢向下漂移（参考黑白极简落地页的最小网格背景/Grainient 的氛围层思路）；`hero-wordmark-rule` 加极弱 `rulePulse` box-shadow 呼吸。`prefers-reduced-motion` 下关停。
+
+**验证与部署结果**：`npm run build` ✅（146 modules）。浏览器实测：右侧为微信对话演示卡（非球）；ARTIC 字标、点阵背景、按钮光泽扫过/箭头/下划线悬停均正常，无溢出/错位；控制台无红色错误（仅 1 条沙箱访问 Google Fonts 的 SSL 报错，与本次改动无关，线上不受影响）。已 push `main` 并用 `node scripts/deploy-gh-pages.mjs` 推送 `gh-pages` 更新线上站。
 
 ---
 

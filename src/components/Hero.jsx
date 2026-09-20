@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Reveal from './Reveal'
-import SpokenToDraft from './SpokenToDraft'
+import InputMockup from './InputMockup'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -68,24 +68,23 @@ export default function Hero({ onStartDemo, onNavigate }) {
     })
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      /* 弥散光斑随滚动轻量视差 */
+      /* Hero 差速滚动视差（取自 GSAP ScrollTrigger「hero section pattern」：
+         背景层移动慢、内容层移动快，形成深浅差；scrub:0.6 加一点点惯性。
+         只动 transform / marginTop（合成器安全），不动 layout 属性。
+         hero-glow-wrap 因 CSS 有 translateY(-50%) 居中，用 marginTop 做视差以回避 transform 冲突。 */
+      const hero = document.querySelector('.hero')
+      if (!hero) return []
       const wrap = document.querySelector('.hero-glow-wrap')
       const horizon = document.querySelector('.hero-horizon')
-      const hero = document.querySelector('.hero')
-      if (!hero) return
+      const content = document.querySelector('.hero-content')
       const clean = []
-      if (wrap) {
-        /* wrap 用 transform: translateY(-50%) 居中，GSAP 的 y 会覆盖它，
-           这里改用 marginTop 做轻量视差以保留垂直居中 */
-        clean.push(
-          gsap.fromTo(wrap, { marginTop: 0 }, { marginTop: 70, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.5 } })
-        )
-      }
-      if (horizon) {
-        clean.push(
-          gsap.fromTo(horizon, { y: 0 }, { y: 46, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.5 } })
-        )
-      }
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 }
+      })
+      if (content) tl.fromTo(content, { y: 0 }, { y: -90, ease: 'none' }, 0)
+      if (wrap) tl.fromTo(wrap, { marginTop: 0 }, { marginTop: 120, ease: 'none' }, 0)
+      if (horizon) tl.fromTo(horizon, { y: 0 }, { y: 84, ease: 'none' }, 0)
+      clean.push(tl)
       return () => clean.forEach((t) => t.scrollTrigger?.kill() || t.kill())
     })
 
@@ -94,6 +93,7 @@ export default function Hero({ onStartDemo, onNavigate }) {
 
   return (
     <section className="hero" id="home">
+      <div className="hero-grid" aria-hidden="true" />
       <div className="hero-glow-wrap" aria-hidden="true">
         <span className="hero-glow" ref={glowRef} />
       </div>
@@ -127,10 +127,10 @@ export default function Hero({ onStartDemo, onNavigate }) {
           <Reveal delay={3}>
             <div className="hero-actions">
               <button className="btn btn-primary btn-lg" onClick={() => onNavigate('pricing')}>
-                开始使用
+                开始使用<span className="btn-arrow" aria-hidden="true">→</span>
               </button>
               <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('features')}>
-                看它怎么改稿
+                看它怎么改稿<span className="btn-arrow" aria-hidden="true">→</span>
               </button>
             </div>
           </Reveal>
@@ -165,9 +165,13 @@ export default function Hero({ onStartDemo, onNavigate }) {
           </Reveal>
         </div>
 
-        {/* Right column: 口语 -> 成稿（大图标 + 打字动画） */}
+        {/* Right column: 产品演示（口语 → 商务稿，逐字出现） */}
         <div className="hero-col hero-col-right">
-          <SpokenToDraft />
+          <Reveal delay={3}>
+            <div className="hero-window hero-window-float">
+              <InputMockup />
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
