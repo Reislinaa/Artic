@@ -1,221 +1,96 @@
+/* ============================================================
+   FeatureShowcase —— 三种版式交替，替代「7 条左右交替、条条聊天框」的流水账。
+
+   v17 重构（用户：中段像流水账、单一、全是聊天框；要简洁但丰富）。
+   结构：
+     Act 1 · 聚焦大卡（核心能力，唯一大演示）
+     Act 2 · 左侧交互面板 + 右侧三枚极简能力卡
+     Act 3 · 收尾双栏（转写看数据 / 隐私看示意图）
+   设计语言沿用小圆角、细线分层、几乎不用阴影、黑白灰。
+   所有 mockup-* 组件样式（编辑器/文风/隐私等）保留在文件后半部复用。
+   ============================================================ */
+
 .feature-showcase {
-  background: var(--bg);
+  background: var(--paper-2);
+  color: var(--text);
   position: relative;
   overflow: hidden;
 }
 
 .feature-showcase-header {
-  text-align: left;
-  padding: 110px 0 60px;
+  padding: 100px 0 40px;
   position: relative;
   z-index: 3;
-  background: var(--bg);
+  background: var(--paper-2);
 }
 
-.feature-bands {
+.feature-showcase .section-title { color: var(--text); }
+.feature-showcase .section-subtitle { color: var(--text-light); }
+.feature-showcase .section-kicker { color: var(--text-light); border-top-color: var(--border); }
+.feature-showcase .section-subtitle { margin-bottom: 48px; }
+
+/* ============ 三种 Act 之间用细线错位分层，制造节奏 ============ */
+.fs-act {
   position: relative;
   z-index: 2;
+  padding: 88px 0;
 }
 
-.feature-band {
-  padding: 90px 0;
-  position: relative;
-}
-
-.feature-band:nth-child(odd) {
-  background: var(--bg-2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.feature-band-inner {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 clamp(24px, 4vw, 72px);
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  align-items: center;
-  gap: clamp(40px, 5vw, 100px);
-}
-
-.feature-band-left .feature-band-content {
-  order: 1;
-  padding-right: clamp(0px, 3vw, 40px);
-}
-
-.feature-band-left .feature-mockup {
-  order: 2;
-}
-
-.feature-band-right .feature-band-content {
-  order: 2;
-  padding-left: clamp(0px, 3vw, 40px);
-}
-
-.feature-band-right .feature-mockup {
-  order: 1;
-}
-
-.feature-band-content {
-  max-width: 520px;
-  position: relative;
-  z-index: 3;
-  background: inherit;
-}
-
-.feature-band-right .feature-band-content {
-  margin-left: auto;
-}
-
-.feature-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--primary);
-  margin-bottom: 10px;
-  font-family: var(--font);
-}
-
-.feature-en {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 1.5px;
-  color: var(--text-light);
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-
-.feature-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--text);
-  margin-bottom: 18px;
-  line-height: 1.2;
-}
-
-.feature-desc {
-  font-size: 1.05rem;
-  color: var(--text-light);
-  line-height: 1.85;
-  margin: 0;
-}
-
-/* ============================================================
-   v11 · 改浅色 —— 全站统一浅色（用户 2026-09-10 决定）
-   此前这里是一整块黑底，靠黑底反衬白色产品卡。
-   改为米白底后，白卡靠自身的细线边框 + 轻阴影分层（mockup 自带 border）。
-   橙色不在这块出现：7 个序号用中性灰，避免「铺色」。
-   ============================================================ */
-.feature-showcase {
-  background: var(--paper-2);
-  color: var(--text);
-}
-
-.feature-showcase-header {
-  background: var(--paper-2);
-}
-
-.feature-showcase .section-title {
-  color: var(--text);
-}
-
-.feature-showcase .section-subtitle {
-  color: var(--text-light);
-}
-
-.feature-showcase .section-kicker {
-  color: var(--text-light);
-  border-top-color: var(--border);
-}
-
-/* 奇偶两条带：浅色下用「白带 + 细线」交替，靠明度差区分 */
-.feature-showcase .feature-band:nth-child(odd) {
+.fs-act-core {
   background: var(--paper);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
 
-/* 序号 01–07 用中性灰：7 个橙色序号属于铺色，橙色让给 Hero 光斑与 CTA */
-.feature-showcase .feature-label {
-  color: var(--text-light);
-  letter-spacing: 0.2em;
+.fs-act-panel {
+  background: var(--paper-2);
 }
 
-.feature-showcase .feature-en {
-  color: var(--text-light);
+.fs-act-edge {
+  background: var(--paper-2);
+  padding-top: 0;
+  padding-bottom: 120px;
 }
 
-.feature-showcase .feature-title {
-  color: var(--text);
-}
-
-.feature-showcase .feature-desc {
-  color: var(--text-light);
-}
-
-/* 垂直节奏 */
-.feature-showcase-header {
-  padding: 100px 0 40px;
-}
-
-.feature-showcase .section-subtitle {
-  margin-bottom: 48px;
-}
-
-.feature-showcase .feature-band {
-  padding: 72px 0;
-}
-
-.feature-mockup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 460px;
-}
-
-.feature-mockup-frame {
-  width: 100%;
-  max-width: 620px;
-  filter: drop-shadow(0 28px 64px rgba(28, 28, 30, 0.1));
-  transition: transform 0.5s var(--ease-out);
-}
-
-/* v11：去掉 hover 抬升 + 缩放。
-   「产品截图悬停时整体浮起并放大」是模板页面的典型动作，这里不再需要。 */
-
-/* ============================================================
-   v15 · 立主次
-   「口语 → 书面语」是产品的核心差异，它必须在这 7 条里被一眼认出来，
-   而不是和「隐私优先」长得一模一样 —— 这正是上一版「平平无奇」的机制。
-   手法保持克制：一条橙色短线 + 一枚墨黑小标签 + 放大的标题与更多留白。
-   不新增卡片色块、不加图标、不放大橙色面积。
-   ============================================================ */
-.feature-band-featured {
-  padding: 96px 0;
-}
-
-.feature-band-featured .feature-band-content::before {
-  content: '';
+/* ============ 共享文字令牌 ============ */
+.fs-label {
   display: block;
-  width: 32px;
-  height: 2px;
-  background: var(--accent);
-  margin-bottom: 22px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+  font-family: var(--font);
 }
 
-.feature-band-featured .feature-title {
-  font-size: clamp(2rem, 3.4vw, 2.7rem);
+.fs-en {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  margin-bottom: 12px;
 }
 
-.feature-band-featured .feature-desc {
-  font-size: 1.1rem;
-  color: var(--text-2);
+.fs-title {
+  font-size: clamp(1.7rem, 2.8vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.24;
 }
 
-.feature-chip {
+.fs-desc {
+  font-size: 1.02rem;
+  color: var(--text-light);
+  line-height: 1.85;
+  margin: 0;
+  max-width: 34em;
+}
+
+.fs-chip {
   display: inline-block;
   margin-left: 10px;
   padding: 2px 8px;
@@ -229,300 +104,194 @@
   vertical-align: 1px;
 }
 
-/* ============ 聊天框模拟 (AI 语音转写) ============ */
-.mockup-chatbox {
-  width: 100%;
-  max-width: 340px;
-  margin: 0 auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow:
-    0 1px 2px rgba(28, 28, 30, 0.04),
-    0 28px 64px rgba(28, 28, 30, 0.10);
-  overflow: hidden;
-  font-family: var(--font);
-}
-
-.mockup-chatbox-header {
-  display: flex;
+/* ============ Act 1 · 聚焦大卡 ============ */
+.core-layout {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(48px, 6vw, 96px);
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
 }
 
-.mockup-chatbox-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--ink);
+.core-copy::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 22px;
+}
+
+.core-copy .fs-title {
+  font-size: clamp(2rem, 3.4vw, 2.7rem);
+}
+
+.core-copy .fs-desc {
+  font-size: 1.08rem;
+  color: var(--text-2);
+}
+
+.core-demo {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
 }
 
-.mockup-chatbox-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text);
+.core-demo-frame {
+  width: 100%;
+  max-width: 540px;
+  filter: drop-shadow(0 28px 64px rgba(28, 28, 30, 0.1));
 }
 
-.mockup-chatbox-status {
-  font-size: 0.75rem;
-  color: var(--text-light);
+/* 证据行：三条极简数字，替代长文案，支撑转化话术 */
+.fs-proofs {
+  list-style: none;
+  margin: 36px 0 0;
+  padding: 24px 0 0;
+  display: flex;
+  gap: clamp(24px, 4vw, 56px);
+  border-top: 1px solid var(--border);
 }
 
-.mockup-chatbox-body {
-  padding: 24px 20px;
+.fs-proofs li {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  min-height: 220px;
+  gap: 4px;
 }
 
-.mockup-chatbox-bubble {
-  max-width: 85%;
-  padding: 12px 16px;
-  border-radius: 18px;
-  font-size: 0.95rem;
-  line-height: 1.55;
-  opacity: 1;
-  transform: none;
-}
-
-.mockup-chatbox-bubble-them {
-  background: var(--bg-2);
+.fs-proof-num {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--text);
-  border-bottom-left-radius: 4px;
-  align-self: flex-start;
-}
-
-.mockup-chatbox-bubble-me {
-  background: var(--ink);
-  color: #fff;
-  border-bottom-right-radius: 4px;
-  align-self: flex-end;
-}
-
-.mockup-chatbox-bubble-voice {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 140px;
-  padding: 14px 16px;
-}
-
-.mockup-chatbox-wave {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  height: 24px;
-}
-
-.mockup-chatbox-wave span {
-  display: block;
-  width: 3px;
-  height: calc(var(--h) * 22px);
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 99px;
-  animation: chatboxWave 1.2s ease-in-out infinite alternate;
-  animation-delay: var(--d);
-}
-
-@keyframes chatboxWave {
-  from { transform: scaleY(0.35); opacity: 0.45; }
-  to   { transform: scaleY(1); opacity: 1; }
-}
-
-.mockup-chatbox-voice-time {
-  font-size: 0.8rem;
-  opacity: 0.9;
   font-variant-numeric: tabular-nums;
 }
 
-.mockup-chatbox-footer {
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--bg);
+.fs-proof-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
 }
 
-.mockup-chatbox-input {
+/* ============ Act 2 · 左交互 + 右卡片 ============ */
+.panel-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(40px, 5vw, 88px);
+  align-items: stretch;
+}
+
+.panel-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-card {
+  display: flex;
+  gap: 18px;
+  padding: 26px 4px;
+  align-items: flex-start;
+}
+
+.panel-card + .panel-card {
+  border-top: 1px solid var(--border);
+}
+
+.panel-card-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  justify-content: center;
+  color: var(--text);
+  background: var(--paper);
 }
 
-.mockup-chatbox-input-text {
+.panel-card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.panel-card-en {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 1.2px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.panel-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.panel-card-desc {
+  font-size: 0.92rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.panel-lead-demo {
+  margin-top: 28px;
+  max-width: 520px;
+}
+
+/* ============ Act 3 · 收尾双栏 ============ */
+.edge-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 5vw, 88px);
+  align-items: start;
+}
+
+.edge-block {
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+.edge-voice .fs-title,
+.edge-privacy .fs-title {
+  font-size: clamp(1.5rem, 2.3vw, 1.9rem);
+}
+
+.edge-stat {
+  margin-top: 34px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.edge-stat-num {
+  font-size: 4.2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--accent-deep);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.edge-stat-label {
   font-size: 0.9rem;
   color: var(--text-light);
 }
 
-/* 本区块唯一的橙色：核心动作（按住说话）。
-   气泡/头像/徽章全部为墨黑后，这一个小按钮才真正突出。 */
-.mockup-chatbox-input-mic {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 橙黄底上用墨色图标（对比度约 9:1）；白压橙只有约 2.2:1 */
-  color: var(--ink);
-  flex-shrink: 0;
+.edge-demo {
+  margin-top: 28px;
+  max-width: 520px;
 }
 
-.mockup-chatbox-input-mic svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* ============ 清理编辑器模拟 ============ */
-.mockup-text-editor {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(28, 28, 30, 0.08);
-}
-
-.mockup-editor-header {
-  display: flex;
-  gap: 8px;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-2);
-}
-
-.mockup-editor-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--surface-3);
-}
-
-.mockup-editor-dot:first-child { background: #C9C7C2; }
-.mockup-editor-dot:nth-child(2) { background: #DAD8D3; }
-.mockup-editor-dot:nth-child(3) { background: #BFBDB8; }
-
-.mockup-editor-body {
-  padding: 28px 32px;
-}
-
-.mockup-line {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  margin-bottom: 16px;
-  color: var(--text);
-}
-
-.mockup-line-strike {
-  text-decoration: line-through;
-  color: var(--text-light);
-  opacity: 0.75;
-}
-
-.mockup-line-final {
-  font-weight: 500;
-  color: var(--text);
-}
-
-.mockup-cleanup-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(15, 118, 110, 0.08);
-  color: var(--secondary);
-  padding: 8px 14px;
-  border-radius: 99px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  border: 1px solid rgba(15, 118, 110, 0.16);
-}
-
-.mockup-cleanup-badge svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* ============ 邮件格式化模拟 ============ */
-.mockup-email {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 28px 32px;
-  box-shadow: 0 20px 50px rgba(28, 28, 30, 0.08);
-}
-
-.mockup-email-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.mockup-email-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--surface-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.mockup-email-from {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 1rem;
-}
-
-.mockup-email-subj {
-  font-size: 0.85rem;
-  color: var(--text-light);
-}
-
-.mockup-email-p {
-  color: var(--text);
-  font-size: 1rem;
-  margin-bottom: 16px;
-}
-
-.mockup-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.mockup-list-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.95rem;
-  color: var(--text);
-}
-
-.mockup-bullet {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--primary);
-  flex-shrink: 0;
-}
+/* ============================================================
+   以下为可复用 mockup 组件样式（v10–v16 沉淀，原样保留）
+   ============================================================ */
 
 /* ============ 语音编辑模拟 ============ */
 .mockup-editor-card {
@@ -652,6 +421,11 @@
   animation: bubble-in 0.45s var(--ease-out) forwards;
 }
 
+@keyframes bubble-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .mockup-tone-bubble-them {
   align-self: flex-start;
   background: var(--surface-2);
@@ -682,7 +456,6 @@
   margin: 0;
 }
 
-/* 原始表达：用 line-through 表示"被替换"，颜色保持可读 */
 .mockup-tone-bubble .mockup-tone-text.mockup-tone-raw {
   color: var(--text-2);
   text-decoration: line-through;
@@ -690,185 +463,8 @@
   opacity: 1;
 }
 
-/* 润色版本：加粗，与原始表达形成明显对比 */
 .mockup-tone-bubble .mockup-tone-text.mockup-tone-polished {
   font-weight: 600;
-}
-
-/* ============ 词库模拟 ============ */
-.mockup-vocab {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 22px;
-  box-shadow: 0 20px 50px rgba(28, 28, 30, 0.08);
-}
-
-.mockup-vocab-chat {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.mockup-vocab-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-}
-
-.mockup-vocab-title {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 1rem;
-}
-
-.mockup-vocab-count {
-  font-size: 0.75rem;
-  color: var(--text-light);
-  background: var(--bg-2);
-  padding: 4px 10px;
-  border-radius: 99px;
-}
-
-.mockup-vocab-bubble {
-  align-self: flex-end;
-  max-width: 92%;
-  padding: 14px 16px;
-  border-radius: 18px;
-  border-bottom-right-radius: 4px;
-  background: var(--ink);
-  color: #fff;
-  animation: bubble-in 0.5s var(--ease-out) forwards;
-}
-
-.mockup-vocab-label {
-  display: block;
-  font-size: 0.7rem;
-  opacity: 0.7;
-  margin-bottom: 6px;
-  letter-spacing: 0.5px;
-}
-
-.mockup-vocab-text {
-  font-size: 0.95rem;
-  line-height: 1.65;
-  margin: 0;
-}
-
-.mockup-vocab-highlight {
-  background: rgba(255, 255, 255, 0.22);
-  border-radius: 6px;
-  padding: 1px 5px;
-  font-weight: 600;
-}
-
-.mockup-vocab-words {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.mockup-vocab-chip {
-  font-size: 0.82rem;
-  color: var(--text);
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 99px;
-}
-
-.mockup-vocab-chip-add {
-  color: var(--primary);
-  border-style: dashed;
-  background: transparent;
-}
-
-/* ============ 全场景通用模拟 ============ */
-.mockup-devices {
-  position: relative;
-  height: 360px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mockup-device {
-  position: absolute;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 10px;
-  box-shadow: 0 20px 50px rgba(28, 28, 30, 0.08);
-}
-
-.mockup-device-phone {
-  width: 90px;
-  height: 170px;
-  left: 10%;
-  top: 50%;
-  transform: translateY(-50%);
-  border-radius: 22px;
-}
-
-.mockup-device-laptop {
-  width: 320px;
-  height: 200px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 16px 16px 6px 6px;
-  padding: 12px 12px 18px;
-}
-
-.mockup-device-tablet {
-  width: 130px;
-  height: 170px;
-  right: 10%;
-  top: 50%;
-  transform: translateY(-50%);
-  border-radius: 20px;
-}
-
-.mockup-device-screen,
-.mockup-device-screen-lg {
-  width: 100%;
-  height: 100%;
-  background: var(--bg-2);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mockup-device-screen-lg {
-  border-radius: 8px;
-}
-
-.mockup-device-row {
-  display: flex;
-  gap: 20px;
-}
-
-.mockup-device-app {
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary);
-  box-shadow: 0 4px 12px rgba(28, 28, 30, 0.05);
-}
-
-.mockup-device-app svg {
-  width: 26px;
-  height: 26px;
-  stroke: var(--primary);
-  stroke-width: 2;
 }
 
 /* ============ 隐私模拟 ============ */
@@ -986,19 +582,14 @@
 }
 
 /* ============ 响应式 ============ */
-@media (max-width: 1100px) {
-  .feature-band-inner {
-    gap: 50px;
-    padding: 0 32px;
+@media (max-width: 1000px) {
+  .core-layout,
+  .edge-layout {
+    gap: 48px;
   }
-  .feature-title {
-    font-size: 1.9rem;
-  }
-  .feature-mockup {
-    min-height: 360px;
-  }
-  .feature-mockup-frame {
-    max-width: 460px;
+  .panel-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
 }
 
@@ -1006,29 +597,22 @@
   .feature-showcase-header {
     padding: 70px 0 40px;
   }
-  .feature-band {
-    padding: 60px 0;
+  .fs-act {
+    padding: 64px 0;
   }
-  .feature-band-inner {
+  .fs-act-edge {
+    padding-bottom: 96px;
+  }
+  .core-layout {
     grid-template-columns: 1fr;
     gap: 36px;
   }
-  .feature-band-left .feature-band-content,
-  .feature-band-right .feature-band-content {
-    order: 2;
-    padding: 0;
-    text-align: left;
-    margin: 0 auto;
+  .core-demo-frame {
+    max-width: 480px;
   }
-  .feature-band-left .feature-mockup,
-  .feature-band-right .feature-mockup {
-    order: 1;
-  }
-  .feature-mockup {
-    min-height: auto;
-  }
-  .feature-mockup-frame {
-    max-width: 420px;
+  .edge-layout {
+    grid-template-columns: 1fr;
+    gap: 48px;
   }
   .container-wide {
     padding: 0 24px;
@@ -1039,50 +623,25 @@
   .feature-showcase-header {
     padding: 50px 0 30px;
   }
-  .feature-band {
-    padding: 44px 0;
+  .fs-act {
+    padding: 48px 0;
   }
-  .feature-band-inner {
-    padding: 0 20px;
+  .fs-act-edge {
+    padding-bottom: 72px;
   }
-  .feature-title {
+  .fs-title {
     font-size: 1.5rem;
   }
-  .feature-desc {
+  .fs-desc {
     font-size: 0.95rem;
   }
-  .mockup-phone-frame {
-    max-width: 280px;
+  .fs-proofs {
+    flex-wrap: wrap;
+    gap: 20px 32px;
   }
-  .mockup-phone-btn {
-    display: none;
-  }
-  .mockup-speed-compare {
-    right: -10px;
-    min-width: 140px;
-    padding: 14px;
-  }
-  .mockup-devices {
-    height: 280px;
-  }
-  .mockup-device-laptop {
-    width: 220px;
-    height: 140px;
-  }
-  .mockup-device-phone {
-    width: 70px;
-    height: 130px;
-    left: 2%;
-  }
-  .mockup-device-tablet {
-    width: 100px;
-    height: 130px;
-    right: 2%;
-  }
-  .mockup-device-app {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+  .panel-card {
+    flex-direction: column;
+    gap: 12px;
   }
   .mockup-privacy-flow {
     flex-direction: column;
@@ -1091,5 +650,8 @@
   .mockup-privacy-arrow {
     transform: rotate(90deg);
     margin-top: 0;
+  }
+  .mockup-privacy {
+    padding: 28px 20px;
   }
 }
