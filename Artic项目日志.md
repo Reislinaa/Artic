@@ -209,10 +209,18 @@ git add -A && git commit -m "..." && git push origin main
 2. **Hero 光斑**（`Hero.css`）：`.hero-glow` / `.hero-horizon` 橙色径向渐变→浅底上的近黑中性晕 `rgba(16,16,16,.08→.02)`（黑白层次，不再有色块）
 3. **编辑器交通灯圆点**（`FeatureShowcase.css`）：`.mockup-editor-dot` 的橙 `#FF8A1F` / 琥珀 `#FFC24B` / 青 `#0F766E`→灰阶 `#C9C7C2` / `#DAD8D3` / `#BFBDB8`
 4. **步骤激活态**（`StepsSection.jsx`）：`.step-num` 滚动激活色 `#F59E0B/#B45309`→`#1A1A1A/#0A0A0A`
+5. **（第二轮，上线截图复查发现）清除全站硬编码橙 `rgba(255, 138, 31, …)`（即 `#FF8A1F`）**：
+   第一版只靠换 CSS 变量，但大量元素用了**硬编码 rgb 写法**、不走变量，上线后仍见橙色 → 统一替换为近黑 `rgba(16, 16, 16, …)`、透明度不变：
+   - `Features.css`（特性卡 hover 边框 / 图标底 `0.08` / 图标描边 `0.14`）
+   - `Showcase.css`（hover 边框 `0.2`）
+   - `pages.css`（高亮卡计多组：hover 边框 `0.25` / 图标底 `0.08` / 描边 `0.14` / 一处 `0.5→0.1` 竖向渐变 / 圆点径向光 `0.18`）
+   - `CheckoutPage.css`（模式条 `code` 底 `0.08`；脉冲光圈动画 `0.4`）
+   - `FeatureShowcase.css`（顶部卡阴影 `0.3` / 填充 `0.08` / 阴影 `0.25` / 底 `0.1`）
 
 **验证与部署结果**：
-- 全局残留橙色检查：`--accent` 系、`#FF8A1F`、`#F59E0B`、`rgba(245/249/253,158/115,11/22/138…)` 在 `src/**.{css,jsx}` 中均不再出现；仅 `public/artic-logo.png` 保留橙色
-- `npm run build` 构建通过（146 模块，1614ms 无报错）
+- 全局残留橙色复查：`src/**.{css,jsx}` 全量扫描 `255, 138, 31` / `#FF8A1F` / `#F59E0B` / `#F97316` / `#C2410C` / 橙黄渐变 rgba 全部 **0 处**；仅 `AuthModal` 保留功能性错误红 `#C0392B`（表单报错用色，非主色）；品牌 logo `public/artic-logo.png` 保留橙色记忆点
+- `npm run build` 通过；构建产物 `dist/assets/*.css` 内橙色特征字符串计数全部为 0
+- 已推送 `main`（触发 GitHub Actions 自动部署），线上截图复查确认黑白
 
 ### 2026-09-10 · 立特色 + 删鼠标特效（用户：看不出特色、平平无奇、特效恶心）
 **用户要求**：这个页面看不出产品特色、一点突出都没有、平平无奇、特效也恶心。

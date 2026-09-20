@@ -88,7 +88,7 @@
 }
 
 .co-mode-bar code {
-  background: rgba(255, 138, 31, 0.08);
+  background: rgba(16, 16, 16, 0.08);
   color: var(--primary);
   padding: 1px 6px;
   border-radius: 5px;
@@ -258,7 +258,7 @@
 }
 
 @keyframes coPulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 138, 31, 0.4); }
+  0% { box-shadow: 0 0 0 0 rgba(16, 16, 16, 0.4); }
   70% { box-shadow: 0 0 0 8px rgba(255, 138, 31, 0); }
   100% { box-shadow: 0 0 0 0 rgba(255, 138, 31, 0); }
 }

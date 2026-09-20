@@ -586,7 +586,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 10px 24px rgba(255, 138, 31, 0.3);
+  box-shadow: 0 10px 24px rgba(16, 16, 16, 0.3);
 }
 
 .mockup-command-chip svg {
@@ -894,7 +894,7 @@
 }
 
 .mockup-shield path:first-child {
-  fill: rgba(255, 138, 31, 0.08);
+  fill: rgba(16, 16, 16, 0.08);
   stroke: var(--primary);
   stroke-width: 2.5;
 }
@@ -917,7 +917,7 @@
   font-weight: 700;
   padding: 5px 10px;
   border-radius: 99px;
-  box-shadow: 0 4px 12px rgba(255, 138, 31, 0.25);
+  box-shadow: 0 4px 12px rgba(16, 16, 16, 0.25);
 }
 
 .mockup-privacy-flow {
@@ -947,7 +947,7 @@
 }
 
 .mockup-privacy-mic {
-  background: rgba(255, 138, 31, 0.1);
+  background: rgba(16, 16, 16, 0.1);
   color: var(--primary);
 }
 
