@@ -69,7 +69,7 @@ export default function DownloadPage() {
           <span className="page-hero-tag">DOWNLOAD · 下载</span>
           <h1 className="page-hero-title">下载<em>ARTIC</em></h1>
           <p className="page-hero-sub">
-            全平台支持，选择你的设备，开始智能输入之旅
+            全平台可用，选好你的设备就开始。
           </p>
         </div>
       </div>

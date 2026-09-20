@@ -24,7 +24,7 @@ const features = [
     ),
     en: 'COMPLETE',
     title: '智能补全',
-    desc: '理解上下文与语气，未写完的句子已为你续上，表达快人一步。'
+    desc: '顺着你的话往下接，句子没写完就替你续上。'
   },
   {
     icon: (
@@ -35,7 +35,7 @@ const features = [
     ),
     en: 'POLISH',
     title: '自动润色',
-    desc: '一句口语，自动整理成得体邮件、汇报或文案，张嘴即得成品。'
+    desc: '一句口语，自动整理成邮件、汇报或文案的正式写法。'
   },
   {
     icon: (
@@ -70,7 +70,7 @@ const features = [
     ),
     en: 'SYNCED',
     title: '跨端同步',
-    desc: '手机、电脑、网页输入习惯与词库无缝同步，处处如一。'
+    desc: '手机、电脑、网页上的词库与输入习惯，同步成一个。'
   }
 ]
 
@@ -86,7 +86,7 @@ export default function Features({ onTryFeature }) {
         </Reveal>
         <Reveal delay={1} variant="fade">
           <p className="section-subtitle">
-            把每一次开口，都变成准确、自然、可直接使用的文字
+            说出口的话，直接成为能发出的文字
           </p>
         </Reveal>
         <ScrollLine />

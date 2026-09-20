@@ -174,31 +174,43 @@
 }
 
 .scenario-card:hover {
-  border-color: rgba(16, 16, 16, 0.25);
-  transform: translateY(-5px);
-  box-shadow: 0 18px 44px rgba(28, 28, 30, 0.07);
+  border-color: rgba(16, 16, 16, 0.3);
 }
 
 .scenario-card:hover::before {
   opacity: 1;
 }
 
+/* 编辑式头部：左序号 + 右描边图标（去掉通用「灰圆角图标块」，消除 AI SaaS 模板感） */
+.scenario-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.scenario-index {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
 .scenario-icon {
-  width: 46px;
-  height: 46px;
-  margin-bottom: 18px;
+  width: 26px;
+  height: 26px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--text-2);
-  background: rgba(16, 16, 16, 0.08);
-  border: 1px solid rgba(16, 16, 16, 0.14);
-  border-radius: 12px;
 }
 
 .scenario-icon svg {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 }
 
 .scenario-timeline {
