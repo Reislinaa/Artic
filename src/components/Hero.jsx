@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Reveal from './Reveal'
-import InputMockup from './InputMockup'
+import SpokenToDraft from './SpokenToDraft'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -165,13 +165,9 @@ export default function Hero({ onStartDemo, onNavigate }) {
           </Reveal>
         </div>
 
-        {/* Right column: 产品演示（口语 → 商务稿，逐字出现） */}
+        {/* Right column: 口语 -> 成稿（大图标 + 打字动画） */}
         <div className="hero-col hero-col-right">
-          <Reveal delay={3}>
-            <div className="hero-window hero-window-float">
-              <InputMockup />
-            </div>
-          </Reveal>
+          <SpokenToDraft />
         </div>
       </div>
     </section>

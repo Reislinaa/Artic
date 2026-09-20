@@ -100,16 +100,6 @@
   width: 100%;
 }
 
-/* ============ 产品演示窗口 ============
-   v15：这里原来分三层承载「浮动 / 3D 倾斜 / 内层视差」，并有一层跟随光标的高光。
-   三层都是鼠标驱动，已全部移除 —— 窗口现在静置，动效只发生在它内部
-   （文字逐字出现，见 InputMockup.jsx）。 */
-.hero-window {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
 /* ============ 编辑式小标签：极小 + 宽字距 + 大写，无胶囊 ============ */
 .hero-tag {
   display: block;
@@ -154,23 +144,6 @@
   background: var(--accent);
   margin: 0 0 26px;
   transform-origin: left center;
-}
-
-/* 产品演示窗口：缓慢的呼吸浮动（与内部逐字落字不冲突） */
-.hero-window-float {
-  animation: heroFloat 7s ease-in-out infinite;
-}
-
-@keyframes heroFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* 响应「减少动态效果」偏好：去掉窗口浮动 */
-@media (prefers-reduced-motion: reduce) {
-  .hero-window-float {
-    animation: none;
-  }
 }
 
 .hero-subtitle {

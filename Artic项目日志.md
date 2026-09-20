@@ -195,6 +195,24 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-20 · 首屏右侧新创意：口语→成稿 自动动画（用户：先生成口语化冗余的话，停顿0.5s后大图标立体旋转像Siri，文字打字变书面稿）
+
+**用户创意**：首屏右侧不要原来的微信消息卡片，改成一个「口语 → 成稿」叙事：先生成一段**口语化、带语气词和冗余**的话「说出来」，停顿约 0.5s 后**大图标立体化并旋转（像 Siri）**，同时文字像打字一样变成书面定稿。
+
+**代码改动痕迹**：
+
+1. `src/components/SpokenToDraft.jsx`（新）+ `SpokenToDraft.css`（新）：
+   - 右侧专属组件，自含一个基于 `useState`/`setInterval` 打的字引擎 + 阶段机（speaking → 清屏+orbOn → typing）。
+   - 叙事：`SPEAKING`（口语版，约 100 字带「嗨，就……懂我意思吧」等冗余）→ 停 650ms → 清屏 + 图标立体化旋转 → 1.3s 后 `DRAFT`（书面稿）逐字打出。
+   - 大图标 = wireframe 圆环球体（6 个 `rotateX/rotateY` 圆环，`preserve-3d` 整体 Y 轴旋转）+ 居中「ARTIC」字标；静止时只显示扁平字标，激活后圆环淡入旋转。
+   - 口语/成稿用徽标区分（「你随口说的」→ 黑胶囊「ARTIC 写好的稿」），打字时带闪烁光标；`prefers-reduced-motion` 下直接显示成稿、图标静止。
+2. `src/components/Hero.jsx`：右栏由 `<InputMockup/>` 换成 `<SpokenToDraft/>`（不再套 Reveal / hero-window 浮动）。
+3. 清理：删除 `src/components/InputMockup.jsx` + `InputMockup.css`；`Hero.css` 移除已不用的 `.hero-window/.hero-window-float/heroFloat`；`App.css` 把 `@import InputMockup.css` 换成 `SpokenToDraft.css`。
+
+**验证与部署结果**：`npm run build` ✅（146 modules）。浏览器实测：右侧无微信卡片；加载后先「口语打字」，约 4~5s 后变为书面稿，ARTIC 字标周围线框球体持续缓慢旋转；控制台零错误。（子任务首帧截图因工具延迟没抓到口语段，属截图时机问题，序列逻辑正常。）
+
+---
+
 ### 2026-09-20 · 修复隐形按钮 + 重构 Hero 大字为 ARTIC 字标 + 补全站动效（用户：附两张截图）
 
 **用户要求**：①「你有很多这种图一黑方块，字呢」→ 下载平台主按钮黑底文字几乎看不见，需修复；②「图二修改一下这部分，大字肯定是 artic，小字再写别的」→ Hero 大标题改为 ARTIC，小字重写；③「整个页面可以多一点动效」。
