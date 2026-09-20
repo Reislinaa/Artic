@@ -24,13 +24,13 @@ import { join } from 'path'
  * 修改后运行：node scripts/gen-icons.mjs
  */
 
-// —— 国内：沟通 / 办公 / 内容社区 / 输入法（均为大众高频 App）——
+// —— 国内：沟通 / 办公 / 内容社区（均为大众高频 App）——
+// 去掉了「搜狗输入法」（输入法本身不是聊天/文档 App，放图标墙里会显得错位）
 const CN = [
   'wechat',                        // 微信
   'qq',                            // QQ
   { img: 'dingtalk' },             // 钉钉（自托管官方图标）
   { img: 'feishu' },               // 飞书（自托管官方图标）
-  'sogou',                         // 搜狗输入法
   'zhihu',                         // 知乎
   'xiaohongshu',                   // 小红书
   'bilibili',                      // 哔哩哔哩
@@ -38,19 +38,22 @@ const CN = [
   'kuaishou'                       // 快手
 ]
 
-// —— 国际：社交沟通 / 会议协作 / 邮箱文档 / 效率 ——
-// 只保留全球范围内最主流的，避免出现用户不认识的图标
+// —— 国际：社交沟通 / 会议协作 / 邮箱文档 ——
+// 只保留**全球最主流、且大众一眼能认出的沟通/办公类 App**；
+// 去掉对多数人陌生的小众工具（Pinterest / Threads / Miro / Jira / Asana /
+// Confluence / Airtable / Obsidian / Todoist / TickTick / Evernote / Google Keep
+// 等），避免用户看到一堆不认识的图标。
 const INTL = [
-  // 社交与即时通讯
+  // 社交与即时通讯（全球 / 东亚主流）
   'whatsapp', 'telegram', 'discord', 'messenger', 'instagram', 'facebook',
-  'x', 'reddit', 'snapchat', 'pinterest', 'threads', 'tiktok',
-  // 会议与团队协作
-  'zoom', 'googlemeet', 'notion', 'trello', 'asana', 'jira', 'confluence',
-  'miro', 'figma', 'dropbox', 'evernote', 'googlekeep', 'googlechat',
-  // 邮箱与文档
-  'gmail', 'googledrive', 'googledocs', 'googlesheets', 'googlecalendar',
-  // 效率与知识管理
-  'todoist', 'ticktick', 'obsidian', 'airtable'
+  'x', 'tiktok', 'reddit', 'snapchat', 'line', 'kakaotalk', 'signal',
+  // 会议与在线协作
+  'zoom', 'googlemeet', 'webex',
+  // 文档 / 云盘 / 设计
+  'notion', 'figma', 'dropbox',
+  // 邮件与生产力（Google 全家桶均为大众高频）
+  'gmail', 'googledrive', 'googledocs', 'googlesheets',
+  'googlecalendar', 'googlechat'
 ]
 
 const resolve = (slug) => {

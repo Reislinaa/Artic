@@ -195,6 +195,22 @@ git add -A && git commit -m "..." && git push origin main
 
 ## 七、开发日志（倒序，最新在最前）
 
+### 2026-09-20 · 重构「轮转图标墙」选品（用户：多数图标不常见且有错，参考 typeless 图标墙补充替换）
+
+**用户要求**：图标墙里大部分图标不常见、个别还放错了，参考 typeless 官网那种「你真正在哪些 App 里写字」的图标墙，补充/替换成大众一眼能认出的常见 App。
+
+**代码改动痕迹**：
+
+1. `scripts/gen-icons.mjs`：重写 `CN` / `INTL` 两个选品数组。
+   - **去掉的小众/错位图标**：搜狗输入法(错位，它本身不是沟通/文档 App)、Pinterest、Threads、Miro、Jira、Asana、Confluence、Airtable、Obsidian、Todoist、TickTick、Evernote、Google Keep。
+   - **新增的全球/东亚主流沟通 App**：LINE、KakaoTalk、Signal、Webex。
+   - 保留全部大众高频项（微信/QQ/钉钉/飞书/知乎/小红书/B站/微博/快手 + WhatsApp/Telegram/Discord/Messenger/Instagram/Facebook/X/TikTok/Reddit/Snapchat/Zoom/Google Meet/Notion/Figma/Dropbox/Gmail/Google 全系等）。
+2. `src/data/app-icons.js`：由脚本重新生成，**44 → 34 个已验证图标**（外环 17 + 内环 17，全部呈现）。新增的 LINE/KakaoTalk/Signal/Webex 均从 simple-icons 强校验取得，无缺失。
+
+**验证与部署结果**：`npm run build` ✅（146 modules）；已 push `main`，并用 `node scripts/deploy-gh-pages.mjs` 推送 `gh-pages` 更新线上静态站。
+
+---
+
 ### 2026-09-20 · 主色调换成黑白（用户：主色调换成黑白）
 **用户要求**：主色调换成黑白；确认「保留黑白主导，橙色减到极少」（无 Figma 设计稿，直接改代码）。
 
