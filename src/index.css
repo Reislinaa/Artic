@@ -30,12 +30,13 @@
   --hairline-ink: rgba(255, 255, 255, 0.16);
   --hairline-ink-strong: rgba(255, 255, 255, 0.30);
 
-  /* —— 点缀色：橙黄（参考图光斑的固有色） —— */
-  --accent: #F59E0B;
-  --accent-bright: #FBBF24;
-  --accent-soft: #FDE68A;
-  --accent-deep: #B45309;
-  --grad-accent: linear-gradient(135deg, #FDE68A 0%, #F97316 100%);
+  /* —— 点缀色：黑白（全站主色调为黑白灰，取消彩色点缀；
+       仅品牌 logo 保留橙色作为唯一记忆点） —— */
+  --accent: #1A1A1A;
+  --accent-bright: #000000;
+  --accent-soft: #EDECE9;
+  --accent-deep: #0A0A0A;
+  --grad-accent: linear-gradient(135deg, #2A2A2A 0%, #0A0A0A 100%);
 
   /* —— 浅色区语义变量 —— */
   --bg: var(--paper-2);
@@ -52,13 +53,13 @@
 
   /* —— 兼容旧变量名 —— */
   --primary: var(--accent-deep);
-  --primary-dark: #92400E;
+  --primary-dark: #000000;
   --primary-light: var(--accent);
   --secondary: #444444;
   --secondary-light: #A3A3A3;
   --gold: var(--accent);
   --grad-brand: var(--grad-accent);
-  --grad-soft: linear-gradient(180deg, rgba(245, 158, 11, 0.10) 0%, transparent 100%);
+  --grad-soft: linear-gradient(180deg, rgba(26, 26, 26, 0.06) 0%, transparent 100%);
 
   /* —— 圆角：大幅收小。大圆角 + 胶囊是「AI 生成感」最强的视觉信号之一 —— */
   --radius-sm: 4px;
@@ -70,7 +71,7 @@
   --shadow-sm: 0 1px 2px rgba(16, 16, 16, 0.04);
   --shadow-md: 0 1px 2px rgba(16, 16, 16, 0.05), 0 6px 18px rgba(16, 16, 16, 0.05);
   --shadow-lg: 0 2px 6px rgba(16, 16, 16, 0.05), 0 18px 44px rgba(16, 16, 16, 0.08);
-  --shadow-accent: 0 4px 14px rgba(245, 158, 11, 0.26);
+  --shadow-accent: 0 4px 14px rgba(16, 16, 16, 0.20);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
@@ -120,7 +121,7 @@ button {
 }
 
 ::selection {
-  background: rgba(245, 158, 11, 0.26);
+  background: rgba(26, 26, 26, 0.18);
   color: var(--ink);
 }
 
@@ -183,11 +184,10 @@ button {
   pointer-events: none;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(253, 230, 138, 0.95) 0%,
-    rgba(251, 191, 36, 0.72) 18%,
-    rgba(245, 158, 11, 0.42) 36%,
-    rgba(249, 115, 22, 0.16) 56%,
-    transparent 74%
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.10) 22%,
+    rgba(255, 255, 255, 0.045) 42%,
+    transparent 72%
   );
   filter: blur(52px);
 }
@@ -202,8 +202,8 @@ button {
   pointer-events: none;
   background: radial-gradient(
     ellipse 50% 100% at 50% 100%,
-    rgba(245, 158, 11, 0.18) 0%,
-    rgba(249, 115, 22, 0.05) 46%,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 46%,
     transparent 72%
   );
   filter: blur(46px);

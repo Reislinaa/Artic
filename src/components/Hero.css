@@ -39,10 +39,9 @@
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(253, 230, 138, 0.92) 0%,
-    rgba(251, 191, 36, 0.70) 22%,
-    rgba(245, 158, 11, 0.42) 40%,
-    rgba(249, 115, 22, 0.15) 60%,
+    rgba(16, 16, 16, 0.08) 0%,
+    rgba(16, 16, 16, 0.05) 30%,
+    rgba(16, 16, 16, 0.025) 52%,
     transparent 76%
   );
   filter: blur(64px);
@@ -59,8 +58,8 @@
   pointer-events: none;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(253, 230, 138, 0.80) 0%,
-    rgba(251, 191, 36, 0.42) 34%,
+    rgba(16, 16, 16, 0.06) 0%,
+    rgba(16, 16, 16, 0.03) 34%,
     transparent 70%
   );
   filter: blur(70px);

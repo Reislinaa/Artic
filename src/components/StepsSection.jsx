@@ -64,7 +64,7 @@ export default function StepsSection() {
           .fromTo(
             '.step-num',
             { borderColor: '#3D3D3D', color: '#85827C' },
-            { borderColor: '#F59E0B', color: '#B45309', duration: 0.4, stagger: 0.15, ease: 'none' },
+            { borderColor: '#1A1A1A', color: '#0A0A0A', duration: 0.4, stagger: 0.15, ease: 'none' },
             0
           )
       }, track)

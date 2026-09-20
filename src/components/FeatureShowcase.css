@@ -411,9 +411,9 @@
   background: var(--surface-3);
 }
 
-.mockup-editor-dot:first-child { background: #FF8A1F; }
-.mockup-editor-dot:nth-child(2) { background: #FFC24B; }
-.mockup-editor-dot:nth-child(3) { background: #0F766E; }
+.mockup-editor-dot:first-child { background: #C9C7C2; }
+.mockup-editor-dot:nth-child(2) { background: #DAD8D3; }
+.mockup-editor-dot:nth-child(3) { background: #BFBDB8; }
 
 .mockup-editor-body {
   padding: 28px 32px;
